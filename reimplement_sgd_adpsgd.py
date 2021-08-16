@@ -35,18 +35,18 @@ import torchvision.transforms as transforms
 from torchvision.models.resnet import Bottleneck
 from torch.nn.parameter import Parameter
 
-from experiment_utils import get_tcp_interface_name
-from experiment_utils import make_logger
-from experiment_utils import Meter
-from experiment_utils import ClusterManager
-from gossip import BilatGossipDataParallel
-from gossip import DynamicDirectedExponentialGraph as DDEGraph
-from gossip import DynamicBipartiteExponentialGraph as DBEGraph
-from gossip import DynamicDirectedLinearGraph as DDLGraph
-from gossip import DynamicBipartiteLinearGraph as DBLGraph
-from gossip import NPeerDynamicDirectedExponentialGraph as NPDDEGraph
-from gossip import RingGraph
-from gossip import UniformMixing
+from AD_PSGD.experiment_utils import get_tcp_interface_name
+from AD_PSGD.experiment_utils import make_logger
+from AD_PSGD.experiment_utils import Meter
+from AD_PSGD.experiment_utils import ClusterManager
+from AD_PSGD.gossip import BilatGossipDataParallel
+from AD_PSGD.gossip import DynamicDirectedExponentialGraph as DDEGraph
+from AD_PSGD.gossip import DynamicBipartiteExponentialGraph as DBEGraph
+from AD_PSGD.gossip import DynamicDirectedLinearGraph as DDLGraph
+from AD_PSGD.gossip import DynamicBipartiteLinearGraph as DBLGraph
+from AD_PSGD.gossip import NPeerDynamicDirectedExponentialGraph as NPDDEGraph
+from AD_PSGD.gossip import RingGraph
+from AD_PSGD.gossip import UniformMixing
 
 GRAPH_TOPOLOGIES = {
     0: DDEGraph,    # Dynamic Directed Exponential
@@ -69,15 +69,15 @@ MIXING_STRATEGIES = {
 parser = argparse.ArgumentParser(description='Playground')
 parser.add_argument('--all_reduce', default='False', type=str,
                     help='whether to use all-reduce or gossip')
-parser.add_argument('--bilat', default='False', type=str,
+parser.add_argument('--bilat', default='True', type=str,
                     help='whether to use bi-lat gossip')
-parser.add_argument('--shared_fpath', default='', type=str,
+parser.add_argument('--shared_fpath', default='results_dir/itr32.txt', type=str,
                     help='file path to use for global iteration tracking')
 parser.add_argument('--batch_size', default=32, type=int,
                     help='per-agent batch size')
 parser.add_argument('--lr', default=0.1, type=float,
                     help='reference learning rate (for 256 sample batch-size)')
-parser.add_argument('--num_dataloader_workers', default=10, type=int,
+parser.add_argument('--num_dataloader_workers', default=16, type=int,
                     help='number of dataloader workers to fork from main')
 parser.add_argument('--num_epochs', default=90, type=int,
                     help='number of epochs to train')
@@ -85,10 +85,10 @@ parser.add_argument('--momentum', default=0.9, type=float,
                     help='optimization momentum')
 parser.add_argument('--weight_decay', default=1e-4, type=float,
                     help='regularization applied to non batch-norm weights')
-parser.add_argument('--nesterov', default='False', type=str,
+parser.add_argument('--nesterov', default='True', type=str,
                     help='whether to use nesterov style momentum'
                          'otherwise will use regular Polyak momentum')
-parser.add_argument('--push_sum', default='True', type=str,
+parser.add_argument('--push_sum', default='False', type=str,
                     help='whether to use push-sum or push-pull gossip')
 parser.add_argument('--graph_type', default=0, type=int,
                     help='the graph topology to use for gossip'
@@ -98,8 +98,8 @@ parser.add_argument('--mixing_strategy', default=0, type=int,
                     help='the mixing strategy to use for gossip'
                          'cf. the gossip mixing_manager for available'
                          'mixing strategies and their corresponding int-id.')
-parser.add_argument('--schedule', nargs='+', type=float,
-                    help='learning rate schedule')
+parser.add_argument('--schedule', nargs='+', default=[30, 0.1, 60, 0.1, 80, 0.1],
+                    type=float, help='learning rate schedule')
 parser.add_argument('--peers_per_itr_schedule', nargs='+', type=int,
                     help='epoch schedule of num peers to send msgs to;'
                          'the expected format is list[epoch, num_peers]'
@@ -111,9 +111,9 @@ parser.add_argument('--overlap', default='False', type=str,
 parser.add_argument('--synch_freq', default=0, type=int,
                     help='max number of iterations to go without synchronizing'
                          'communication between nodes')
-parser.add_argument('--warmup', default='False', type=str,
+parser.add_argument('--warmup', default='True', type=str,
                     help='whether to warmup learning rate for first 5 epochs')
-parser.add_argument('--seed', default=47, type=int,
+parser.add_argument('--seed', default=1, type=int,
                     help='seed used for ALL stochastic elements in script')
 parser.add_argument('--resume', default='False', type=str,
                     help='whether to resume from previously saved checkpoint')
@@ -122,13 +122,13 @@ parser.add_argument('--backend', default='nccl', type=str,
                     help='torch.distributed backend')
 parser.add_argument('--bs_fpath', default='', type=str,
                     help='batch-script file path to resubmit on preemption')
-parser.add_argument('--tag', default='', type=str,
+parser.add_argument('--tag', default='ADPSGD_ETH', type=str,
                     help='tag used to prepend checkpoint file names')
-parser.add_argument('--print_freq', default=10, type=int,
+parser.add_argument('--print_freq', default=100, type=int,
                     help='frequency (itr.) with which to print train stats')
-parser.add_argument('--verbose', default='True', type=str,
+parser.add_argument('--verbose', default='Falses', type=str,
                     help='whether to log everything or just warnings/errors')
-parser.add_argument('--train_fast', default='False', type=str,
+parser.add_argument('--train_fast', default='True', type=str,
                     help='whether to run script with only one validation run'
                          '(at the end once the model is trained)')
 parser.add_argument('--checkpoint_all', default='True', type=str,
