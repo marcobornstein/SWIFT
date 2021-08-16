@@ -19,6 +19,7 @@ import copy
 import os
 import socket
 import time
+import platform
 
 import torch
 import torch.backends.cudnn as cudnn
@@ -117,7 +118,7 @@ parser.add_argument('--seed', default=1, type=int,
                     help='seed used for ALL stochastic elements in script')
 parser.add_argument('--resume', default='False', type=str,
                     help='whether to resume from previously saved checkpoint')
-parser.add_argument('--backend', default='nccl', type=str,
+parser.add_argument('--backend', default='mpi', type=str,
                     choices=['nccl', 'gloo', 'mpi'],
                     help='torch.distributed backend')
 parser.add_argument('--bs_fpath', default='', type=str,
@@ -136,7 +137,7 @@ parser.add_argument('--checkpoint_all', default='True', type=str,
                          'False: save just one (rank 0) model at each itr')
 parser.add_argument('--master_port', default='40100', type=str,
                     help='port used to initialize distributed backend')
-parser.add_argument('--checkpoint_dir', type=str,
+parser.add_argument('--checkpoint_dir', type=str, default='dir',
                     help='directory for saving log-files')
 parser.add_argument('--network_interface_type', default='ethernet',
                     choices=['infiniband', 'ethernet'],
@@ -615,12 +616,16 @@ def parse_args():
     """
     args = parser.parse_args()
     ClusterManager.set_checkpoint_dir(args.checkpoint_dir)
-
-    args.master_addr = os.environ['HOSTNAME']
+    # FOR MARCO
+    args.master_addr = platform.uname()[1]
+    # args.master_addr = os.environ['DESKTOP_5MJ72NN']
     if args.backend == 'mpi':
-        args.rank = int(os.environ['OMPI_COMM_WORLD_RANK'])
-        args.world_size = int(os.environ['OMPI_UNIVERSE_SIZE'])
-        args.device_id = int(os.environ['OMPI_COMM_WORLD_LOCAL_RANK'])
+        #args.rank = int(os.environ['OMPI_COMM_WORLD_RANK'])
+        #args.world_size = int(os.environ['OMPI_UNIVERSE_SIZE'])
+        #args.device_id = int(os.environ['OMPI_COMM_WORLD_LOCAL_RANK'])
+        args.rank = int(0)
+        args.world_size = int(1)
+        args.device_id = int(0)
     else:
         args.rank = int(os.environ['SLURM_PROCID'])
         args.world_size = int(os.environ['SLURM_NTASKS'])
@@ -725,6 +730,8 @@ def init_model():
 
 
 if __name__ == '__main__':
-    mp.set_start_method('forkserver', force=True)
+    # I changed this from forkserver to spawn....
+    # mp.set_start_method('forkserver', force=True)
+    mp.set_start_method('spawn', force=True)
     main()
     print('hello world')
