@@ -1,0 +1,2 @@
+Namespace(bs=4, budget=0.8, compress=False, consensus_lr=0.1, dataset='cifar10', datasetRoot='env/lib/site-packages/torchvision/datasets', description='Matcha', epoch=1, graphid=0, lr=0.8, matcha=False, model='res', momentum=0.0, name='default', nesterov=False, outputFolder='Output', p=False, randomSeed=9001, savePath='/MATCHA', warmup=False)
+Matcha
