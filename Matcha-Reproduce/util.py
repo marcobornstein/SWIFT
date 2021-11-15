@@ -21,9 +21,9 @@ from torchvision import datasets, transforms
 import torch.backends.cudnn as cudnn
 import torchvision.models as models
 
-from models import *
 import resnet
 import vggnet
+import wrn
 
 # Marco edit
 #import GraphPreprocess 
