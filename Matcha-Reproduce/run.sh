@@ -16,4 +16,8 @@
 #module load python
 module load openmpi
 
+<<<<<<< HEAD
 mpirun -np 8 python train_mpi.py --description Matcha --randomSeed 9001 --datasetRoot ./data --budget 0.8 --outputFolder Output --bs 16 --epoch 1 --name Test
+=======
+mpirun -np 8 python train_mpi.py --description Matcha --randomSeed 9001 --datasetRoot ./data --budget 0.8 --outputFolder Output --bs 4 --epoch 10
+>>>>>>> fe22fedc420778b14aff4fac7c46ae3d7bd08b86
