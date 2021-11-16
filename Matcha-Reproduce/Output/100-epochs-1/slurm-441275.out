@@ -1,0 +1,918 @@
+==> load train data
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+==> load test data
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+rank: 4, epoch: 0.000, loss: 2.111, train_acc: 19.296, test_acc: 22.610 epoch time: 3.792
+rank: 6, epoch: 0.000, loss: 2.052, train_acc: 22.592, test_acc: 26.930 epoch time: 3.730
+rank: 0, epoch: 0.000, loss: 2.102, train_acc: 19.152, test_acc: 22.530 epoch time: 3.843
+comp_time: 3.233, comm_time: 0.611, comp_time_budget: 0.841, comm_time_budget: 0.159
+rank: 1, epoch: 0.000, loss: 2.052, train_acc: 21.888, test_acc: 30.960 epoch time: 3.789
+rank: 7, epoch: 0.000, loss: 2.043, train_acc: 21.984, test_acc: 32.400 epoch time: 3.772
+rank: 2, epoch: 0.000, loss: 2.084, train_acc: 22.288, test_acc: 22.250 epoch time: 3.822
+rank: 3, epoch: 0.000, loss: 2.049, train_acc: 22.144, test_acc: 28.780 epoch time: 3.802
+rank: 5, epoch: 0.000, loss: 2.081, train_acc: 21.472, test_acc: 27.550 epoch time: 3.825
+rank: 5, epoch: 1.000, loss: 1.845, train_acc: 29.840, test_acc: 30.930 epoch time: 3.559
+rank: 6, epoch: 1.000, loss: 1.783, train_acc: 32.736, test_acc: 37.210 epoch time: 3.496
+rank: 1, epoch: 1.000, loss: 1.814, train_acc: 31.904, test_acc: 34.250 epoch time: 3.536
+rank: 2, epoch: 1.000, loss: 1.839, train_acc: 30.528, test_acc: 32.900 epoch time: 3.553
+rank: 0, epoch: 1.000, loss: 1.917, train_acc: 25.840, test_acc: 28.750 epoch time: 3.566
+comp_time: 2.956, comm_time: 0.611, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 4, epoch: 1.000, loss: 1.911, train_acc: 26.704, test_acc: 31.450 epoch time: 3.525
+rank: 7, epoch: 1.000, loss: 1.774, train_acc: 33.792, test_acc: 37.740 epoch time: 3.511
+rank: 3, epoch: 1.000, loss: 1.788, train_acc: 32.208, test_acc: 31.930 epoch time: 3.509
+rank: 5, epoch: 2.000, loss: 1.718, train_acc: 35.264, test_acc: 24.850 epoch time: 3.539
+rank: 0, epoch: 2.000, loss: 1.801, train_acc: 30.144, test_acc: 35.540 epoch time: 3.558
+comp_time: 2.951, comm_time: 0.607, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 1, epoch: 2.000, loss: 1.660, train_acc: 38.240, test_acc: 36.220 epoch time: 3.520
+rank: 6, epoch: 2.000, loss: 1.650, train_acc: 37.920, test_acc: 37.940 epoch time: 3.468
+rank: 2, epoch: 2.000, loss: 1.713, train_acc: 35.648, test_acc: 39.660 epoch time: 3.543
+rank: 7, epoch: 2.000, loss: 1.630, train_acc: 38.848, test_acc: 36.720 epoch time: 3.510
+rank: 4, epoch: 2.000, loss: 1.809, train_acc: 29.968, test_acc: 25.740 epoch time: 3.499
+rank: 3, epoch: 2.000, loss: 1.639, train_acc: 39.136, test_acc: 39.200 epoch time: 3.492
+rank: 5, epoch: 3.000, loss: 1.585, train_acc: 40.912, test_acc: 38.360 epoch time: 3.545
+rank: 6, epoch: 3.000, loss: 1.517, train_acc: 44.256, test_acc: 39.220 epoch time: 3.481
+rank: 4, epoch: 3.000, loss: 1.699, train_acc: 36.976, test_acc: 39.560 epoch time: 3.526
+rank: 2, epoch: 3.000, loss: 1.586, train_acc: 42.464, test_acc: 41.200 epoch time: 3.535
+rank: 0, epoch: 3.000, loss: 1.708, train_acc: 35.120, test_acc: 38.880 epoch time: 3.563
+comp_time: 2.956, comm_time: 0.607, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 7, epoch: 3.000, loss: 1.494, train_acc: 45.248, test_acc: 36.440 epoch time: 3.493
+rank: 1, epoch: 3.000, loss: 1.544, train_acc: 43.008, test_acc: 38.390 epoch time: 3.516
+rank: 3, epoch: 3.000, loss: 1.529, train_acc: 43.072, test_acc: 44.180 epoch time: 3.492
+rank: 3, epoch: 4.000, loss: 1.382, train_acc: 49.920, test_acc: 38.400 epoch time: 3.488
+rank: 1, epoch: 4.000, loss: 1.390, train_acc: 49.712, test_acc: 47.940 epoch time: 3.520
+rank: 4, epoch: 4.000, loss: 1.609, train_acc: 40.688, test_acc: 35.790 epoch time: 3.504
+rank: 2, epoch: 4.000, loss: 1.462, train_acc: 46.704, test_acc: 46.080 epoch time: 3.554
+rank: 0, epoch: 4.000, loss: 1.625, train_acc: 39.552, test_acc: 41.580 epoch time: 3.556
+comp_time: 2.949, comm_time: 0.607, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 7, epoch: 4.000, loss: 1.346, train_acc: 51.280, test_acc: 52.550 epoch time: 3.511
+rank: 5, epoch: 4.000, loss: 1.468, train_acc: 45.424, test_acc: 30.820 epoch time: 3.525
+rank: 6, epoch: 4.000, loss: 1.366, train_acc: 50.160, test_acc: 41.880 epoch time: 3.456
+rank: 4, epoch: 5.000, loss: 1.527, train_acc: 44.384, test_acc: 45.610 epoch time: 3.514
+rank: 3, epoch: 5.000, loss: 1.247, train_acc: 55.312, test_acc: 42.950 epoch time: 3.481
+rank: 7, epoch: 5.000, loss: 1.217, train_acc: 56.096, test_acc: 52.680 epoch time: 3.514
+rank: 6, epoch: 5.000, loss: 1.246, train_acc: 55.312, test_acc: 49.400 epoch time: 3.450
+rank: 5, epoch: 5.000, loss: 1.345, train_acc: 51.712, test_acc: 38.640 epoch time: 3.530
+rank: 1, epoch: 5.000, loss: 1.251, train_acc: 55.024, test_acc: 45.800 epoch time: 3.524
+rank: 2, epoch: 5.000, loss: 1.335, train_acc: 51.744, test_acc: 48.550 epoch time: 3.554
+rank: 0, epoch: 5.000, loss: 1.550, train_acc: 43.328, test_acc: 43.170 epoch time: 3.562
+comp_time: 2.954, comm_time: 0.608, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 3, epoch: 6.000, loss: 1.153, train_acc: 59.872, test_acc: 47.070 epoch time: 3.501
+rank: 7, epoch: 6.000, loss: 1.124, train_acc: 60.288, test_acc: 58.010 epoch time: 3.489
+rank: 6, epoch: 6.000, loss: 1.141, train_acc: 59.040, test_acc: 50.780 epoch time: 3.465
+rank: 0, epoch: 6.000, loss: 1.470, train_acc: 46.288, test_acc: 43.790 epoch time: 3.557
+comp_time: 2.951, comm_time: 0.606, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 4, epoch: 6.000, loss: 1.458, train_acc: 46.720, test_acc: 42.520 epoch time: 3.524
+rank: 2, epoch: 6.000, loss: 1.251, train_acc: 55.184, test_acc: 27.620 epoch time: 3.531
+rank: 5, epoch: 6.000, loss: 1.241, train_acc: 55.664, test_acc: 25.730 epoch time: 3.540
+rank: 1, epoch: 6.000, loss: 1.170, train_acc: 57.728, test_acc: 46.220 epoch time: 3.527
+rank: 7, epoch: 7.000, loss: 1.053, train_acc: 62.784, test_acc: 54.810 epoch time: 3.566
+rank: 5, epoch: 7.000, loss: 1.174, train_acc: 58.848, test_acc: 55.710 epoch time: 3.541
+rank: 1, epoch: 7.000, loss: 1.074, train_acc: 62.128, test_acc: 50.620 epoch time: 3.519
+rank: 2, epoch: 7.000, loss: 1.192, train_acc: 57.904, test_acc: 17.750 epoch time: 3.565
+rank: 4, epoch: 7.000, loss: 1.388, train_acc: 49.920, test_acc: 34.470 epoch time: 3.516
+rank: 0, epoch: 7.000, loss: 1.405, train_acc: 49.744, test_acc: 22.960 epoch time: 3.573
+comp_time: 2.965, comm_time: 0.608, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 3, epoch: 7.000, loss: 1.078, train_acc: 61.744, test_acc: 38.090 epoch time: 3.490
+rank: 6, epoch: 7.000, loss: 1.076, train_acc: 61.888, test_acc: 46.770 epoch time: 3.455
+rank: 4, epoch: 8.000, loss: 1.301, train_acc: 53.360, test_acc: 21.400 epoch time: 3.534
+rank: 5, epoch: 8.000, loss: 1.123, train_acc: 60.848, test_acc: 50.290 epoch time: 3.535
+rank: 3, epoch: 8.000, loss: 1.008, train_acc: 65.232, test_acc: 56.950 epoch time: 3.506
+rank: 2, epoch: 8.000, loss: 1.114, train_acc: 60.896, test_acc: 24.780 epoch time: 3.519
+rank: 7, epoch: 8.000, loss: 0.991, train_acc: 64.784, test_acc: 37.530 epoch time: 3.492
+rank: 1, epoch: 8.000, loss: 1.044, train_acc: 63.120, test_acc: 27.020 epoch time: 3.540
+rank: 6, epoch: 8.000, loss: 1.004, train_acc: 64.544, test_acc: 65.930 epoch time: 3.472
+rank: 0, epoch: 8.000, loss: 1.333, train_acc: 52.624, test_acc: 34.750 epoch time: 3.555
+comp_time: 2.950, comm_time: 0.605, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 5, epoch: 9.000, loss: 1.065, train_acc: 62.896, test_acc: 58.660 epoch time: 3.536
+rank: 2, epoch: 9.000, loss: 1.097, train_acc: 61.472, test_acc: 35.900 epoch time: 3.533
+rank: 0, epoch: 9.000, loss: 1.260, train_acc: 55.152, test_acc: 51.130 epoch time: 3.559
+comp_time: 2.952, comm_time: 0.608, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 7, epoch: 9.000, loss: 0.966, train_acc: 65.776, test_acc: 57.850 epoch time: 3.499
+rank: 4, epoch: 9.000, loss: 1.252, train_acc: 55.504, test_acc: 57.780 epoch time: 3.525
+rank: 1, epoch: 9.000, loss: 0.962, train_acc: 66.480, test_acc: 58.680 epoch time: 3.520
+rank: 3, epoch: 9.000, loss: 0.964, train_acc: 67.120, test_acc: 49.080 epoch time: 3.502
+rank: 6, epoch: 9.000, loss: 0.959, train_acc: 66.208, test_acc: 64.880 epoch time: 3.461
+rank: 3, epoch: 10.000, loss: 0.899, train_acc: 68.832, test_acc: 58.550 epoch time: 3.501
+rank: 2, epoch: 10.000, loss: 1.042, train_acc: 64.176, test_acc: 41.860 epoch time: 3.534
+rank: 1, epoch: 10.000, loss: 0.943, train_acc: 67.296, test_acc: 66.450 epoch time: 3.526
+rank: 7, epoch: 10.000, loss: 0.909, train_acc: 68.320, test_acc: 54.170 epoch time: 3.490
+rank: 0, epoch: 10.000, loss: 1.224, train_acc: 57.104, test_acc: 55.400 epoch time: 3.548
+comp_time: 2.947, comm_time: 0.601, comp_time_budget: 0.831, comm_time_budget: 0.169
+rank: 6, epoch: 10.000, loss: 0.943, train_acc: 67.216, test_acc: 45.350 epoch time: 3.451
+rank: 4, epoch: 10.000, loss: 1.205, train_acc: 57.216, test_acc: 49.010 epoch time: 3.489
+rank: 5, epoch: 10.000, loss: 1.042, train_acc: 64.128, test_acc: 39.750 epoch time: 3.515
+rank: 4, epoch: 11.000, loss: 1.149, train_acc: 59.504, test_acc: 49.630 epoch time: 3.525
+rank: 1, epoch: 11.000, loss: 0.914, train_acc: 68.368, test_acc: 51.800 epoch time: 3.529
+rank: 5, epoch: 11.000, loss: 0.992, train_acc: 66.112, test_acc: 63.900 epoch time: 3.553
+rank: 6, epoch: 11.000, loss: 0.900, train_acc: 69.360, test_acc: 58.070 epoch time: 3.465
+rank: 2, epoch: 11.000, loss: 1.021, train_acc: 64.160, test_acc: 53.570 epoch time: 3.551
+rank: 7, epoch: 11.000, loss: 0.888, train_acc: 70.192, test_acc: 56.410 epoch time: 3.504
+rank: 3, epoch: 11.000, loss: 0.889, train_acc: 69.616, test_acc: 62.050 epoch time: 3.518
+rank: 0, epoch: 11.000, loss: 1.152, train_acc: 59.488, test_acc: 62.230 epoch time: 3.551
+comp_time: 2.938, comm_time: 0.613, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 2, epoch: 12.000, loss: 0.977, train_acc: 65.680, test_acc: 53.970 epoch time: 3.556
+rank: 6, epoch: 12.000, loss: 0.856, train_acc: 70.752, test_acc: 53.160 epoch time: 3.449
+rank: 3, epoch: 12.000, loss: 0.857, train_acc: 71.040, test_acc: 66.340 epoch time: 3.486
+rank: 1, epoch: 12.000, loss: 0.877, train_acc: 69.264, test_acc: 49.380 epoch time: 3.515
+rank: 4, epoch: 12.000, loss: 1.118, train_acc: 60.992, test_acc: 50.600 epoch time: 3.490
+rank: 0, epoch: 12.000, loss: 1.105, train_acc: 61.376, test_acc: 37.500 epoch time: 3.545
+comp_time: 2.944, comm_time: 0.601, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 5, epoch: 12.000, loss: 1.004, train_acc: 64.864, test_acc: 42.700 epoch time: 3.537
+rank: 7, epoch: 12.000, loss: 0.865, train_acc: 70.048, test_acc: 58.550 epoch time: 3.489
+rank: 1, epoch: 13.000, loss: 0.860, train_acc: 70.384, test_acc: 60.000 epoch time: 3.519
+rank: 6, epoch: 13.000, loss: 0.852, train_acc: 70.464, test_acc: 64.670 epoch time: 3.463
+rank: 0, epoch: 13.000, loss: 1.088, train_acc: 61.312, test_acc: 50.040 epoch time: 3.558
+comp_time: 2.949, comm_time: 0.609, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 2, epoch: 13.000, loss: 0.976, train_acc: 65.952, test_acc: 45.650 epoch time: 3.540
+rank: 7, epoch: 13.000, loss: 0.836, train_acc: 71.312, test_acc: 59.300 epoch time: 3.518
+rank: 3, epoch: 13.000, loss: 0.856, train_acc: 70.640, test_acc: 53.450 epoch time: 3.478
+rank: 5, epoch: 13.000, loss: 0.961, train_acc: 66.784, test_acc: 44.140 epoch time: 3.526
+rank: 4, epoch: 13.000, loss: 1.054, train_acc: 62.992, test_acc: 57.870 epoch time: 3.527
+rank: 6, epoch: 14.000, loss: 0.820, train_acc: 71.072, test_acc: 72.120 epoch time: 3.459
+rank: 0, epoch: 14.000, loss: 1.033, train_acc: 64.832, test_acc: 49.150 epoch time: 3.551
+comp_time: 2.948, comm_time: 0.602, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 5, epoch: 14.000, loss: 0.948, train_acc: 67.888, test_acc: 47.460 epoch time: 3.536
+rank: 2, epoch: 14.000, loss: 0.944, train_acc: 67.872, test_acc: 54.100 epoch time: 3.528
+rank: 3, epoch: 14.000, loss: 0.821, train_acc: 71.664, test_acc: 69.680 epoch time: 3.501
+rank: 7, epoch: 14.000, loss: 0.821, train_acc: 72.432, test_acc: 48.490 epoch time: 3.511
+rank: 4, epoch: 14.000, loss: 1.024, train_acc: 64.176, test_acc: 51.440 epoch time: 3.514
+rank: 1, epoch: 14.000, loss: 0.828, train_acc: 71.808, test_acc: 58.830 epoch time: 3.519
+rank: 4, epoch: 15.000, loss: 0.987, train_acc: 66.096, test_acc: 62.370 epoch time: 3.499
+rank: 1, epoch: 15.000, loss: 0.823, train_acc: 71.472, test_acc: 59.880 epoch time: 3.534
+rank: 6, epoch: 15.000, loss: 0.808, train_acc: 72.496, test_acc: 50.990 epoch time: 3.464
+rank: 5, epoch: 15.000, loss: 0.961, train_acc: 66.912, test_acc: 50.160 epoch time: 3.532
+rank: 2, epoch: 15.000, loss: 0.922, train_acc: 68.304, test_acc: 42.810 epoch time: 3.540
+rank: 0, epoch: 15.000, loss: 1.005, train_acc: 65.152, test_acc: 57.800 epoch time: 3.559
+comp_time: 2.943, comm_time: 0.617, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 3, epoch: 15.000, loss: 0.811, train_acc: 72.576, test_acc: 52.990 epoch time: 3.515
+rank: 7, epoch: 15.000, loss: 0.792, train_acc: 72.752, test_acc: 52.400 epoch time: 3.519
+rank: 6, epoch: 16.000, loss: 0.802, train_acc: 72.384, test_acc: 63.610 epoch time: 3.459
+rank: 2, epoch: 16.000, loss: 0.895, train_acc: 69.008, test_acc: 44.280 epoch time: 3.545
+rank: 4, epoch: 16.000, loss: 0.964, train_acc: 66.192, test_acc: 55.460 epoch time: 3.534
+rank: 5, epoch: 16.000, loss: 0.910, train_acc: 68.736, test_acc: 53.610 epoch time: 3.522
+rank: 0, epoch: 16.000, loss: 0.995, train_acc: 65.344, test_acc: 47.550 epoch time: 3.540
+comp_time: 2.934, comm_time: 0.607, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 7, epoch: 16.000, loss: 0.788, train_acc: 73.072, test_acc: 48.940 epoch time: 3.513
+rank: 3, epoch: 16.000, loss: 0.792, train_acc: 72.656, test_acc: 56.460 epoch time: 3.491
+rank: 1, epoch: 16.000, loss: 0.791, train_acc: 72.720, test_acc: 68.200 epoch time: 3.513
+rank: 0, epoch: 17.000, loss: 0.962, train_acc: 66.576, test_acc: 57.470 epoch time: 3.563
+comp_time: 2.957, comm_time: 0.606, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 7, epoch: 17.000, loss: 0.775, train_acc: 73.472, test_acc: 67.230 epoch time: 3.499
+rank: 2, epoch: 17.000, loss: 0.891, train_acc: 69.760, test_acc: 52.940 epoch time: 3.551
+rank: 3, epoch: 17.000, loss: 0.785, train_acc: 72.896, test_acc: 66.660 epoch time: 3.504
+rank: 4, epoch: 17.000, loss: 0.973, train_acc: 66.128, test_acc: 47.440 epoch time: 3.524
+rank: 5, epoch: 17.000, loss: 0.912, train_acc: 68.208, test_acc: 63.850 epoch time: 3.534
+rank: 6, epoch: 17.000, loss: 0.764, train_acc: 74.352, test_acc: 69.930 epoch time: 3.458
+rank: 1, epoch: 17.000, loss: 0.798, train_acc: 72.704, test_acc: 44.860 epoch time: 3.533
+rank: 5, epoch: 18.000, loss: 0.891, train_acc: 69.248, test_acc: 47.700 epoch time: 3.526
+rank: 4, epoch: 18.000, loss: 0.938, train_acc: 67.280, test_acc: 49.740 epoch time: 3.487
+rank: 6, epoch: 18.000, loss: 0.770, train_acc: 73.584, test_acc: 72.100 epoch time: 3.486
+rank: 2, epoch: 18.000, loss: 0.883, train_acc: 69.424, test_acc: 25.350 epoch time: 3.540
+rank: 7, epoch: 18.000, loss: 0.782, train_acc: 73.472, test_acc: 67.330 epoch time: 3.499
+rank: 0, epoch: 18.000, loss: 0.957, train_acc: 67.168, test_acc: 51.530 epoch time: 3.552
+comp_time: 2.947, comm_time: 0.604, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 3, epoch: 18.000, loss: 0.756, train_acc: 73.968, test_acc: 63.380 epoch time: 3.485
+rank: 1, epoch: 18.000, loss: 0.794, train_acc: 72.352, test_acc: 59.140 epoch time: 3.516
+rank: 7, epoch: 19.000, loss: 0.756, train_acc: 74.000, test_acc: 60.710 epoch time: 3.514
+rank: 4, epoch: 19.000, loss: 0.920, train_acc: 68.720, test_acc: 66.350 epoch time: 3.523
+rank: 5, epoch: 19.000, loss: 0.895, train_acc: 69.024, test_acc: 39.370 epoch time: 3.526
+rank: 6, epoch: 19.000, loss: 0.755, train_acc: 74.352, test_acc: 64.690 epoch time: 3.457
+rank: 0, epoch: 19.000, loss: 0.934, train_acc: 67.808, test_acc: 64.030 epoch time: 3.547
+comp_time: 2.938, comm_time: 0.609, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 2, epoch: 19.000, loss: 0.898, train_acc: 68.480, test_acc: 65.220 epoch time: 3.544
+rank: 1, epoch: 19.000, loss: 0.788, train_acc: 72.864, test_acc: 63.400 epoch time: 3.526
+rank: 3, epoch: 19.000, loss: 0.766, train_acc: 74.352, test_acc: 55.510 epoch time: 3.494
+rank: 1, epoch: 20.000, loss: 0.768, train_acc: 74.128, test_acc: 59.520 epoch time: 3.522
+rank: 5, epoch: 20.000, loss: 0.870, train_acc: 69.920, test_acc: 67.280 epoch time: 3.529
+rank: 7, epoch: 20.000, loss: 0.753, train_acc: 73.760, test_acc: 45.810 epoch time: 3.501
+rank: 2, epoch: 20.000, loss: 0.882, train_acc: 69.696, test_acc: 40.380 epoch time: 3.530
+rank: 0, epoch: 20.000, loss: 0.925, train_acc: 68.048, test_acc: 40.040 epoch time: 3.566
+comp_time: 2.958, comm_time: 0.608, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 6, epoch: 20.000, loss: 0.756, train_acc: 74.112, test_acc: 63.950 epoch time: 3.466
+rank: 3, epoch: 20.000, loss: 0.763, train_acc: 73.760, test_acc: 63.450 epoch time: 3.511
+rank: 4, epoch: 20.000, loss: 0.897, train_acc: 68.912, test_acc: 55.640 epoch time: 3.516
+rank: 1, epoch: 21.000, loss: 0.767, train_acc: 74.208, test_acc: 54.680 epoch time: 3.516
+rank: 4, epoch: 21.000, loss: 0.895, train_acc: 69.552, test_acc: 51.990 epoch time: 3.509
+rank: 3, epoch: 21.000, loss: 0.762, train_acc: 74.144, test_acc: 62.040 epoch time: 3.500
+rank: 2, epoch: 21.000, loss: 0.859, train_acc: 70.608, test_acc: 45.000 epoch time: 3.519
+rank: 0, epoch: 21.000, loss: 0.911, train_acc: 68.048, test_acc: 63.140 epoch time: 3.547
+comp_time: 2.947, comm_time: 0.601, comp_time_budget: 0.831, comm_time_budget: 0.169
+rank: 5, epoch: 21.000, loss: 0.861, train_acc: 70.528, test_acc: 31.450 epoch time: 3.517
+rank: 7, epoch: 21.000, loss: 0.747, train_acc: 74.256, test_acc: 61.420 epoch time: 3.497
+rank: 6, epoch: 21.000, loss: 0.728, train_acc: 75.120, test_acc: 68.080 epoch time: 3.452
+rank: 0, epoch: 22.000, loss: 0.877, train_acc: 69.808, test_acc: 69.670 epoch time: 3.557
+comp_time: 2.947, comm_time: 0.610, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 1, epoch: 22.000, loss: 0.760, train_acc: 73.952, test_acc: 60.340 epoch time: 3.523
+rank: 3, epoch: 22.000, loss: 0.758, train_acc: 74.048, test_acc: 46.960 epoch time: 3.494
+rank: 4, epoch: 22.000, loss: 0.884, train_acc: 69.552, test_acc: 55.780 epoch time: 3.540
+rank: 2, epoch: 22.000, loss: 0.882, train_acc: 69.392, test_acc: 36.640 epoch time: 3.531
+rank: 5, epoch: 22.000, loss: 0.859, train_acc: 70.112, test_acc: 37.520 epoch time: 3.545
+rank: 7, epoch: 22.000, loss: 0.733, train_acc: 75.440, test_acc: 71.650 epoch time: 3.499
+rank: 6, epoch: 22.000, loss: 0.726, train_acc: 75.648, test_acc: 66.260 epoch time: 3.459
+rank: 6, epoch: 23.000, loss: 0.718, train_acc: 76.528, test_acc: 48.870 epoch time: 3.450
+rank: 7, epoch: 23.000, loss: 0.721, train_acc: 75.744, test_acc: 59.570 epoch time: 3.521
+rank: 2, epoch: 23.000, loss: 0.874, train_acc: 69.664, test_acc: 55.820 epoch time: 3.525
+rank: 1, epoch: 23.000, loss: 0.755, train_acc: 74.560, test_acc: 61.930 epoch time: 3.513
+rank: 4, epoch: 23.000, loss: 0.878, train_acc: 69.504, test_acc: 30.410 epoch time: 3.518
+rank: 0, epoch: 23.000, loss: 0.891, train_acc: 68.240, test_acc: 24.160 epoch time: 3.553
+comp_time: 2.949, comm_time: 0.603, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 3, epoch: 23.000, loss: 0.726, train_acc: 76.048, test_acc: 49.410 epoch time: 3.485
+rank: 5, epoch: 23.000, loss: 0.849, train_acc: 70.864, test_acc: 59.680 epoch time: 3.520
+rank: 5, epoch: 24.000, loss: 0.858, train_acc: 70.000, test_acc: 17.230 epoch time: 3.542
+rank: 4, epoch: 24.000, loss: 0.863, train_acc: 70.368, test_acc: 25.380 epoch time: 3.515
+rank: 6, epoch: 24.000, loss: 0.706, train_acc: 75.680, test_acc: 56.150 epoch time: 3.461
+rank: 3, epoch: 24.000, loss: 0.700, train_acc: 76.400, test_acc: 57.030 epoch time: 3.496
+rank: 0, epoch: 24.000, loss: 0.881, train_acc: 69.472, test_acc: 63.740 epoch time: 3.557
+comp_time: 2.946, comm_time: 0.611, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 7, epoch: 24.000, loss: 0.726, train_acc: 75.376, test_acc: 64.030 epoch time: 3.495
+rank: 2, epoch: 24.000, loss: 0.859, train_acc: 70.416, test_acc: 31.740 epoch time: 3.529
+rank: 1, epoch: 24.000, loss: 0.751, train_acc: 74.208, test_acc: 62.820 epoch time: 3.528
+rank: 7, epoch: 25.000, loss: 0.714, train_acc: 75.680, test_acc: 65.730 epoch time: 3.500
+rank: 1, epoch: 25.000, loss: 0.744, train_acc: 74.256, test_acc: 53.740 epoch time: 3.540
+rank: 2, epoch: 25.000, loss: 0.846, train_acc: 70.784, test_acc: 63.010 epoch time: 3.538
+rank: 0, epoch: 25.000, loss: 0.855, train_acc: 70.560, test_acc: 57.910 epoch time: 3.554
+comp_time: 2.951, comm_time: 0.603, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 4, epoch: 25.000, loss: 0.859, train_acc: 70.688, test_acc: 66.610 epoch time: 3.502
+rank: 3, epoch: 25.000, loss: 0.722, train_acc: 75.648, test_acc: 74.050 epoch time: 3.503
+rank: 6, epoch: 25.000, loss: 0.700, train_acc: 75.632, test_acc: 40.050 epoch time: 3.456
+rank: 5, epoch: 25.000, loss: 0.848, train_acc: 70.496, test_acc: 58.910 epoch time: 3.523
+rank: 3, epoch: 26.000, loss: 0.712, train_acc: 75.760, test_acc: 51.510 epoch time: 3.503
+rank: 7, epoch: 26.000, loss: 0.705, train_acc: 76.336, test_acc: 51.620 epoch time: 3.502
+rank: 2, epoch: 26.000, loss: 0.854, train_acc: 70.672, test_acc: 47.080 epoch time: 3.531
+rank: 4, epoch: 26.000, loss: 0.855, train_acc: 70.368, test_acc: 51.570 epoch time: 3.523
+rank: 0, epoch: 26.000, loss: 0.847, train_acc: 71.472, test_acc: 60.120 epoch time: 3.561
+comp_time: 2.950, comm_time: 0.611, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 1, epoch: 26.000, loss: 0.716, train_acc: 75.472, test_acc: 62.350 epoch time: 3.524
+rank: 5, epoch: 26.000, loss: 0.833, train_acc: 71.504, test_acc: 61.950 epoch time: 3.550
+rank: 6, epoch: 26.000, loss: 0.713, train_acc: 75.680, test_acc: 63.060 epoch time: 3.464
+rank: 3, epoch: 27.000, loss: 0.716, train_acc: 75.712, test_acc: 68.140 epoch time: 3.481
+rank: 7, epoch: 27.000, loss: 0.721, train_acc: 75.280, test_acc: 74.830 epoch time: 3.504
+rank: 5, epoch: 27.000, loss: 0.832, train_acc: 71.616, test_acc: 68.160 epoch time: 3.527
+rank: 6, epoch: 27.000, loss: 0.691, train_acc: 75.952, test_acc: 66.360 epoch time: 3.458
+rank: 2, epoch: 27.000, loss: 0.859, train_acc: 71.232, test_acc: 63.320 epoch time: 3.547
+rank: 4, epoch: 27.000, loss: 0.830, train_acc: 71.696, test_acc: 58.170 epoch time: 3.552
+rank: 0, epoch: 27.000, loss: 0.860, train_acc: 70.816, test_acc: 70.050 epoch time: 3.544
+comp_time: 2.940, comm_time: 0.604, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 1, epoch: 27.000, loss: 0.737, train_acc: 74.464, test_acc: 65.000 epoch time: 3.519
+rank: 3, epoch: 28.000, loss: 0.714, train_acc: 75.216, test_acc: 48.700 epoch time: 3.493
+rank: 4, epoch: 28.000, loss: 0.855, train_acc: 70.496, test_acc: 63.500 epoch time: 3.519
+rank: 6, epoch: 28.000, loss: 0.708, train_acc: 75.904, test_acc: 48.320 epoch time: 3.460
+rank: 5, epoch: 28.000, loss: 0.829, train_acc: 72.016, test_acc: 41.770 epoch time: 3.552
+rank: 2, epoch: 28.000, loss: 0.817, train_acc: 72.304, test_acc: 53.300 epoch time: 3.524
+rank: 7, epoch: 28.000, loss: 0.688, train_acc: 76.384, test_acc: 58.510 epoch time: 3.504
+rank: 1, epoch: 28.000, loss: 0.709, train_acc: 75.600, test_acc: 59.220 epoch time: 3.522
+rank: 0, epoch: 28.000, loss: 0.833, train_acc: 71.056, test_acc: 44.960 epoch time: 3.554
+comp_time: 2.948, comm_time: 0.607, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 7, epoch: 29.000, loss: 0.699, train_acc: 76.176, test_acc: 66.420 epoch time: 3.497
+rank: 4, epoch: 29.000, loss: 0.826, train_acc: 71.520, test_acc: 69.890 epoch time: 3.512
+rank: 1, epoch: 29.000, loss: 0.704, train_acc: 75.488, test_acc: 54.490 epoch time: 3.509
+rank: 3, epoch: 29.000, loss: 0.689, train_acc: 76.464, test_acc: 63.170 epoch time: 3.504
+rank: 5, epoch: 29.000, loss: 0.845, train_acc: 71.264, test_acc: 48.960 epoch time: 3.526
+rank: 2, epoch: 29.000, loss: 0.832, train_acc: 71.728, test_acc: 62.230 epoch time: 3.518
+rank: 0, epoch: 29.000, loss: 0.846, train_acc: 71.488, test_acc: 65.730 epoch time: 3.552
+comp_time: 2.948, comm_time: 0.603, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 6, epoch: 29.000, loss: 0.702, train_acc: 75.216, test_acc: 65.550 epoch time: 3.457
+rank: 1, epoch: 30.000, loss: 0.702, train_acc: 76.384, test_acc: 64.580 epoch time: 3.518
+rank: 7, epoch: 30.000, loss: 0.696, train_acc: 75.712, test_acc: 66.300 epoch time: 3.497
+rank: 6, epoch: 30.000, loss: 0.697, train_acc: 76.272, test_acc: 60.050 epoch time: 3.460
+rank: 3, epoch: 30.000, loss: 0.698, train_acc: 76.080, test_acc: 62.250 epoch time: 3.485
+rank: 4, epoch: 30.000, loss: 0.836, train_acc: 71.600, test_acc: 45.730 epoch time: 3.503
+rank: 0, epoch: 30.000, loss: 0.836, train_acc: 71.440, test_acc: 62.490 epoch time: 3.553
+comp_time: 2.948, comm_time: 0.605, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 5, epoch: 30.000, loss: 0.834, train_acc: 71.776, test_acc: 49.460 epoch time: 3.583
+rank: 2, epoch: 30.000, loss: 0.816, train_acc: 71.856, test_acc: 42.240 epoch time: 3.561
+rank: 5, epoch: 31.000, loss: 0.816, train_acc: 71.504, test_acc: 66.910 epoch time: 3.522
+rank: 3, epoch: 31.000, loss: 0.686, train_acc: 77.024, test_acc: 70.870 epoch time: 3.490
+rank: 4, epoch: 31.000, loss: 0.829, train_acc: 71.664, test_acc: 69.930 epoch time: 3.507
+rank: 2, epoch: 31.000, loss: 0.828, train_acc: 71.808, test_acc: 57.990 epoch time: 3.539
+rank: 1, epoch: 31.000, loss: 0.714, train_acc: 75.792, test_acc: 67.510 epoch time: 3.531
+rank: 6, epoch: 31.000, loss: 0.671, train_acc: 77.648, test_acc: 55.670 epoch time: 3.452
+rank: 0, epoch: 31.000, loss: 0.817, train_acc: 72.160, test_acc: 69.200 epoch time: 3.542
+comp_time: 2.939, comm_time: 0.603, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 7, epoch: 31.000, loss: 0.686, train_acc: 76.608, test_acc: 61.240 epoch time: 3.492
+rank: 5, epoch: 32.000, loss: 0.825, train_acc: 71.648, test_acc: 49.590 epoch time: 3.522
+rank: 6, epoch: 32.000, loss: 0.674, train_acc: 76.864, test_acc: 77.440 epoch time: 3.467
+rank: 0, epoch: 32.000, loss: 0.851, train_acc: 71.040, test_acc: 67.580 epoch time: 3.553
+comp_time: 2.947, comm_time: 0.606, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 7, epoch: 32.000, loss: 0.700, train_acc: 76.128, test_acc: 37.760 epoch time: 3.498
+rank: 4, epoch: 32.000, loss: 0.832, train_acc: 71.088, test_acc: 51.050 epoch time: 3.488
+rank: 2, epoch: 32.000, loss: 0.823, train_acc: 72.224, test_acc: 33.490 epoch time: 3.541
+rank: 1, epoch: 32.000, loss: 0.709, train_acc: 75.824, test_acc: 68.590 epoch time: 3.529
+rank: 3, epoch: 32.000, loss: 0.690, train_acc: 77.152, test_acc: 77.690 epoch time: 3.511
+rank: 3, epoch: 33.000, loss: 0.701, train_acc: 75.664, test_acc: 53.710 epoch time: 3.491
+rank: 7, epoch: 33.000, loss: 0.689, train_acc: 76.848, test_acc: 67.020 epoch time: 3.511
+rank: 2, epoch: 33.000, loss: 0.809, train_acc: 72.272, test_acc: 62.180 epoch time: 3.521
+rank: 1, epoch: 33.000, loss: 0.705, train_acc: 75.744, test_acc: 61.650 epoch time: 3.527
+rank: 4, epoch: 33.000, loss: 0.816, train_acc: 72.096, test_acc: 51.900 epoch time: 3.508
+rank: 0, epoch: 33.000, loss: 0.815, train_acc: 72.096, test_acc: 31.950 epoch time: 3.551
+comp_time: 2.946, comm_time: 0.605, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 5, epoch: 33.000, loss: 0.808, train_acc: 72.352, test_acc: 58.680 epoch time: 3.519
+rank: 6, epoch: 33.000, loss: 0.657, train_acc: 77.744, test_acc: 66.890 epoch time: 3.455
+rank: 1, epoch: 34.000, loss: 0.706, train_acc: 75.376, test_acc: 60.120 epoch time: 3.519
+rank: 7, epoch: 34.000, loss: 0.686, train_acc: 76.672, test_acc: 53.620 epoch time: 3.515
+rank: 5, epoch: 34.000, loss: 0.822, train_acc: 72.144, test_acc: 47.140 epoch time: 3.522
+rank: 4, epoch: 34.000, loss: 0.829, train_acc: 71.712, test_acc: 46.060 epoch time: 3.495
+rank: 2, epoch: 34.000, loss: 0.833, train_acc: 71.456, test_acc: 40.360 epoch time: 3.538
+rank: 0, epoch: 34.000, loss: 0.815, train_acc: 72.176, test_acc: 58.520 epoch time: 3.551
+comp_time: 2.948, comm_time: 0.603, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 3, epoch: 34.000, loss: 0.676, train_acc: 77.824, test_acc: 71.320 epoch time: 3.511
+rank: 6, epoch: 34.000, loss: 0.661, train_acc: 77.088, test_acc: 65.540 epoch time: 3.449
+rank: 2, epoch: 35.000, loss: 0.821, train_acc: 72.176, test_acc: 41.440 epoch time: 3.549
+rank: 1, epoch: 35.000, loss: 0.698, train_acc: 76.080, test_acc: 73.290 epoch time: 3.514
+rank: 5, epoch: 35.000, loss: 0.814, train_acc: 71.776, test_acc: 44.090 epoch time: 3.552
+rank: 4, epoch: 35.000, loss: 0.798, train_acc: 72.608, test_acc: 65.240 epoch time: 3.501
+rank: 7, epoch: 35.000, loss: 0.706, train_acc: 75.696, test_acc: 72.040 epoch time: 3.504
+rank: 0, epoch: 35.000, loss: 0.832, train_acc: 72.192, test_acc: 59.020 epoch time: 3.549
+comp_time: 2.943, comm_time: 0.606, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 3, epoch: 35.000, loss: 0.683, train_acc: 77.104, test_acc: 49.940 epoch time: 3.492
+rank: 6, epoch: 35.000, loss: 0.667, train_acc: 77.120, test_acc: 57.420 epoch time: 3.456
+rank: 0, epoch: 36.000, loss: 0.827, train_acc: 71.312, test_acc: 42.450 epoch time: 3.500
+comp_time: 2.901, comm_time: 0.600, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 7, epoch: 36.000, loss: 0.673, train_acc: 76.768, test_acc: 65.100 epoch time: 3.487
+rank: 5, epoch: 36.000, loss: 0.816, train_acc: 72.400, test_acc: 27.640 epoch time: 3.539
+rank: 2, epoch: 36.000, loss: 0.807, train_acc: 72.432, test_acc: 25.180 epoch time: 3.502
+rank: 6, epoch: 36.000, loss: 0.674, train_acc: 76.368, test_acc: 71.420 epoch time: 3.459
+rank: 4, epoch: 36.000, loss: 0.818, train_acc: 71.968, test_acc: 39.860 epoch time: 3.476
+rank: 3, epoch: 36.000, loss: 0.676, train_acc: 77.232, test_acc: 76.490 epoch time: 3.500
+rank: 1, epoch: 36.000, loss: 0.680, train_acc: 76.592, test_acc: 59.750 epoch time: 3.519
+rank: 0, epoch: 37.000, loss: 0.805, train_acc: 72.608, test_acc: 73.990 epoch time: 3.563
+comp_time: 2.952, comm_time: 0.611, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 5, epoch: 37.000, loss: 0.797, train_acc: 72.704, test_acc: 60.940 epoch time: 3.559
+rank: 3, epoch: 37.000, loss: 0.682, train_acc: 77.424, test_acc: 46.890 epoch time: 3.494
+rank: 1, epoch: 37.000, loss: 0.688, train_acc: 76.672, test_acc: 66.060 epoch time: 3.526
+rank: 2, epoch: 37.000, loss: 0.811, train_acc: 72.768, test_acc: 44.990 epoch time: 3.551
+rank: 7, epoch: 37.000, loss: 0.673, train_acc: 77.040, test_acc: 66.730 epoch time: 3.506
+rank: 4, epoch: 37.000, loss: 0.811, train_acc: 71.904, test_acc: 73.550 epoch time: 3.523
+rank: 6, epoch: 37.000, loss: 0.655, train_acc: 77.344, test_acc: 73.900 epoch time: 3.472
+rank: 5, epoch: 38.000, loss: 0.798, train_acc: 72.720, test_acc: 33.920 epoch time: 3.519
+rank: 0, epoch: 38.000, loss: 0.825, train_acc: 71.328, test_acc: 53.080 epoch time: 3.484
+comp_time: 2.885, comm_time: 0.599, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 3, epoch: 38.000, loss: 0.668, train_acc: 76.928, test_acc: 60.090 epoch time: 3.476
+rank: 4, epoch: 38.000, loss: 0.795, train_acc: 72.736, test_acc: 51.870 epoch time: 3.461
+rank: 2, epoch: 38.000, loss: 0.791, train_acc: 73.328, test_acc: 56.790 epoch time: 3.490
+rank: 1, epoch: 38.000, loss: 0.700, train_acc: 76.096, test_acc: 69.900 epoch time: 3.504
+rank: 6, epoch: 38.000, loss: 0.652, train_acc: 77.008, test_acc: 62.640 epoch time: 3.463
+rank: 7, epoch: 38.000, loss: 0.678, train_acc: 76.448, test_acc: 57.790 epoch time: 3.510
+rank: 6, epoch: 39.000, loss: 0.677, train_acc: 76.944, test_acc: 59.900 epoch time: 3.451
+rank: 4, epoch: 39.000, loss: 0.809, train_acc: 72.416, test_acc: 50.710 epoch time: 3.480
+rank: 1, epoch: 39.000, loss: 0.690, train_acc: 76.032, test_acc: 56.570 epoch time: 3.529
+rank: 5, epoch: 39.000, loss: 0.799, train_acc: 72.864, test_acc: 45.470 epoch time: 3.537
+rank: 0, epoch: 39.000, loss: 0.789, train_acc: 72.800, test_acc: 57.680 epoch time: 3.513
+comp_time: 2.908, comm_time: 0.605, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 2, epoch: 39.000, loss: 0.814, train_acc: 71.568, test_acc: 59.400 epoch time: 3.478
+rank: 3, epoch: 39.000, loss: 0.669, train_acc: 77.904, test_acc: 51.160 epoch time: 3.480
+rank: 7, epoch: 39.000, loss: 0.661, train_acc: 77.696, test_acc: 73.200 epoch time: 3.516
+rank: 3, epoch: 40.000, loss: 0.659, train_acc: 77.840, test_acc: 65.660 epoch time: 3.484
+rank: 0, epoch: 40.000, loss: 0.809, train_acc: 71.712, test_acc: 57.510 epoch time: 3.524
+comp_time: 2.924, comm_time: 0.601, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 2, epoch: 40.000, loss: 0.773, train_acc: 73.120, test_acc: 22.620 epoch time: 3.499
+rank: 4, epoch: 40.000, loss: 0.800, train_acc: 71.984, test_acc: 60.190 epoch time: 3.478
+rank: 6, epoch: 40.000, loss: 0.665, train_acc: 77.168, test_acc: 69.000 epoch time: 3.469
+rank: 1, epoch: 40.000, loss: 0.688, train_acc: 76.160, test_acc: 58.380 epoch time: 3.523
+rank: 7, epoch: 40.000, loss: 0.660, train_acc: 77.584, test_acc: 71.470 epoch time: 3.497
+rank: 5, epoch: 40.000, loss: 0.809, train_acc: 72.160, test_acc: 35.060 epoch time: 3.519
+rank: 0, epoch: 41.000, loss: 0.799, train_acc: 72.720, test_acc: 59.370 epoch time: 3.504
+comp_time: 2.899, comm_time: 0.605, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 5, epoch: 41.000, loss: 0.790, train_acc: 72.608, test_acc: 37.910 epoch time: 3.523
+rank: 4, epoch: 41.000, loss: 0.788, train_acc: 72.208, test_acc: 46.080 epoch time: 3.471
+rank: 1, epoch: 41.000, loss: 0.675, train_acc: 76.672, test_acc: 58.610 epoch time: 3.527
+rank: 2, epoch: 41.000, loss: 0.781, train_acc: 73.072, test_acc: 61.560 epoch time: 3.481
+rank: 3, epoch: 41.000, loss: 0.679, train_acc: 76.928, test_acc: 68.140 epoch time: 3.492
+rank: 7, epoch: 41.000, loss: 0.655, train_acc: 78.016, test_acc: 73.950 epoch time: 3.497
+rank: 6, epoch: 41.000, loss: 0.658, train_acc: 77.280, test_acc: 71.830 epoch time: 3.459
+rank: 7, epoch: 42.000, loss: 0.642, train_acc: 78.208, test_acc: 70.350 epoch time: 3.497
+rank: 6, epoch: 42.000, loss: 0.648, train_acc: 78.176, test_acc: 67.640 epoch time: 3.476
+rank: 4, epoch: 42.000, loss: 0.792, train_acc: 72.736, test_acc: 34.190 epoch time: 3.487
+rank: 3, epoch: 42.000, loss: 0.662, train_acc: 77.456, test_acc: 72.130 epoch time: 3.487
+rank: 2, epoch: 42.000, loss: 0.785, train_acc: 73.184, test_acc: 58.310 epoch time: 3.494
+rank: 5, epoch: 42.000, loss: 0.788, train_acc: 72.832, test_acc: 26.110 epoch time: 3.574
+rank: 1, epoch: 42.000, loss: 0.692, train_acc: 76.256, test_acc: 72.340 epoch time: 3.517
+rank: 0, epoch: 42.000, loss: 0.795, train_acc: 72.704, test_acc: 37.590 epoch time: 3.521
+comp_time: 2.918, comm_time: 0.603, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 3, epoch: 43.000, loss: 0.676, train_acc: 76.736, test_acc: 66.250 epoch time: 5.471
+rank: 5, epoch: 43.000, loss: 0.800, train_acc: 72.816, test_acc: 64.350 epoch time: 5.421
+rank: 4, epoch: 43.000, loss: 0.790, train_acc: 72.880, test_acc: 73.320 epoch time: 5.129
+rank: 0, epoch: 43.000, loss: 0.785, train_acc: 73.280, test_acc: 72.490 epoch time: 5.160
+comp_time: 2.923, comm_time: 2.236, comp_time_budget: 0.567, comm_time_budget: 0.433
+rank: 2, epoch: 43.000, loss: 0.794, train_acc: 72.960, test_acc: 44.770 epoch time: 5.212
+rank: 7, epoch: 43.000, loss: 0.665, train_acc: 77.216, test_acc: 65.030 epoch time: 5.335
+rank: 6, epoch: 43.000, loss: 0.657, train_acc: 77.920, test_acc: 66.300 epoch time: 5.401
+rank: 1, epoch: 43.000, loss: 0.691, train_acc: 76.560, test_acc: 62.090 epoch time: 6.145
+rank: 0, epoch: 44.000, loss: 0.786, train_acc: 73.072, test_acc: 59.310 epoch time: 3.504
+comp_time: 2.902, comm_time: 0.602, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 6, epoch: 44.000, loss: 0.654, train_acc: 77.568, test_acc: 68.260 epoch time: 3.451
+rank: 2, epoch: 44.000, loss: 0.769, train_acc: 73.712, test_acc: 41.120 epoch time: 3.465
+rank: 1, epoch: 44.000, loss: 0.658, train_acc: 77.328, test_acc: 39.580 epoch time: 3.503
+rank: 7, epoch: 44.000, loss: 0.639, train_acc: 77.648, test_acc: 67.240 epoch time: 3.502
+rank: 5, epoch: 44.000, loss: 0.801, train_acc: 72.912, test_acc: 46.740 epoch time: 3.527
+rank: 4, epoch: 44.000, loss: 0.817, train_acc: 72.000, test_acc: 66.970 epoch time: 3.471
+rank: 3, epoch: 44.000, loss: 0.646, train_acc: 78.144, test_acc: 71.730 epoch time: 3.480
+rank: 1, epoch: 45.000, loss: 0.668, train_acc: 77.184, test_acc: 65.970 epoch time: 3.518
+rank: 4, epoch: 45.000, loss: 0.791, train_acc: 72.720, test_acc: 66.020 epoch time: 3.500
+rank: 2, epoch: 45.000, loss: 0.797, train_acc: 73.344, test_acc: 39.490 epoch time: 3.519
+rank: 3, epoch: 45.000, loss: 0.653, train_acc: 77.968, test_acc: 58.600 epoch time: 3.485
+rank: 0, epoch: 45.000, loss: 0.799, train_acc: 72.432, test_acc: 65.750 epoch time: 3.522
+comp_time: 2.916, comm_time: 0.606, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 5, epoch: 45.000, loss: 0.798, train_acc: 73.104, test_acc: 57.430 epoch time: 3.522
+rank: 7, epoch: 45.000, loss: 0.653, train_acc: 77.504, test_acc: 56.100 epoch time: 3.519
+rank: 6, epoch: 45.000, loss: 0.649, train_acc: 77.840, test_acc: 53.400 epoch time: 3.473
+rank: 4, epoch: 46.000, loss: 0.797, train_acc: 72.832, test_acc: 67.890 epoch time: 3.524
+rank: 1, epoch: 46.000, loss: 0.685, train_acc: 76.672, test_acc: 67.270 epoch time: 3.520
+rank: 2, epoch: 46.000, loss: 0.805, train_acc: 72.304, test_acc: 50.520 epoch time: 3.512
+rank: 5, epoch: 46.000, loss: 0.791, train_acc: 72.816, test_acc: 32.580 epoch time: 3.546
+rank: 6, epoch: 46.000, loss: 0.639, train_acc: 77.984, test_acc: 73.650 epoch time: 3.457
+rank: 3, epoch: 46.000, loss: 0.661, train_acc: 77.696, test_acc: 36.690 epoch time: 3.493
+rank: 7, epoch: 46.000, loss: 0.653, train_acc: 77.504, test_acc: 73.100 epoch time: 3.493
+rank: 0, epoch: 46.000, loss: 0.789, train_acc: 73.040, test_acc: 57.370 epoch time: 3.531
+comp_time: 2.924, comm_time: 0.607, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 4, epoch: 47.000, loss: 0.794, train_acc: 72.528, test_acc: 50.000 epoch time: 3.475
+rank: 6, epoch: 47.000, loss: 0.657, train_acc: 77.408, test_acc: 61.550 epoch time: 3.466
+rank: 7, epoch: 47.000, loss: 0.650, train_acc: 77.552, test_acc: 68.090 epoch time: 3.493
+rank: 0, epoch: 47.000, loss: 0.792, train_acc: 73.056, test_acc: 43.000 epoch time: 3.486
+comp_time: 2.880, comm_time: 0.605, comp_time_budget: 0.826, comm_time_budget: 0.174
+rank: 5, epoch: 47.000, loss: 0.807, train_acc: 72.752, test_acc: 49.900 epoch time: 3.513
+rank: 2, epoch: 47.000, loss: 0.785, train_acc: 73.040, test_acc: 55.780 epoch time: 3.498
+rank: 1, epoch: 47.000, loss: 0.680, train_acc: 76.672, test_acc: 59.250 epoch time: 3.513
+rank: 3, epoch: 47.000, loss: 0.653, train_acc: 77.664, test_acc: 67.420 epoch time: 3.509
+rank: 4, epoch: 48.000, loss: 0.804, train_acc: 72.672, test_acc: 67.230 epoch time: 3.486
+rank: 1, epoch: 48.000, loss: 0.658, train_acc: 77.296, test_acc: 65.970 epoch time: 3.519
+rank: 6, epoch: 48.000, loss: 0.639, train_acc: 78.208, test_acc: 23.460 epoch time: 3.450
+rank: 2, epoch: 48.000, loss: 0.783, train_acc: 73.776, test_acc: 35.740 epoch time: 3.508
+rank: 7, epoch: 48.000, loss: 0.641, train_acc: 78.368, test_acc: 52.610 epoch time: 3.495
+rank: 3, epoch: 48.000, loss: 0.640, train_acc: 77.136, test_acc: 26.510 epoch time: 3.486
+rank: 0, epoch: 48.000, loss: 0.774, train_acc: 73.600, test_acc: 63.450 epoch time: 3.508
+comp_time: 2.904, comm_time: 0.604, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 5, epoch: 48.000, loss: 0.787, train_acc: 73.232, test_acc: 59.700 epoch time: 3.549
+rank: 6, epoch: 49.000, loss: 0.646, train_acc: 78.384, test_acc: 68.050 epoch time: 3.514
+rank: 4, epoch: 49.000, loss: 0.778, train_acc: 73.184, test_acc: 66.640 epoch time: 3.515
+rank: 1, epoch: 49.000, loss: 0.686, train_acc: 75.760, test_acc: 45.010 epoch time: 3.510
+rank: 5, epoch: 49.000, loss: 0.778, train_acc: 73.696, test_acc: 61.030 epoch time: 3.538
+rank: 3, epoch: 49.000, loss: 0.674, train_acc: 77.168, test_acc: 72.680 epoch time: 3.489
+rank: 7, epoch: 49.000, loss: 0.657, train_acc: 77.360, test_acc: 48.180 epoch time: 3.500
+rank: 0, epoch: 49.000, loss: 0.788, train_acc: 72.976, test_acc: 60.350 epoch time: 3.552
+comp_time: 2.946, comm_time: 0.606, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 2, epoch: 49.000, loss: 0.759, train_acc: 74.224, test_acc: 55.630 epoch time: 3.529
+rank: 6, epoch: 50.000, loss: 0.626, train_acc: 79.024, test_acc: 66.140 epoch time: 3.463
+rank: 5, epoch: 50.000, loss: 0.794, train_acc: 72.016, test_acc: 25.110 epoch time: 3.536
+rank: 4, epoch: 50.000, loss: 0.784, train_acc: 73.392, test_acc: 53.620 epoch time: 3.495
+rank: 0, epoch: 50.000, loss: 0.776, train_acc: 73.072, test_acc: 63.230 epoch time: 3.517
+comp_time: 2.911, comm_time: 0.606, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 2, epoch: 50.000, loss: 0.784, train_acc: 72.736, test_acc: 37.290 epoch time: 3.517
+rank: 3, epoch: 50.000, loss: 0.658, train_acc: 77.184, test_acc: 63.460 epoch time: 3.495
+rank: 7, epoch: 50.000, loss: 0.638, train_acc: 78.576, test_acc: 51.750 epoch time: 3.496
+rank: 1, epoch: 50.000, loss: 0.663, train_acc: 77.584, test_acc: 29.740 epoch time: 3.519
+rank: 3, epoch: 51.000, loss: 0.663, train_acc: 77.216, test_acc: 53.220 epoch time: 3.482
+rank: 4, epoch: 51.000, loss: 0.782, train_acc: 72.864, test_acc: 61.200 epoch time: 3.490
+rank: 7, epoch: 51.000, loss: 0.662, train_acc: 77.104, test_acc: 35.610 epoch time: 3.497
+rank: 6, epoch: 51.000, loss: 0.630, train_acc: 78.560, test_acc: 67.510 epoch time: 3.452
+rank: 2, epoch: 51.000, loss: 0.797, train_acc: 72.448, test_acc: 57.490 epoch time: 3.505
+rank: 0, epoch: 51.000, loss: 0.776, train_acc: 73.440, test_acc: 54.740 epoch time: 3.513
+comp_time: 2.910, comm_time: 0.603, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 1, epoch: 51.000, loss: 0.655, train_acc: 77.712, test_acc: 60.000 epoch time: 3.524
+rank: 5, epoch: 51.000, loss: 0.795, train_acc: 73.328, test_acc: 63.450 epoch time: 3.524
+rank: 0, epoch: 52.000, loss: 0.792, train_acc: 72.720, test_acc: 61.330 epoch time: 3.494
+comp_time: 2.886, comm_time: 0.608, comp_time_budget: 0.826, comm_time_budget: 0.174
+rank: 4, epoch: 52.000, loss: 0.784, train_acc: 73.072, test_acc: 62.860 epoch time: 3.478
+rank: 6, epoch: 52.000, loss: 0.639, train_acc: 78.176, test_acc: 62.790 epoch time: 3.455
+rank: 1, epoch: 52.000, loss: 0.658, train_acc: 77.472, test_acc: 37.430 epoch time: 3.519
+rank: 2, epoch: 52.000, loss: 0.790, train_acc: 73.264, test_acc: 40.860 epoch time: 3.489
+rank: 3, epoch: 52.000, loss: 0.652, train_acc: 77.968, test_acc: 65.030 epoch time: 3.492
+rank: 7, epoch: 52.000, loss: 0.638, train_acc: 78.000, test_acc: 30.740 epoch time: 3.514
+rank: 5, epoch: 52.000, loss: 0.783, train_acc: 72.848, test_acc: 48.620 epoch time: 3.520
+rank: 0, epoch: 53.000, loss: 0.773, train_acc: 73.440, test_acc: 68.830 epoch time: 3.494
+comp_time: 2.890, comm_time: 0.604, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 5, epoch: 53.000, loss: 0.785, train_acc: 73.344, test_acc: 67.070 epoch time: 3.517
+rank: 1, epoch: 53.000, loss: 0.650, train_acc: 77.904, test_acc: 64.580 epoch time: 3.514
+rank: 6, epoch: 53.000, loss: 0.613, train_acc: 79.152, test_acc: 65.700 epoch time: 3.447
+rank: 2, epoch: 53.000, loss: 0.783, train_acc: 72.528, test_acc: 54.350 epoch time: 3.492
+rank: 4, epoch: 53.000, loss: 0.772, train_acc: 73.856, test_acc: 62.730 epoch time: 3.463
+rank: 3, epoch: 53.000, loss: 0.654, train_acc: 77.824, test_acc: 68.140 epoch time: 3.486
+rank: 7, epoch: 53.000, loss: 0.654, train_acc: 77.584, test_acc: 60.560 epoch time: 3.519
+rank: 7, epoch: 54.000, loss: 0.646, train_acc: 78.112, test_acc: 72.820 epoch time: 3.503
+rank: 4, epoch: 54.000, loss: 0.776, train_acc: 73.424, test_acc: 66.610 epoch time: 3.487
+rank: 3, epoch: 54.000, loss: 0.655, train_acc: 77.888, test_acc: 53.740 epoch time: 3.513
+rank: 5, epoch: 54.000, loss: 0.793, train_acc: 73.456, test_acc: 61.650 epoch time: 3.540
+rank: 0, epoch: 54.000, loss: 0.790, train_acc: 72.784, test_acc: 52.920 epoch time: 3.546
+comp_time: 2.932, comm_time: 0.614, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 2, epoch: 54.000, loss: 0.759, train_acc: 74.000, test_acc: 51.220 epoch time: 3.523
+rank: 6, epoch: 54.000, loss: 0.636, train_acc: 78.784, test_acc: 71.120 epoch time: 3.473
+rank: 1, epoch: 54.000, loss: 0.657, train_acc: 77.408, test_acc: 76.240 epoch time: 3.540
+rank: 7, epoch: 55.000, loss: 0.628, train_acc: 78.544, test_acc: 65.510 epoch time: 3.493
+rank: 4, epoch: 55.000, loss: 0.779, train_acc: 73.552, test_acc: 69.210 epoch time: 3.462
+rank: 5, epoch: 55.000, loss: 0.806, train_acc: 72.592, test_acc: 66.470 epoch time: 3.521
+rank: 3, epoch: 55.000, loss: 0.650, train_acc: 78.080, test_acc: 60.770 epoch time: 3.473
+rank: 2, epoch: 55.000, loss: 0.772, train_acc: 73.248, test_acc: 13.820 epoch time: 3.501
+rank: 0, epoch: 55.000, loss: 0.766, train_acc: 74.032, test_acc: 47.420 epoch time: 3.496
+comp_time: 2.895, comm_time: 0.602, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 1, epoch: 55.000, loss: 0.662, train_acc: 77.504, test_acc: 60.980 epoch time: 3.520
+rank: 6, epoch: 55.000, loss: 0.632, train_acc: 78.608, test_acc: 60.190 epoch time: 3.446
+rank: 2, epoch: 56.000, loss: 0.776, train_acc: 73.968, test_acc: 63.690 epoch time: 3.505
+rank: 1, epoch: 56.000, loss: 0.659, train_acc: 77.616, test_acc: 58.770 epoch time: 3.513
+rank: 6, epoch: 56.000, loss: 0.617, train_acc: 78.976, test_acc: 55.730 epoch time: 3.466
+rank: 3, epoch: 56.000, loss: 0.644, train_acc: 78.256, test_acc: 66.300 epoch time: 3.483
+rank: 0, epoch: 56.000, loss: 0.794, train_acc: 73.456, test_acc: 59.370 epoch time: 3.500
+comp_time: 2.896, comm_time: 0.604, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 4, epoch: 56.000, loss: 0.793, train_acc: 73.520, test_acc: 34.510 epoch time: 3.476
+rank: 5, epoch: 56.000, loss: 0.790, train_acc: 73.376, test_acc: 57.400 epoch time: 3.516
+rank: 7, epoch: 56.000, loss: 0.646, train_acc: 77.888, test_acc: 64.210 epoch time: 3.498
+rank: 1, epoch: 57.000, loss: 0.649, train_acc: 78.352, test_acc: 49.860 epoch time: 3.523
+rank: 4, epoch: 57.000, loss: 0.769, train_acc: 73.808, test_acc: 56.680 epoch time: 3.486
+rank: 7, epoch: 57.000, loss: 0.637, train_acc: 78.048, test_acc: 53.070 epoch time: 3.492
+rank: 0, epoch: 57.000, loss: 0.775, train_acc: 73.296, test_acc: 54.640 epoch time: 3.518
+comp_time: 2.914, comm_time: 0.604, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 2, epoch: 57.000, loss: 0.781, train_acc: 73.312, test_acc: 57.460 epoch time: 3.496
+rank: 6, epoch: 57.000, loss: 0.624, train_acc: 78.864, test_acc: 72.250 epoch time: 3.451
+rank: 3, epoch: 57.000, loss: 0.651, train_acc: 77.408, test_acc: 66.600 epoch time: 3.482
+rank: 5, epoch: 57.000, loss: 0.777, train_acc: 73.216, test_acc: 55.670 epoch time: 3.533
+rank: 0, epoch: 58.000, loss: 0.784, train_acc: 73.776, test_acc: 58.430 epoch time: 3.503
+comp_time: 2.896, comm_time: 0.607, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 3, epoch: 58.000, loss: 0.622, train_acc: 79.104, test_acc: 51.190 epoch time: 3.490
+rank: 7, epoch: 58.000, loss: 0.633, train_acc: 78.688, test_acc: 72.470 epoch time: 3.517
+rank: 2, epoch: 58.000, loss: 0.773, train_acc: 73.728, test_acc: 60.160 epoch time: 3.503
+rank: 6, epoch: 58.000, loss: 0.623, train_acc: 78.752, test_acc: 66.350 epoch time: 3.467
+rank: 4, epoch: 58.000, loss: 0.775, train_acc: 73.488, test_acc: 64.120 epoch time: 3.475
+rank: 5, epoch: 58.000, loss: 0.764, train_acc: 73.904, test_acc: 34.170 epoch time: 3.521
+rank: 1, epoch: 58.000, loss: 0.668, train_acc: 76.992, test_acc: 65.740 epoch time: 3.536
+rank: 0, epoch: 59.000, loss: 0.766, train_acc: 73.792, test_acc: 65.130 epoch time: 3.524
+comp_time: 2.921, comm_time: 0.603, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 5, epoch: 59.000, loss: 0.777, train_acc: 73.808, test_acc: 59.330 epoch time: 3.535
+rank: 4, epoch: 59.000, loss: 0.779, train_acc: 73.040, test_acc: 38.960 epoch time: 3.502
+rank: 2, epoch: 59.000, loss: 0.795, train_acc: 72.896, test_acc: 47.300 epoch time: 3.524
+rank: 3, epoch: 59.000, loss: 0.647, train_acc: 78.192, test_acc: 58.610 epoch time: 3.501
+rank: 6, epoch: 59.000, loss: 0.618, train_acc: 78.864, test_acc: 67.070 epoch time: 3.460
+rank: 1, epoch: 59.000, loss: 0.635, train_acc: 78.672, test_acc: 63.220 epoch time: 3.521
+rank: 7, epoch: 59.000, loss: 0.641, train_acc: 78.160, test_acc: 73.620 epoch time: 3.491
+rank: 3, epoch: 60.000, loss: 0.652, train_acc: 79.008, test_acc: 69.020 epoch time: 3.485
+rank: 4, epoch: 60.000, loss: 0.772, train_acc: 73.024, test_acc: 60.210 epoch time: 3.458
+rank: 2, epoch: 60.000, loss: 0.762, train_acc: 73.840, test_acc: 61.990 epoch time: 3.504
+rank: 5, epoch: 60.000, loss: 0.800, train_acc: 73.648, test_acc: 50.200 epoch time: 3.530
+rank: 0, epoch: 60.000, loss: 0.779, train_acc: 73.680, test_acc: 40.060 epoch time: 3.518
+comp_time: 2.909, comm_time: 0.609, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 6, epoch: 60.000, loss: 0.618, train_acc: 79.104, test_acc: 71.020 epoch time: 3.464
+rank: 1, epoch: 60.000, loss: 0.648, train_acc: 77.488, test_acc: 67.230 epoch time: 3.535
+rank: 7, epoch: 60.000, loss: 0.623, train_acc: 78.032, test_acc: 62.690 epoch time: 3.496
+rank: 2, epoch: 61.000, loss: 0.776, train_acc: 73.392, test_acc: 56.220 epoch time: 3.512
+rank: 5, epoch: 61.000, loss: 0.780, train_acc: 73.008, test_acc: 48.900 epoch time: 3.535
+rank: 7, epoch: 61.000, loss: 0.608, train_acc: 79.424, test_acc: 66.990 epoch time: 3.496
+rank: 6, epoch: 61.000, loss: 0.620, train_acc: 79.120, test_acc: 72.100 epoch time: 3.459
+rank: 0, epoch: 61.000, loss: 0.749, train_acc: 74.368, test_acc: 64.710 epoch time: 3.537
+comp_time: 2.932, comm_time: 0.605, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 1, epoch: 61.000, loss: 0.663, train_acc: 77.344, test_acc: 33.340 epoch time: 3.528
+rank: 4, epoch: 61.000, loss: 0.776, train_acc: 73.120, test_acc: 54.850 epoch time: 3.498
+rank: 3, epoch: 61.000, loss: 0.649, train_acc: 78.208, test_acc: 62.100 epoch time: 3.480
+rank: 1, epoch: 62.000, loss: 0.663, train_acc: 77.520, test_acc: 45.720 epoch time: 3.526
+rank: 3, epoch: 62.000, loss: 0.640, train_acc: 78.592, test_acc: 71.990 epoch time: 3.491
+rank: 4, epoch: 62.000, loss: 0.772, train_acc: 73.408, test_acc: 37.820 epoch time: 3.489
+rank: 7, epoch: 62.000, loss: 0.628, train_acc: 78.768, test_acc: 68.740 epoch time: 3.515
+rank: 2, epoch: 62.000, loss: 0.757, train_acc: 74.192, test_acc: 41.100 epoch time: 3.487
+rank: 6, epoch: 62.000, loss: 0.632, train_acc: 78.416, test_acc: 57.950 epoch time: 3.454
+rank: 0, epoch: 62.000, loss: 0.763, train_acc: 74.016, test_acc: 58.170 epoch time: 3.519
+comp_time: 2.915, comm_time: 0.605, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 5, epoch: 62.000, loss: 0.781, train_acc: 73.392, test_acc: 57.820 epoch time: 3.527
+rank: 6, epoch: 63.000, loss: 0.621, train_acc: 78.704, test_acc: 78.290 epoch time: 3.483
+rank: 1, epoch: 63.000, loss: 0.658, train_acc: 77.264, test_acc: 55.920 epoch time: 3.519
+rank: 4, epoch: 63.000, loss: 0.770, train_acc: 73.520, test_acc: 66.850 epoch time: 3.494
+rank: 2, epoch: 63.000, loss: 0.783, train_acc: 73.344, test_acc: 47.870 epoch time: 3.512
+rank: 0, epoch: 63.000, loss: 0.763, train_acc: 74.352, test_acc: 67.470 epoch time: 3.510
+comp_time: 2.900, comm_time: 0.610, comp_time_budget: 0.826, comm_time_budget: 0.174
+rank: 7, epoch: 63.000, loss: 0.631, train_acc: 77.616, test_acc: 65.480 epoch time: 3.497
+rank: 3, epoch: 63.000, loss: 0.626, train_acc: 78.640, test_acc: 64.460 epoch time: 3.485
+rank: 5, epoch: 63.000, loss: 0.791, train_acc: 72.848, test_acc: 46.410 epoch time: 3.526
+rank: 2, epoch: 64.000, loss: 0.760, train_acc: 73.520, test_acc: 27.310 epoch time: 3.470
+rank: 5, epoch: 64.000, loss: 0.767, train_acc: 73.792, test_acc: 59.040 epoch time: 3.511
+rank: 3, epoch: 64.000, loss: 0.658, train_acc: 77.904, test_acc: 56.450 epoch time: 3.506
+rank: 4, epoch: 64.000, loss: 0.767, train_acc: 73.392, test_acc: 45.610 epoch time: 3.469
+rank: 7, epoch: 64.000, loss: 0.634, train_acc: 78.208, test_acc: 69.020 epoch time: 3.490
+rank: 0, epoch: 64.000, loss: 0.770, train_acc: 73.520, test_acc: 68.810 epoch time: 3.500
+comp_time: 2.901, comm_time: 0.599, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 1, epoch: 64.000, loss: 0.658, train_acc: 77.424, test_acc: 63.070 epoch time: 3.504
+rank: 6, epoch: 64.000, loss: 0.621, train_acc: 79.136, test_acc: 68.030 epoch time: 3.462
+rank: 0, epoch: 65.000, loss: 0.781, train_acc: 73.440, test_acc: 71.820 epoch time: 3.511
+comp_time: 2.903, comm_time: 0.608, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 7, epoch: 65.000, loss: 0.629, train_acc: 78.640, test_acc: 69.190 epoch time: 3.521
+rank: 1, epoch: 65.000, loss: 0.659, train_acc: 77.696, test_acc: 67.680 epoch time: 3.514
+rank: 2, epoch: 65.000, loss: 0.767, train_acc: 73.440, test_acc: 57.690 epoch time: 3.481
+rank: 4, epoch: 65.000, loss: 0.764, train_acc: 73.600, test_acc: 66.020 epoch time: 3.472
+rank: 3, epoch: 65.000, loss: 0.643, train_acc: 77.536, test_acc: 65.890 epoch time: 3.487
+rank: 6, epoch: 65.000, loss: 0.627, train_acc: 79.056, test_acc: 64.460 epoch time: 3.469
+rank: 5, epoch: 65.000, loss: 0.794, train_acc: 72.912, test_acc: 60.880 epoch time: 3.527
+rank: 4, epoch: 66.000, loss: 0.768, train_acc: 73.088, test_acc: 61.830 epoch time: 3.478
+rank: 2, epoch: 66.000, loss: 0.762, train_acc: 73.920, test_acc: 50.490 epoch time: 3.491
+rank: 7, epoch: 66.000, loss: 0.627, train_acc: 78.512, test_acc: 73.670 epoch time: 3.504
+rank: 5, epoch: 66.000, loss: 0.786, train_acc: 73.392, test_acc: 58.440 epoch time: 3.522
+rank: 1, epoch: 66.000, loss: 0.650, train_acc: 77.616, test_acc: 59.110 epoch time: 3.513
+rank: 0, epoch: 66.000, loss: 0.762, train_acc: 74.000, test_acc: 44.230 epoch time: 3.523
+comp_time: 2.921, comm_time: 0.602, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 6, epoch: 66.000, loss: 0.620, train_acc: 79.328, test_acc: 74.570 epoch time: 3.459
+rank: 3, epoch: 66.000, loss: 0.639, train_acc: 78.256, test_acc: 53.760 epoch time: 3.478
+rank: 6, epoch: 67.000, loss: 0.618, train_acc: 78.896, test_acc: 47.730 epoch time: 3.452
+rank: 0, epoch: 67.000, loss: 0.745, train_acc: 74.592, test_acc: 32.390 epoch time: 3.496
+comp_time: 2.891, comm_time: 0.606, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 2, epoch: 67.000, loss: 0.751, train_acc: 74.384, test_acc: 48.750 epoch time: 3.499
+rank: 3, epoch: 67.000, loss: 0.632, train_acc: 78.960, test_acc: 63.760 epoch time: 3.485
+rank: 1, epoch: 67.000, loss: 0.662, train_acc: 77.376, test_acc: 66.670 epoch time: 3.519
+rank: 4, epoch: 67.000, loss: 0.757, train_acc: 73.744, test_acc: 42.360 epoch time: 3.473
+rank: 7, epoch: 67.000, loss: 0.609, train_acc: 78.992, test_acc: 68.180 epoch time: 3.488
+rank: 5, epoch: 67.000, loss: 0.790, train_acc: 73.248, test_acc: 62.560 epoch time: 3.543
+rank: 4, epoch: 68.000, loss: 0.738, train_acc: 74.080, test_acc: 59.230 epoch time: 3.454
+rank: 2, epoch: 68.000, loss: 0.790, train_acc: 72.816, test_acc: 58.360 epoch time: 3.495
+rank: 1, epoch: 68.000, loss: 0.649, train_acc: 78.512, test_acc: 51.850 epoch time: 3.514
+rank: 6, epoch: 68.000, loss: 0.619, train_acc: 78.576, test_acc: 25.990 epoch time: 3.468
+rank: 0, epoch: 68.000, loss: 0.767, train_acc: 73.520, test_acc: 55.960 epoch time: 3.513
+comp_time: 2.910, comm_time: 0.603, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 3, epoch: 68.000, loss: 0.631, train_acc: 78.640, test_acc: 16.730 epoch time: 3.484
+rank: 5, epoch: 68.000, loss: 0.773, train_acc: 73.712, test_acc: 45.780 epoch time: 3.518
+rank: 7, epoch: 68.000, loss: 0.640, train_acc: 77.808, test_acc: 63.200 epoch time: 3.513
+rank: 5, epoch: 69.000, loss: 0.769, train_acc: 74.192, test_acc: 50.970 epoch time: 3.522
+rank: 4, epoch: 69.000, loss: 0.754, train_acc: 73.808, test_acc: 53.580 epoch time: 3.474
+rank: 0, epoch: 69.000, loss: 0.758, train_acc: 73.664, test_acc: 56.480 epoch time: 3.508
+comp_time: 2.899, comm_time: 0.608, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 2, epoch: 69.000, loss: 0.767, train_acc: 73.824, test_acc: 54.090 epoch time: 3.481
+rank: 7, epoch: 69.000, loss: 0.631, train_acc: 78.784, test_acc: 70.050 epoch time: 3.505
+rank: 1, epoch: 69.000, loss: 0.644, train_acc: 78.112, test_acc: 58.460 epoch time: 3.524
+rank: 3, epoch: 69.000, loss: 0.645, train_acc: 78.480, test_acc: 56.980 epoch time: 3.498
+rank: 6, epoch: 69.000, loss: 0.617, train_acc: 79.040, test_acc: 69.850 epoch time: 3.467
+rank: 3, epoch: 70.000, loss: 0.631, train_acc: 78.288, test_acc: 67.410 epoch time: 3.489
+rank: 5, epoch: 70.000, loss: 0.752, train_acc: 74.512, test_acc: 48.030 epoch time: 3.531
+rank: 4, epoch: 70.000, loss: 0.747, train_acc: 74.432, test_acc: 65.650 epoch time: 3.465
+rank: 2, epoch: 70.000, loss: 0.788, train_acc: 73.312, test_acc: 63.460 epoch time: 3.465
+rank: 7, epoch: 70.000, loss: 0.638, train_acc: 77.648, test_acc: 66.330 epoch time: 3.495
+rank: 1, epoch: 70.000, loss: 0.639, train_acc: 78.032, test_acc: 64.200 epoch time: 3.523
+rank: 6, epoch: 70.000, loss: 0.628, train_acc: 78.480, test_acc: 61.360 epoch time: 3.449
+rank: 0, epoch: 70.000, loss: 0.776, train_acc: 73.600, test_acc: 67.430 epoch time: 3.494
+comp_time: 2.893, comm_time: 0.601, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 4, epoch: 71.000, loss: 0.762, train_acc: 73.600, test_acc: 44.670 epoch time: 3.450
+rank: 7, epoch: 71.000, loss: 0.629, train_acc: 78.512, test_acc: 78.120 epoch time: 3.497
+rank: 3, epoch: 71.000, loss: 0.644, train_acc: 78.192, test_acc: 71.870 epoch time: 3.492
+rank: 5, epoch: 71.000, loss: 0.777, train_acc: 73.904, test_acc: 74.160 epoch time: 3.519
+rank: 0, epoch: 71.000, loss: 0.772, train_acc: 73.328, test_acc: 65.960 epoch time: 3.507
+comp_time: 2.901, comm_time: 0.605, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 2, epoch: 71.000, loss: 0.734, train_acc: 74.752, test_acc: 72.400 epoch time: 3.494
+rank: 6, epoch: 71.000, loss: 0.636, train_acc: 78.208, test_acc: 76.750 epoch time: 3.467
+rank: 1, epoch: 71.000, loss: 0.634, train_acc: 78.464, test_acc: 73.080 epoch time: 3.510
+rank: 5, epoch: 72.000, loss: 0.746, train_acc: 75.136, test_acc: 10.310 epoch time: 3.512
+rank: 0, epoch: 72.000, loss: 0.756, train_acc: 73.984, test_acc: 38.290 epoch time: 3.498
+comp_time: 2.897, comm_time: 0.601, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 4, epoch: 72.000, loss: 0.731, train_acc: 74.496, test_acc: 61.660 epoch time: 3.472
+rank: 2, epoch: 72.000, loss: 0.746, train_acc: 74.672, test_acc: 50.080 epoch time: 3.473
+rank: 3, epoch: 72.000, loss: 0.625, train_acc: 78.928, test_acc: 59.640 epoch time: 3.475
+rank: 1, epoch: 72.000, loss: 0.645, train_acc: 77.776, test_acc: 56.210 epoch time: 3.525
+rank: 6, epoch: 72.000, loss: 0.641, train_acc: 77.792, test_acc: 68.850 epoch time: 3.463
+rank: 7, epoch: 72.000, loss: 0.636, train_acc: 78.352, test_acc: 43.980 epoch time: 3.484
+rank: 1, epoch: 73.000, loss: 0.652, train_acc: 77.280, test_acc: 51.020 epoch time: 3.531
+rank: 2, epoch: 73.000, loss: 0.759, train_acc: 73.712, test_acc: 56.310 epoch time: 3.478
+rank: 0, epoch: 73.000, loss: 0.766, train_acc: 73.984, test_acc: 47.460 epoch time: 3.515
+comp_time: 2.897, comm_time: 0.618, comp_time_budget: 0.824, comm_time_budget: 0.176
+rank: 6, epoch: 73.000, loss: 0.608, train_acc: 79.200, test_acc: 78.380 epoch time: 3.471
+rank: 5, epoch: 73.000, loss: 0.761, train_acc: 74.144, test_acc: 54.920 epoch time: 3.549
+rank: 7, epoch: 73.000, loss: 0.643, train_acc: 77.984, test_acc: 72.980 epoch time: 3.498
+rank: 3, epoch: 73.000, loss: 0.645, train_acc: 77.904, test_acc: 51.400 epoch time: 3.497
+rank: 4, epoch: 73.000, loss: 0.746, train_acc: 74.272, test_acc: 63.410 epoch time: 3.477
+rank: 4, epoch: 74.000, loss: 0.745, train_acc: 74.752, test_acc: 64.810 epoch time: 3.447
+rank: 0, epoch: 74.000, loss: 0.770, train_acc: 73.776, test_acc: 44.310 epoch time: 3.510
+comp_time: 2.905, comm_time: 0.605, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 5, epoch: 74.000, loss: 0.759, train_acc: 73.840, test_acc: 44.880 epoch time: 3.513
+rank: 3, epoch: 74.000, loss: 0.642, train_acc: 78.752, test_acc: 67.280 epoch time: 3.474
+rank: 7, epoch: 74.000, loss: 0.638, train_acc: 77.808, test_acc: 60.300 epoch time: 3.516
+rank: 1, epoch: 74.000, loss: 0.643, train_acc: 78.112, test_acc: 68.950 epoch time: 3.515
+rank: 6, epoch: 74.000, loss: 0.632, train_acc: 78.624, test_acc: 72.030 epoch time: 3.455
+rank: 2, epoch: 74.000, loss: 0.734, train_acc: 75.088, test_acc: 29.540 epoch time: 3.493
+rank: 7, epoch: 75.000, loss: 0.615, train_acc: 79.312, test_acc: 68.360 epoch time: 3.486
+rank: 4, epoch: 75.000, loss: 0.741, train_acc: 74.528, test_acc: 72.660 epoch time: 3.446
+rank: 1, epoch: 75.000, loss: 0.646, train_acc: 78.128, test_acc: 53.940 epoch time: 3.510
+rank: 0, epoch: 75.000, loss: 0.776, train_acc: 73.712, test_acc: 64.590 epoch time: 3.508
+comp_time: 2.907, comm_time: 0.600, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 2, epoch: 75.000, loss: 0.750, train_acc: 74.416, test_acc: 65.330 epoch time: 3.487
+rank: 3, epoch: 75.000, loss: 0.634, train_acc: 78.224, test_acc: 73.850 epoch time: 3.479
+rank: 6, epoch: 75.000, loss: 0.610, train_acc: 79.376, test_acc: 69.760 epoch time: 3.447
+rank: 5, epoch: 75.000, loss: 0.778, train_acc: 73.792, test_acc: 47.890 epoch time: 3.533
+rank: 0, epoch: 76.000, loss: 0.752, train_acc: 74.544, test_acc: 43.440 epoch time: 3.507
+comp_time: 2.900, comm_time: 0.607, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 6, epoch: 76.000, loss: 0.616, train_acc: 79.072, test_acc: 71.520 epoch time: 3.478
+rank: 3, epoch: 76.000, loss: 0.611, train_acc: 79.568, test_acc: 68.220 epoch time: 3.494
+rank: 4, epoch: 76.000, loss: 0.753, train_acc: 74.448, test_acc: 63.870 epoch time: 3.449
+rank: 2, epoch: 76.000, loss: 0.762, train_acc: 73.872, test_acc: 17.990 epoch time: 3.491
+rank: 1, epoch: 76.000, loss: 0.665, train_acc: 77.152, test_acc: 73.640 epoch time: 3.540
+rank: 5, epoch: 76.000, loss: 0.774, train_acc: 73.520, test_acc: 69.760 epoch time: 3.514
+rank: 7, epoch: 76.000, loss: 0.631, train_acc: 78.736, test_acc: 73.280 epoch time: 3.496
+rank: 1, epoch: 77.000, loss: 0.633, train_acc: 78.368, test_acc: 65.040 epoch time: 3.503
+rank: 0, epoch: 77.000, loss: 0.763, train_acc: 74.544, test_acc: 70.390 epoch time: 3.480
+comp_time: 2.881, comm_time: 0.599, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 5, epoch: 77.000, loss: 0.768, train_acc: 73.488, test_acc: 60.110 epoch time: 3.550
+rank: 4, epoch: 77.000, loss: 0.746, train_acc: 75.008, test_acc: 64.740 epoch time: 3.462
+rank: 2, epoch: 77.000, loss: 0.759, train_acc: 74.016, test_acc: 51.830 epoch time: 3.483
+rank: 6, epoch: 77.000, loss: 0.589, train_acc: 79.824, test_acc: 64.450 epoch time: 3.447
+rank: 7, epoch: 77.000, loss: 0.613, train_acc: 79.008, test_acc: 74.390 epoch time: 3.487
+rank: 3, epoch: 77.000, loss: 0.645, train_acc: 77.872, test_acc: 57.960 epoch time: 3.477
+rank: 1, epoch: 78.000, loss: 0.647, train_acc: 77.664, test_acc: 66.010 epoch time: 3.509
+rank: 0, epoch: 78.000, loss: 0.744, train_acc: 74.256, test_acc: 55.890 epoch time: 3.493
+comp_time: 2.884, comm_time: 0.609, comp_time_budget: 0.826, comm_time_budget: 0.174
+rank: 4, epoch: 78.000, loss: 0.767, train_acc: 74.448, test_acc: 46.450 epoch time: 3.472
+rank: 2, epoch: 78.000, loss: 0.772, train_acc: 73.424, test_acc: 72.520 epoch time: 3.487
+rank: 3, epoch: 78.000, loss: 0.624, train_acc: 78.480, test_acc: 65.560 epoch time: 3.482
+rank: 6, epoch: 78.000, loss: 0.597, train_acc: 79.744, test_acc: 73.340 epoch time: 3.462
+rank: 7, epoch: 78.000, loss: 0.640, train_acc: 78.128, test_acc: 36.190 epoch time: 3.511
+rank: 5, epoch: 78.000, loss: 0.767, train_acc: 73.936, test_acc: 50.270 epoch time: 3.516
+rank: 4, epoch: 79.000, loss: 0.763, train_acc: 73.424, test_acc: 55.070 epoch time: 3.449
+rank: 2, epoch: 79.000, loss: 0.746, train_acc: 74.496, test_acc: 58.810 epoch time: 3.488
+rank: 3, epoch: 79.000, loss: 0.629, train_acc: 78.560, test_acc: 68.220 epoch time: 3.491
+rank: 6, epoch: 79.000, loss: 0.612, train_acc: 79.376, test_acc: 63.040 epoch time: 3.450
+rank: 0, epoch: 79.000, loss: 0.749, train_acc: 74.416, test_acc: 47.150 epoch time: 3.502
+comp_time: 2.904, comm_time: 0.598, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 5, epoch: 79.000, loss: 0.769, train_acc: 73.696, test_acc: 62.910 epoch time: 3.517
+rank: 7, epoch: 79.000, loss: 0.632, train_acc: 79.216, test_acc: 67.730 epoch time: 3.483
+rank: 1, epoch: 79.000, loss: 0.634, train_acc: 78.144, test_acc: 65.730 epoch time: 3.504
+rank: 3, epoch: 80.000, loss: 0.626, train_acc: 78.832, test_acc: 70.150 epoch time: 3.484
+rank: 4, epoch: 80.000, loss: 0.749, train_acc: 73.904, test_acc: 62.010 epoch time: 3.525
+rank: 1, epoch: 80.000, loss: 0.647, train_acc: 77.328, test_acc: 61.560 epoch time: 3.524
+rank: 2, epoch: 80.000, loss: 0.761, train_acc: 73.168, test_acc: 58.290 epoch time: 3.495
+rank: 5, epoch: 80.000, loss: 0.761, train_acc: 73.648, test_acc: 25.990 epoch time: 3.535
+rank: 0, epoch: 80.000, loss: 0.758, train_acc: 74.016, test_acc: 13.930 epoch time: 3.487
+comp_time: 2.880, comm_time: 0.607, comp_time_budget: 0.826, comm_time_budget: 0.174
+rank: 6, epoch: 80.000, loss: 0.614, train_acc: 78.560, test_acc: 64.940 epoch time: 3.471
+rank: 7, epoch: 80.000, loss: 0.641, train_acc: 77.712, test_acc: 57.000 epoch time: 3.492
+rank: 5, epoch: 81.000, loss: 0.763, train_acc: 73.728, test_acc: 64.840 epoch time: 3.508
+rank: 0, epoch: 81.000, loss: 0.750, train_acc: 74.992, test_acc: 54.740 epoch time: 3.477
+comp_time: 2.879, comm_time: 0.598, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 1, epoch: 81.000, loss: 0.644, train_acc: 78.032, test_acc: 72.380 epoch time: 3.507
+rank: 4, epoch: 81.000, loss: 0.747, train_acc: 74.544, test_acc: 64.340 epoch time: 3.474
+rank: 7, epoch: 81.000, loss: 0.632, train_acc: 78.352, test_acc: 68.950 epoch time: 3.486
+rank: 2, epoch: 81.000, loss: 0.764, train_acc: 74.048, test_acc: 41.730 epoch time: 3.481
+rank: 3, epoch: 81.000, loss: 0.631, train_acc: 78.704, test_acc: 52.900 epoch time: 3.473
+rank: 6, epoch: 81.000, loss: 0.605, train_acc: 78.528, test_acc: 48.170 epoch time: 3.455
+rank: 6, epoch: 82.000, loss: 0.598, train_acc: 79.392, test_acc: 69.630 epoch time: 3.465
+rank: 3, epoch: 82.000, loss: 0.622, train_acc: 78.944, test_acc: 63.240 epoch time: 3.494
+rank: 1, epoch: 82.000, loss: 0.659, train_acc: 77.344, test_acc: 51.440 epoch time: 3.514
+rank: 2, epoch: 82.000, loss: 0.743, train_acc: 74.416, test_acc: 29.570 epoch time: 3.473
+rank: 4, epoch: 82.000, loss: 0.750, train_acc: 74.272, test_acc: 68.030 epoch time: 3.478
+rank: 0, epoch: 82.000, loss: 0.744, train_acc: 75.408, test_acc: 43.190 epoch time: 3.501
+comp_time: 2.897, comm_time: 0.605, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 7, epoch: 82.000, loss: 0.629, train_acc: 79.120, test_acc: 76.830 epoch time: 3.502
+rank: 5, epoch: 82.000, loss: 0.773, train_acc: 73.616, test_acc: 33.140 epoch time: 3.545
+rank: 7, epoch: 83.000, loss: 0.604, train_acc: 79.568, test_acc: 70.660 epoch time: 3.481
+rank: 2, epoch: 83.000, loss: 0.780, train_acc: 72.912, test_acc: 63.820 epoch time: 3.468
+rank: 1, epoch: 83.000, loss: 0.636, train_acc: 77.744, test_acc: 52.350 epoch time: 3.496
+rank: 4, epoch: 83.000, loss: 0.747, train_acc: 74.816, test_acc: 72.660 epoch time: 3.466
+rank: 6, epoch: 83.000, loss: 0.620, train_acc: 78.336, test_acc: 64.620 epoch time: 3.450
+rank: 0, epoch: 83.000, loss: 0.755, train_acc: 73.744, test_acc: 66.820 epoch time: 3.500
+comp_time: 2.899, comm_time: 0.601, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 3, epoch: 83.000, loss: 0.634, train_acc: 77.968, test_acc: 66.970 epoch time: 3.525
+rank: 5, epoch: 83.000, loss: 0.760, train_acc: 74.368, test_acc: 51.260 epoch time: 3.509
+rank: 2, epoch: 84.000, loss: 0.733, train_acc: 74.240, test_acc: 43.920 epoch time: 3.491
+rank: 7, epoch: 84.000, loss: 0.594, train_acc: 79.632, test_acc: 63.170 epoch time: 3.489
+rank: 1, epoch: 84.000, loss: 0.641, train_acc: 77.696, test_acc: 55.280 epoch time: 3.506
+rank: 4, epoch: 84.000, loss: 0.736, train_acc: 74.880, test_acc: 49.930 epoch time: 3.475
+rank: 3, epoch: 84.000, loss: 0.626, train_acc: 78.592, test_acc: 61.380 epoch time: 3.483
+rank: 0, epoch: 84.000, loss: 0.773, train_acc: 73.488, test_acc: 46.510 epoch time: 3.480
+comp_time: 2.876, comm_time: 0.604, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 5, epoch: 84.000, loss: 0.815, train_acc: 72.624, test_acc: 61.450 epoch time: 3.536
+rank: 6, epoch: 84.000, loss: 0.611, train_acc: 79.232, test_acc: 67.040 epoch time: 3.455
+rank: 4, epoch: 85.000, loss: 0.743, train_acc: 74.240, test_acc: 64.980 epoch time: 3.466
+rank: 3, epoch: 85.000, loss: 0.638, train_acc: 78.320, test_acc: 43.090 epoch time: 3.486
+rank: 1, epoch: 85.000, loss: 0.633, train_acc: 78.320, test_acc: 65.230 epoch time: 3.512
+rank: 6, epoch: 85.000, loss: 0.621, train_acc: 79.056, test_acc: 77.750 epoch time: 3.448
+rank: 5, epoch: 85.000, loss: 0.765, train_acc: 74.064, test_acc: 73.410 epoch time: 3.526
+rank: 2, epoch: 85.000, loss: 0.764, train_acc: 73.600, test_acc: 48.210 epoch time: 3.491
+rank: 0, epoch: 85.000, loss: 0.743, train_acc: 74.992, test_acc: 62.060 epoch time: 3.488
+comp_time: 2.886, comm_time: 0.602, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 7, epoch: 85.000, loss: 0.617, train_acc: 79.056, test_acc: 57.030 epoch time: 3.489
+rank: 1, epoch: 86.000, loss: 0.629, train_acc: 78.512, test_acc: 79.250 epoch time: 3.532
+rank: 0, epoch: 86.000, loss: 0.748, train_acc: 74.560, test_acc: 62.280 epoch time: 3.507
+comp_time: 2.901, comm_time: 0.606, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 3, epoch: 86.000, loss: 0.612, train_acc: 79.136, test_acc: 55.650 epoch time: 3.482
+rank: 2, epoch: 86.000, loss: 0.754, train_acc: 74.320, test_acc: 42.110 epoch time: 3.477
+rank: 4, epoch: 86.000, loss: 0.744, train_acc: 74.656, test_acc: 54.750 epoch time: 3.472
+rank: 5, epoch: 86.000, loss: 0.753, train_acc: 74.176, test_acc: 53.820 epoch time: 3.517
+rank: 6, epoch: 86.000, loss: 0.618, train_acc: 78.688, test_acc: 66.410 epoch time: 3.455
+rank: 7, epoch: 86.000, loss: 0.643, train_acc: 78.272, test_acc: 77.840 epoch time: 3.489
+rank: 4, epoch: 87.000, loss: 0.720, train_acc: 75.648, test_acc: 65.750 epoch time: 3.466
+rank: 3, epoch: 87.000, loss: 0.620, train_acc: 78.800, test_acc: 39.230 epoch time: 3.490
+rank: 7, epoch: 87.000, loss: 0.593, train_acc: 80.080, test_acc: 62.880 epoch time: 3.488
+rank: 6, epoch: 87.000, loss: 0.612, train_acc: 79.392, test_acc: 67.770 epoch time: 3.450
+rank: 5, epoch: 87.000, loss: 0.774, train_acc: 73.776, test_acc: 48.470 epoch time: 3.519
+rank: 1, epoch: 87.000, loss: 0.623, train_acc: 79.088, test_acc: 66.350 epoch time: 3.523
+rank: 0, epoch: 87.000, loss: 0.772, train_acc: 73.600, test_acc: 60.540 epoch time: 3.489
+comp_time: 2.886, comm_time: 0.603, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 2, epoch: 87.000, loss: 0.758, train_acc: 74.240, test_acc: 34.350 epoch time: 3.492
+rank: 6, epoch: 88.000, loss: 0.607, train_acc: 79.392, test_acc: 74.600 epoch time: 3.452
+rank: 4, epoch: 88.000, loss: 0.745, train_acc: 74.992, test_acc: 63.770 epoch time: 3.463
+rank: 3, epoch: 88.000, loss: 0.622, train_acc: 78.832, test_acc: 54.420 epoch time: 3.479
+rank: 1, epoch: 88.000, loss: 0.655, train_acc: 77.312, test_acc: 59.990 epoch time: 3.498
+rank: 2, epoch: 88.000, loss: 0.748, train_acc: 74.128, test_acc: 45.000 epoch time: 3.477
+rank: 7, epoch: 88.000, loss: 0.622, train_acc: 78.688, test_acc: 66.910 epoch time: 3.481
+rank: 0, epoch: 88.000, loss: 0.748, train_acc: 75.120, test_acc: 68.060 epoch time: 3.475
+comp_time: 2.875, comm_time: 0.600, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 5, epoch: 88.000, loss: 0.758, train_acc: 74.064, test_acc: 31.800 epoch time: 3.518
+rank: 1, epoch: 89.000, loss: 0.648, train_acc: 77.744, test_acc: 65.510 epoch time: 3.524
+rank: 2, epoch: 89.000, loss: 0.762, train_acc: 73.776, test_acc: 39.950 epoch time: 3.499
+rank: 3, epoch: 89.000, loss: 0.645, train_acc: 77.904, test_acc: 50.740 epoch time: 3.491
+rank: 5, epoch: 89.000, loss: 0.762, train_acc: 73.680, test_acc: 53.660 epoch time: 3.517
+rank: 0, epoch: 89.000, loss: 0.740, train_acc: 74.816, test_acc: 67.690 epoch time: 3.492
+comp_time: 2.885, comm_time: 0.607, comp_time_budget: 0.826, comm_time_budget: 0.174
+rank: 4, epoch: 89.000, loss: 0.748, train_acc: 74.656, test_acc: 66.260 epoch time: 3.470
+rank: 6, epoch: 89.000, loss: 0.600, train_acc: 79.424, test_acc: 73.350 epoch time: 3.455
+rank: 7, epoch: 89.000, loss: 0.592, train_acc: 80.016, test_acc: 67.920 epoch time: 3.489
+rank: 3, epoch: 90.000, loss: 0.624, train_acc: 77.888, test_acc: 55.230 epoch time: 3.475
+rank: 2, epoch: 90.000, loss: 0.735, train_acc: 75.024, test_acc: 71.370 epoch time: 3.486
+rank: 1, epoch: 90.000, loss: 0.635, train_acc: 78.368, test_acc: 67.270 epoch time: 3.506
+rank: 5, epoch: 90.000, loss: 0.772, train_acc: 73.088, test_acc: 67.920 epoch time: 3.502
+rank: 0, epoch: 90.000, loss: 0.743, train_acc: 74.752, test_acc: 62.450 epoch time: 3.507
+comp_time: 2.907, comm_time: 0.600, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 7, epoch: 90.000, loss: 0.610, train_acc: 79.328, test_acc: 71.530 epoch time: 3.497
+rank: 4, epoch: 90.000, loss: 0.736, train_acc: 74.720, test_acc: 54.080 epoch time: 3.437
+rank: 6, epoch: 90.000, loss: 0.596, train_acc: 79.664, test_acc: 58.750 epoch time: 3.460
+rank: 6, epoch: 91.000, loss: 0.613, train_acc: 79.456, test_acc: 66.950 epoch time: 3.467
+rank: 0, epoch: 91.000, loss: 0.730, train_acc: 74.672, test_acc: 65.220 epoch time: 3.512
+comp_time: 2.902, comm_time: 0.610, comp_time_budget: 0.826, comm_time_budget: 0.174
+rank: 7, epoch: 91.000, loss: 0.619, train_acc: 78.816, test_acc: 75.090 epoch time: 3.494
+rank: 4, epoch: 91.000, loss: 0.763, train_acc: 73.728, test_acc: 69.760 epoch time: 3.449
+rank: 1, epoch: 91.000, loss: 0.641, train_acc: 77.600, test_acc: 61.810 epoch time: 3.519
+rank: 2, epoch: 91.000, loss: 0.760, train_acc: 74.080, test_acc: 62.070 epoch time: 3.516
+rank: 3, epoch: 91.000, loss: 0.624, train_acc: 78.576, test_acc: 55.680 epoch time: 3.488
+rank: 5, epoch: 91.000, loss: 0.752, train_acc: 74.016, test_acc: 64.360 epoch time: 3.525
+rank: 5, epoch: 92.000, loss: 0.765, train_acc: 74.592, test_acc: 61.360 epoch time: 3.514
+rank: 0, epoch: 92.000, loss: 0.735, train_acc: 74.816, test_acc: 43.710 epoch time: 3.522
+comp_time: 2.922, comm_time: 0.601, comp_time_budget: 0.829, comm_time_budget: 0.171
+rank: 1, epoch: 92.000, loss: 0.638, train_acc: 78.592, test_acc: 73.170 epoch time: 3.516
+rank: 2, epoch: 92.000, loss: 0.779, train_acc: 74.000, test_acc: 44.950 epoch time: 3.487
+rank: 7, epoch: 92.000, loss: 0.623, train_acc: 78.672, test_acc: 70.740 epoch time: 3.512
+rank: 6, epoch: 92.000, loss: 0.599, train_acc: 79.648, test_acc: 76.200 epoch time: 3.441
+rank: 4, epoch: 92.000, loss: 0.760, train_acc: 74.160, test_acc: 47.850 epoch time: 3.438
+rank: 3, epoch: 92.000, loss: 0.630, train_acc: 78.176, test_acc: 65.770 epoch time: 3.473
+rank: 4, epoch: 93.000, loss: 0.727, train_acc: 75.152, test_acc: 64.210 epoch time: 3.447
+rank: 1, epoch: 93.000, loss: 0.642, train_acc: 78.352, test_acc: 64.220 epoch time: 3.510
+rank: 6, epoch: 93.000, loss: 0.612, train_acc: 79.056, test_acc: 67.150 epoch time: 3.470
+rank: 0, epoch: 93.000, loss: 0.748, train_acc: 74.624, test_acc: 62.940 epoch time: 3.512
+comp_time: 2.907, comm_time: 0.605, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 3, epoch: 93.000, loss: 0.608, train_acc: 79.728, test_acc: 71.240 epoch time: 3.500
+rank: 7, epoch: 93.000, loss: 0.633, train_acc: 78.464, test_acc: 69.710 epoch time: 3.490
+rank: 5, epoch: 93.000, loss: 0.751, train_acc: 74.144, test_acc: 58.890 epoch time: 3.514
+rank: 2, epoch: 93.000, loss: 0.775, train_acc: 73.520, test_acc: 64.200 epoch time: 3.496
+rank: 5, epoch: 94.000, loss: 0.757, train_acc: 74.128, test_acc: 32.260 epoch time: 3.517
+rank: 2, epoch: 94.000, loss: 0.745, train_acc: 74.336, test_acc: 39.390 epoch time: 3.493
+rank: 0, epoch: 94.000, loss: 0.742, train_acc: 74.912, test_acc: 43.930 epoch time: 3.512
+comp_time: 2.908, comm_time: 0.603, comp_time_budget: 0.828, comm_time_budget: 0.172
+rank: 3, epoch: 94.000, loss: 0.646, train_acc: 78.496, test_acc: 72.920 epoch time: 3.481
+rank: 4, epoch: 94.000, loss: 0.745, train_acc: 74.768, test_acc: 62.320 epoch time: 3.437
+rank: 1, epoch: 94.000, loss: 0.619, train_acc: 79.184, test_acc: 58.940 epoch time: 3.518
+rank: 7, epoch: 94.000, loss: 0.630, train_acc: 78.656, test_acc: 73.130 epoch time: 3.505
+rank: 6, epoch: 94.000, loss: 0.593, train_acc: 79.328, test_acc: 69.540 epoch time: 3.447
+rank: 4, epoch: 95.000, loss: 0.729, train_acc: 74.816, test_acc: 69.340 epoch time: 3.471
+rank: 1, epoch: 95.000, loss: 0.653, train_acc: 77.664, test_acc: 63.550 epoch time: 3.507
+rank: 3, epoch: 95.000, loss: 0.615, train_acc: 79.152, test_acc: 43.840 epoch time: 3.480
+rank: 6, epoch: 95.000, loss: 0.601, train_acc: 79.568, test_acc: 73.990 epoch time: 3.453
+rank: 0, epoch: 95.000, loss: 0.745, train_acc: 74.880, test_acc: 63.730 epoch time: 3.508
+comp_time: 2.903, comm_time: 0.605, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 2, epoch: 95.000, loss: 0.747, train_acc: 74.272, test_acc: 60.060 epoch time: 3.471
+rank: 5, epoch: 95.000, loss: 0.772, train_acc: 73.376, test_acc: 64.640 epoch time: 3.515
+rank: 7, epoch: 95.000, loss: 0.619, train_acc: 79.088, test_acc: 74.990 epoch time: 3.510
+rank: 0, epoch: 96.000, loss: 0.754, train_acc: 73.696, test_acc: 41.390 epoch time: 3.486
+comp_time: 2.882, comm_time: 0.604, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 6, epoch: 96.000, loss: 0.601, train_acc: 79.168, test_acc: 60.720 epoch time: 3.454
+rank: 4, epoch: 96.000, loss: 0.724, train_acc: 75.552, test_acc: 40.360 epoch time: 3.475
+rank: 3, epoch: 96.000, loss: 0.633, train_acc: 78.560, test_acc: 65.700 epoch time: 3.485
+rank: 2, epoch: 96.000, loss: 0.730, train_acc: 74.576, test_acc: 39.130 epoch time: 3.494
+rank: 5, epoch: 96.000, loss: 0.772, train_acc: 73.360, test_acc: 43.400 epoch time: 3.532
+rank: 1, epoch: 96.000, loss: 0.615, train_acc: 79.248, test_acc: 72.440 epoch time: 3.558
+rank: 7, epoch: 96.000, loss: 0.625, train_acc: 78.464, test_acc: 46.390 epoch time: 3.492
+rank: 5, epoch: 97.000, loss: 0.769, train_acc: 73.856, test_acc: 54.550 epoch time: 3.512
+rank: 4, epoch: 97.000, loss: 0.746, train_acc: 74.384, test_acc: 66.350 epoch time: 3.436
+rank: 6, epoch: 97.000, loss: 0.604, train_acc: 79.232, test_acc: 70.090 epoch time: 3.447
+rank: 0, epoch: 97.000, loss: 0.741, train_acc: 75.216, test_acc: 72.320 epoch time: 3.540
+comp_time: 2.938, comm_time: 0.602, comp_time_budget: 0.830, comm_time_budget: 0.170
+rank: 1, epoch: 97.000, loss: 0.631, train_acc: 78.560, test_acc: 58.230 epoch time: 3.526
+rank: 7, epoch: 97.000, loss: 0.614, train_acc: 79.344, test_acc: 59.290 epoch time: 3.486
+rank: 3, epoch: 97.000, loss: 0.640, train_acc: 78.672, test_acc: 42.430 epoch time: 3.477
+rank: 2, epoch: 97.000, loss: 0.751, train_acc: 74.192, test_acc: 51.450 epoch time: 3.490
+rank: 6, epoch: 98.000, loss: 0.623, train_acc: 78.832, test_acc: 61.980 epoch time: 3.455
+rank: 2, epoch: 98.000, loss: 0.755, train_acc: 74.304, test_acc: 45.560 epoch time: 3.489
+rank: 4, epoch: 98.000, loss: 0.730, train_acc: 74.976, test_acc: 32.000 epoch time: 3.463
+rank: 5, epoch: 98.000, loss: 0.767, train_acc: 73.760, test_acc: 47.810 epoch time: 3.512
+rank: 7, epoch: 98.000, loss: 0.615, train_acc: 79.296, test_acc: 51.120 epoch time: 3.491
+rank: 3, epoch: 98.000, loss: 0.626, train_acc: 78.416, test_acc: 62.870 epoch time: 3.484
+rank: 1, epoch: 98.000, loss: 0.626, train_acc: 78.544, test_acc: 66.190 epoch time: 3.527
+rank: 0, epoch: 98.000, loss: 0.755, train_acc: 74.384, test_acc: 58.110 epoch time: 3.497
+comp_time: 2.892, comm_time: 0.605, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 2, epoch: 99.000, loss: 0.771, train_acc: 73.680, test_acc: 64.780 epoch time: 3.491
+rank: 5, epoch: 99.000, loss: 0.746, train_acc: 74.800, test_acc: 68.970 epoch time: 3.511
+rank: 1, epoch: 99.000, loss: 0.640, train_acc: 78.048, test_acc: 75.000 epoch time: 3.527
+rank: 0, epoch: 99.000, loss: 0.742, train_acc: 74.560, test_acc: 56.040 epoch time: 3.483
+comp_time: 2.882, comm_time: 0.601, comp_time_budget: 0.827, comm_time_budget: 0.173
+rank: 4, epoch: 99.000, loss: 0.746, train_acc: 74.160, test_acc: 47.520 epoch time: 3.463
+rank: 7, epoch: 99.000, loss: 0.602, train_acc: 79.600, test_acc: 63.110 epoch time: 3.491
+rank: 3, epoch: 99.000, loss: 0.610, train_acc: 78.608, test_acc: 60.020 epoch time: 3.467
+rank: 6, epoch: 99.000, loss: 0.613, train_acc: 79.376, test_acc: 71.510 epoch time: 3.446

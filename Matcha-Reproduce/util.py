@@ -415,15 +415,21 @@ class Recorder(object):
         self.record_accuracy.append(test_acc)
 
     def save_to_file(self):
-        np.savetxt(self.saveFolderName+'/dsgd-lr'+str(self.args.lr)+'-budget'+str(self.args.budget)+'-r'+str(self.rank)+'-recordtime.log', self.total_record_timing, delimiter=',')
-        np.savetxt(self.saveFolderName+'/dsgd-lr'+str(self.args.lr)+'-budget'+str(self.args.budget)+'-r'+str(self.rank)+'-time.log',  self.record_timing, delimiter=',')
-        np.savetxt(self.saveFolderName+'/dsgd-lr'+str(self.args.lr)+'-budget'+str(self.args.budget)+'-r'+str(self.rank)+'-comptime.log',  self.record_comp_timing, delimiter=',')
-        np.savetxt(self.saveFolderName+'/dsgd-lr'+str(self.args.lr)+'-budget'+str(self.args.budget)+'-r'+str(self.rank)+'-commtime.log',  self.record_comm_timing, delimiter=',')
-        np.savetxt(self.saveFolderName+'/dsgd-lr'+str(self.args.lr)+'-budget'+str(self.args.budget)+'-r'+str(self.rank)+'-losses.log',  self.record_losses, delimiter=',')
-        np.savetxt(self.saveFolderName+'/dsgd-lr'+str(self.args.lr)+'-budget'+str(self.args.budget)+'-r'+str(self.rank)+'-tacc.log',  self.record_trainacc, delimiter=',')
-        np.savetxt(self.saveFolderName+'/dsgd-lr'+str(self.args.lr)+'-budget'+str(self.args.budget)+'-r'+str(self.rank)+'-acc.log',  self.record_accuracy, delimiter=',')
+        subfolder = self.saveFolderName+'/run-'+self.args.name+'-'+str(self.args.epoch)+'epochs'
+        
+        isExist = os.path.exists(subfolder)
+        if not isExist:
+            os.makedirs(subfolder)
 
-        with open(self.saveFolderName+'/ExpDescription', 'w') as f:
+        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-recordtime.log', self.total_record_timing, delimiter=',')
+        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-time.log',  self.record_timing, delimiter=',')
+        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-comptime.log',  self.record_comp_timing, delimiter=',')
+        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-commtime.log',  self.record_comm_timing, delimiter=',')
+        np.savetxt(subfolder+'/dsgd--r'+str(self.rank)+'-losses.log',  self.record_losses, delimiter=',')
+        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-tacc.log',  self.record_trainacc, delimiter=',')
+        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-acc.log',  self.record_accuracy, delimiter=',')
+
+        with open(subfolder+'/ExpDescription', 'w') as f:
             f.write(str(self.args)+ '\n')
             f.write(self.args.description + '\n')
 

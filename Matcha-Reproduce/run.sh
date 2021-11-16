@@ -2,7 +2,7 @@
 
 # Lines that begin with #SBATCH specify commands to be used by SLURM for scheduling
 
-#SBATCH --job-name=matcha     # sets the job name if not set from environment#SBATCH --time=00:30:00                                         # how long you think your job will take to complete; format=hh:mm:ss
+#SBATCH --job-name=matcha     # sets the job name if not set from environment#SBATCH --time=02:30:00                                         # how long you think your job will take to complete; format=hh:mm:ss
 #SBATCH --account=scavenger                                     # set QOS, this will determine what resources can be requested
 #SBATCH --qos=scavenger                                         # set QOS, this will determine what resources can be requested
 #SBATCH --partition=scavenger
@@ -16,4 +16,4 @@
 #module load python
 module load openmpi
 
-mpirun -np 8 python train_mpi.py --description Matcha --randomSeed 9001 --datasetRoot ./data --budget 0.8 --outputFolder Output
+mpirun -np 8 python train_mpi.py --description Matcha --randomSeed 9001 --datasetRoot ./data --budget 0.8 --outputFolder Output --bs 16 --epoch 1 --name Test
