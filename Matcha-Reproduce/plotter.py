@@ -4,20 +4,21 @@ import numpy as np
 import sys
 
 
-def plot_accuracy(directory_path, epoch, num_workers):
+def unpack_data(directory_path, epoch, num_workers, datatype):
     directory = os.path.join(directory_path)
-    train_accuracies = np.zeros((epoch, num_workers))
+    data = np.zeros((epoch, num_workers))
     for root, dirs, files in os.walk(directory):
         j = 0
         for file in files:
-            if file.endswith("tacc.log"):
+            if file.endswith(datatype+".log"):
                 f = open(directory_path+'/'+file, 'r')
                 i = 0
                 for line in f:
-                    train_accuracies[i,j] = line
+                    data[i,j] = line
                     i += 1
                 j += 1
-    return train_accuracies
+    return data
+
 
 if __name__ == "__main__":
 
@@ -30,16 +31,22 @@ if __name__ == "__main__":
     epoch = int(args[2])
     num_workers = int(args[3])
 
-    train_accuracy = plot_accuracy(path, epoch, num_workers)
-        
-    fig = plt.figure()
-    for i in range(num_workers):
-        plt.plot(range(1, epoch+1), train_accuracy[:, i])
-
-    plt.xlabel('Epochs')
-    plt.ylabel('Training Accuracy')
+    #datatypes = ['tacc', 'acc', 'losses', 'time', 'comptime', 'commtime']
+    datatypes = ['-tacc', '-acc', '-losses']
+    ylabels = ['Training-Accuracy', 'Test-Accuracy', 'Training-Loss']
 
     output_folder = './Figures/'
     output_name = args[4]
 
-    plt.savefig(output_folder+output_name+'.png')
+    for i in range(len(datatypes)):
+        
+        data = unpack_data(path, epoch, num_workers, datatypes[i])
+        
+        fig = plt.figure()
+        for j in range(num_workers):
+            plt.plot(range(1, epoch+1), data[:, j])
+
+            plt.xlabel('Epochs')
+            plt.ylabel(ylabels[i])
+
+        plt.savefig(output_folder+output_name+'-'+ylabels[i]+'.png')
