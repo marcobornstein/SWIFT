@@ -34,7 +34,10 @@ if __name__ == "__main__":
         
     fig = plt.figure()
     for i in range(num_workers):
-        plt.plot(train_accuracy[:, i], range(1, epoch+1))
+        plt.plot(range(1, epoch+1), train_accuracy[:, i])
+
+    plt.xlabel('Epochs')
+    plt.ylabel('Training Accuracy')
 
     output_folder = './Figures/'
     output_name = args[4]
