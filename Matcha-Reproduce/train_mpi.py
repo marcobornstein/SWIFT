@@ -217,6 +217,8 @@ if __name__ == "__main__":
     parser.add_argument('--description', type=str, help='experiment description')
 
     parser.add_argument('--model', default="res", type=str, help='model name: res/VGG/wrn')
+    parser.add_argument('--resSize', default=50, type=int, help='res net size')
+
     parser.add_argument('--lr', default=0.8, type=float, help='learning rate')
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
     parser.add_argument('--epoch', '-e', default=1, type=int, help='total epoch')

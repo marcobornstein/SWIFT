@@ -16,4 +16,4 @@
 #module load python
 module load openmpi
 
-mpirun -np 8 python train_mpi.py --description Matcha --randomSeed 9001 --datasetRoot ./data --budget 0.8 --outputFolder Output --downloadCifar 1
+mpirun -np 8 python train_mpi.py --description Matcha --randomSeed 9001 --datasetRoot ./data --budget 0.5 --outputFolder Output --downloadCifar 1

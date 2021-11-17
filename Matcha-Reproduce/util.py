@@ -275,11 +275,8 @@ def select_model(num_class, args):
         model = vggnet.VGG(16, num_class)
     elif args.model == 'res':
         if args.dataset == 'cifar10':
-            # model = large_resnet.ResNet18()
-            #model = resnet.ResNet(50, num_class)
-            model = resnet.ResNet(18, num_class)
+            model = resnet.ResNet(args.resSize, num_class)
         elif args.dataset == 'imagenet':
-           # model = models.resnet18()
             model = resnet.ResNet(18, num_class)
     elif args.model == 'wrn':
         model = wrn.Wide_ResNet(28,10,0,num_class)
@@ -425,7 +422,7 @@ class Recorder(object):
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-time.log',  self.record_timing, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-comptime.log',  self.record_comp_timing, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-commtime.log',  self.record_comm_timing, delimiter=',')
-        np.savetxt(subfolder+'/dsgd--r'+str(self.rank)+'-losses.log',  self.record_losses, delimiter=',')
+        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-losses.log',  self.record_losses, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-tacc.log',  self.record_trainacc, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-acc.log',  self.record_accuracy, delimiter=',')
 
