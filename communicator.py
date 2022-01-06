@@ -59,6 +59,13 @@ class AsyncCentralServer:
         return self.function(self.x) + \
                (self.L/(2*np.sqrt(self.tau)))*np.sum(np.arange(1, self.tau+1)*self.x_diff[-self.tau:])
 
+    def flush(self):
+        for k in range(40):
+            for i in range(0, self.size):
+                if i != self.rank:
+                    if self.comm.iprobe(source=i, tag=i):
+                        self.comm.recv(source=i, tag=i)
+
     def initial_request(self):
         """ Initialize Communication between Server and Workers """
 
@@ -76,6 +83,7 @@ class AsyncCentralServer:
 
         j = 0
         msg_count = 0
+
         while msg_count < num_msg:
             if self.requests[j].Get_status():
 
@@ -234,6 +242,13 @@ class SyncCentralServer:
         return self.function(self.x) + \
                (self.L / (2 * np.sqrt(self.tau))) * np.sum(np.arange(1, self.tau + 1) * self.x_diff[-self.tau:])
 
+    def flush(self):
+        for k in range(1000):
+            for i in range(0, self.size):
+                if i != self.rank:
+                    if self.comm.iprobe(source=i, tag=i):
+                        self.comm.recv(source=i, tag=i)
+
     def receive(self, num_updates):
         """ Receive Worker updates for a specified number of updates """
 
@@ -336,7 +351,7 @@ class SyncCentralServer:
 class ParallelWorker:
     """ Class constructed to turn one process into a parallel worker for SE-ACGD """
 
-    def __init__(self, rank, size, root, x, grad, stepsize):
+    def __init__(self, rank, size, root, x, grad, stepsize, delay):
         """ Initialize Parallel Worker """
 
         # Initialize MPI variables
@@ -344,13 +359,16 @@ class ParallelWorker:
         self.rank = rank
         self.size = size
         self.req = MPI.REQUEST_NULL
-        
+
         # Initialize message count, root destination (central server), stepsize, gradient function, and initial solution
         self.msg_count = 0
         self.root = root
         self.grad = grad
         self.x = x
         self.stepsize = stepsize
+
+        # User defined worker delay
+        self.delay = delay
 
         # Compute the indices of the solution that the worker will be working on
         per_process = int(self.x.shape[0]/(self.size-1))
@@ -383,6 +401,7 @@ class ParallelWorker:
         # Initiate receiving (non-blocking) the end flag (this won't arrive for awhile)
         end_req = self.comm.irecv(source=self.root, tag=self.rank)
 
+
         while True:
 
             # Compute gradient
@@ -390,7 +409,7 @@ class ParallelWorker:
 
             # Add in an optional delay (to replicate a slow worker)
             if self.rank == 1:
-                time.sleep(0.00001)
+                time.sleep(self.delay)
 
             # Send computed gradient
             self.send(msg)
