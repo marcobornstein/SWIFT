@@ -33,7 +33,6 @@ class AsyncDecentralized:
         # faltten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
 
-
     def reset_model(self):
         # Reset local models to be the averaged model
         for f, t in zip(unflatten_tensors(
@@ -69,6 +68,7 @@ class AsyncDecentralized:
         return toc - tic
 
     def broadcast(self, model):
+
         # necessary preprocess
         self.prepare_send_buffer(model)
 
@@ -83,11 +83,11 @@ class AsyncDecentralized:
 
     def communicate(self, model):
 
-        self.iter += 1
-
         if self.iter % self.sgd_updates == 0:
             comm_time = self.averaging(model)
         else:
             comm_time = self.broadcast(model)
+
+        self.iter += 1
 
         return comm_time
