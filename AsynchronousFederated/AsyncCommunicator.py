@@ -26,18 +26,19 @@ class AsyncDecentralized:
         self.iter = 0
 
     def prepare_send_buffer(self, model):
+
         # stack all model parameters into one tensor list
         self.tensor_list = list()
+
         for param in model.parameters():
             self.tensor_list.append(param)
-        # faltten tensors
+
+        # flatten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
 
     def reset_model(self):
         # Reset local models to be the averaged model
-        for f, t in zip(unflatten_tensors(
-                        self.avg_model.cuda(), self.tensor_list),
-                        self.tensor_list):
+        for f, t in zip(unflatten_tensors(self.avg_model.cuda(), self.tensor_list), self.tensor_list):
             with torch.no_grad():
                 t.set_(f)
 
