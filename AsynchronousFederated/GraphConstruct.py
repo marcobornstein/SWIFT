@@ -22,18 +22,18 @@ class GraphConstruct:
         if weight_type == 'learnable':
             # NEED TO IMPLEMENT HERE
             weights = np.ones(self.size)
-
+            
         elif weight_type == 'matcha':
             # NEED TO IMPLEMENT HERE
             weights = np.ones(self.size)
-
+            
         else:
             weights = (1/self.size) * np.ones(self.size)
-
+            
         return weights
 
     def getNeighbors(self):
-
+        
         neighbors = [[] for _ in range(self.size)]
         for edge in self.graph:
             node1, node2 = edge[0], edge[1]
@@ -42,5 +42,6 @@ class GraphConstruct:
                 exit()
             neighbors[node1].append(node2)
             neighbors[node2].append(node1)
-
+            
         return neighbors
+    
