@@ -2,14 +2,12 @@ import os
 import numpy as np
 import time
 import argparse
-import sys
-
-from mpi4py import MPI
-from math import ceil
-from random import Random
-import networkx as nx
-
+import resnet
+import util
 import gc
+from GraphConstruct import GraphConstruct
+from AsyncCommunicator import AsyncDecentralized
+from mpi4py import MPI
 
 import torch
 import torch.distributed as dist
@@ -25,12 +23,6 @@ import torch.backends.cudnn as cudnn
 import torchvision.models as models
 cudnn.benchmark = True
 
-import resnet
-import vggnet
-import wrn 
-import util
-from graph_manager import FixedProcessor, MatchaProcessor
-from communicator import decenCommunicator, ChocoCommunicator, centralizedCommunicator
 
 def sync_allreduce(model, rank, size):
     senddata = {}
@@ -38,7 +30,7 @@ def sync_allreduce(model, rank, size):
     for param in model.parameters():
         tmp = param.data.cpu()
         senddata[param] = tmp.numpy()
-        recvdata[param] = np.empty(senddata[param].shape, dtype = senddata[param].dtype)
+        recvdata[param] = np.empty(senddata[param].shape, dtype=senddata[param].dtype)
     torch.cuda.synchronize()
     comm.barrier()
 
@@ -56,6 +48,7 @@ def sync_allreduce(model, rank, size):
         param.data = param.data/float(size)
     return comm_t
 
+
 def run(rank, size):
 
     # set random seed
@@ -64,28 +57,21 @@ def run(rank, size):
 
     # load data
     train_loader, test_loader = util.partition_dataset(rank, size, args)    
-    num_batches = ceil(len(train_loader.dataset) / float(args.bs))
+    # num_batches = ceil(len(train_loader.dataset) / float(args.bs))
 
     # load base network topology
-    subGraphs = util.select_graph(args.graphid)
-    
-    # define graph activation scheme
-    if args.matcha:
-        GP = MatchaProcessor(subGraphs, args.budget, rank, size, args.epoch*num_batches, True)
-    else:
-        GP = FixedProcessor(subGraphs, args.budget, rank, size, args.epoch*num_batches, True)
+    Graph = [[(0, 1)]]
 
-    # define communicator
-    if args.compress:
-        communicator = ChocoCommunicator(rank, size, GP, 0.9, args.consensus_lr)
-    else:
-        communicator = decenCommunicator(rank, size, GP)
+    GP = GraphConstruct(Graph, rank, size)
+    sgd_steps = 3
+    communicator = AsyncDecentralized(rank, size, GP, sgd_steps)
 
     # select neural network model
-    model = util.select_model(10, args)
+    num_class = 10
+    model = resnet.ResNet(args.resSize, num_class)
 
     # split up GPUs                                                                                                                                              
-    num_gpus =  torch.cuda.device_count()
+    num_gpus = torch.cuda.device_count()
     gpu_id = rank % num_gpus
     
     # initialize the GPU being used                                                                                                                              
@@ -105,11 +91,11 @@ def run(rank, size):
 
     # init recorder
     comp_time, comm_time = 0, 0
-    recorder = util.Recorder(args,rank)
+    recorder = util.Recorder(args, rank)
     losses = util.AverageMeter()
     top1 = util.AverageMeter()
     tic = time.time()
-    itr = 0
+    # itr = 0
 
     # start training
     for epoch in range(args.epoch):
@@ -119,7 +105,7 @@ def run(rank, size):
         for batch_idx, (data, target) in enumerate(train_loader):
             start_time = time.time()
             # data loading 
-            data, target = data.cuda(non_blocking = True), target.cuda(non_blocking = True)                
+            data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
             
             # forward pass
             output = model(data)
@@ -148,25 +134,28 @@ def run(rank, size):
             d_comm_time = communicator.communicate(model)
             comm_time += d_comm_time
 
+            # Marco comment out for now
+            # print("batch_idx: %d, rank: %d, comp_time: %.3f, comm_time: %.3f,epoch time: %.3f "
+            #      % (batch_idx + 1, rank, d_comp_time, d_comm_time, comp_time + comm_time), end='\r')
+
             gc.collect()
             del data, target, output, d_comm_time, d_comp_time
 
-            #Marco comment out for now
-            #print("batch_idx: %d, rank: %d, comp_time: %.3f, comm_time: %.3f,epoch time: %.3f " % (batch_idx+1,rank,d_comp_time, d_comm_time, comp_time+ comm_time), end='\r')
-
         toc = time.time()
-        record_time = toc - tic # time that includes anything
-        epoch_time = comp_time + comm_time # only include important parts
+        record_time = toc - tic  # time that includes anything
+        epoch_time = comp_time + comm_time  # only include important parts
 
         # evaluate test accuracy at the end of each epoch
         test_acc = util.test(model, test_loader)[0].item()
 
-        recorder.add_new(record_time,comp_time,comm_time,epoch_time,top1.avg,losses.avg,test_acc)
-        print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, test_acc, epoch_time))
+        recorder.add_new(record_time, comp_time, comm_time, epoch_time, top1.avg, losses.avg, test_acc)
+        print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f epoch time: %.3f"
+              % (rank, epoch, losses.avg, top1.avg, test_acc, epoch_time))
         if rank == 0:
-            print("comp_time: %.3f, comm_time: %.3f, comp_time_budget: %.3f, comm_time_budget: %.3f" % (comp_time, comm_time, comp_time/epoch_time, comm_time/epoch_time))
+            print("comp_time: %.3f, comm_time: %.3f, comp_time_budget: %.3f, comm_time_budget: %.3f"
+                  % (comp_time, comm_time, comp_time/epoch_time, comm_time/epoch_time))
        
-        if epoch%10 == 0:
+        if epoch % 10 == 0:
             recorder.save_to_file()
 
         # reset recorders
@@ -178,8 +167,7 @@ def run(rank, size):
     recorder.save_to_file()
 
 
-def update_learning_rate(optimizer, epoch, itr=None, itr_per_epoch=None,
-                         scale=1):
+def update_learning_rate(optimizer, epoch, itr=None, itr_per_epoch=None):
     """
     1) Linearly warmup to reference learning rate (5 epochs)
     2) Decay learning rate exponentially (epochs 30, 60, 80)
@@ -190,7 +178,6 @@ def update_learning_rate(optimizer, epoch, itr=None, itr_per_epoch=None,
     target_lr = args.lr
     lr_schedule = [100, 150]
 
-    lr = None
     if args.warmup and epoch < 5:  # warmup to scaled lr
         if target_lr <= base_lr:
             lr = target_lr
@@ -210,10 +197,11 @@ def update_learning_rate(optimizer, epoch, itr=None, itr_per_epoch=None,
         for param_group in optimizer.param_groups:
             param_group['lr'] = lr
 
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
-    parser.add_argument('--name','-n', default="default", type=str, help='experiment name')
+    parser.add_argument('--name', '-n', default="default", type=str, help='experiment name')
     parser.add_argument('--description', type=str, help='experiment description')
 
     parser.add_argument('--model', default="res", type=str, help='model name: res/VGG/wrn')
@@ -232,11 +220,10 @@ if __name__ == "__main__":
     
     parser.add_argument('--dataset', default='cifar10', type=str, help='the dataset')
     parser.add_argument('--datasetRoot', type=str, help='the path of dataset')
-    parser.add_argument('--downloadCifar', default = 0, type=int, help='change to 1 if needing to download Cifar')
-
+    parser.add_argument('--downloadCifar', default=0, type=int, help='change to 1 if needing to download Cifar')
 
     parser.add_argument('--p', '-p', action='store_true', help='partition the dataset or not')
-    parser.add_argument('--savePath' ,type=str, help='save path')
+    parser.add_argument('--savePath', type=str, help='save path')
 
     # Marco edit, add in the folder where outputs are saved
     parser.add_argument('--outputFolder', type=str, help = 'save folder')
