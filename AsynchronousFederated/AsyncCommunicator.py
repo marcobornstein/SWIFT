@@ -47,13 +47,14 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
+        worker_model = np.empty_like(self.avg_model)
 
         tic = time.time()
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for node in self.neighbor_list:
-            print('source is %d and rank is %d' %(node, self.rank))
-            worker_model = self.comm.recv(source=node, tag=node)
+            print('source is %d and rank is %d' % (node, self.rank))
+            self.comm.Recv(worker_model, source=node, tag=node)
             print('after recv')
             self.avg_model.add_(worker_model, alpha=self.neighbor_weights[node])
 
@@ -78,7 +79,7 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            self.requests[idx] = self.comm.isend(self.send_buffer, dest=node, tag=self.rank)
+            self.requests[idx] = self.comm.Isend(np.array(self.send_buffer), dest=node, tag=self.rank)
         print('sent')
 
         toc = time.time()
