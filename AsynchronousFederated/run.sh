@@ -14,5 +14,6 @@
 #SBATCH --mail-type=END                 # Valid type values are NONE, BEGIN, END, FAIL, REQUEUE
 
 module load openmpi
+module load cuda/11.2.2
 
 mpirun -np 2 python train_mpi.py --description asyncDecentralized --resSize 50 --randomSeed 9001 --datasetRoot ./data --budget 1 --outputFolder Output --bs 64 --epoch 1 --name trial
