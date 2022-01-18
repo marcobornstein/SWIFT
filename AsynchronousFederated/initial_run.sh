@@ -11,10 +11,8 @@
 #SBATCH --ntasks=8
 #SBATCH --mem 64gb                        # memory required by job; if unit is not specified MB will be assumed
 #SBATCH --nice=0
-#SBATCH --mail-type=END                   # Valid type values are NONE, BEGIN, END, FAIL, REQUEUE,
-#SBATCH --error Logs/%x_%A_%a.log
+#SBATCH --mail-type=END                   # Valid type values are NONE, BEGIN, END, FAIL, REQUEUE
 
-#module load python
 module load openmpi
 
 mpirun -np 8 python train_mpi.py --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --budget 1 --outputFolder Output --downloadCifar 1 --epoch 1 --name trial
