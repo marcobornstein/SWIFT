@@ -32,7 +32,7 @@ class GraphConstruct:
             
         return weights
 
-    def getNeighbors(self):
+    def getNeighbors(self, rank):
         
         neighbors = [[] for _ in range(self.size)]
         for edge in self.graph:
@@ -43,5 +43,5 @@ class GraphConstruct:
             neighbors[node1].append(node2)
             neighbors[node2].append(node1)
             
-        return neighbors
+        return neighbors[rank]
     

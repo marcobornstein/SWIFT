@@ -14,7 +14,7 @@ class AsyncDecentralized:
         self.topology = topology
         self.neighbor_list = self.topology.getNeighbors(rank)
         self.neighbor_weights = topology.getWeights()
-        self.degree = len(self.neighbor_list[rank])
+        self.degree = len(self.neighbor_list)
 
         # Initialize MPI variables
         self.comm = MPI.COMM_WORLD
