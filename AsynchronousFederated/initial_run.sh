@@ -15,4 +15,4 @@
 
 module load openmpi
 
-mpirun -np 8 python train_mpi.py --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --budget 1 --outputFolder Output --downloadCifar 1 --epoch 1 --name trial
+mpirun -np 2 python train_mpi.py --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --budget 1 --outputFolder Output --downloadCifar 1 --epoch 1 --name trial
