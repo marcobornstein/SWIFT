@@ -12,8 +12,8 @@ class AsyncDecentralized:
 
         # Graph initialization
         self.topology = topology
-        self.neighbor_list = self.topology.getNeighbors(rank)
-        self.neighbor_weights = topology.getWeights()
+        self.neighbor_list = self.topology.neighbor_list
+        self.neighbor_weights = topology.neighbor_weights
         self.degree = len(self.neighbor_list)
 
         # Initialize MPI variables
