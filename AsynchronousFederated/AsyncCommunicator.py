@@ -56,7 +56,7 @@ class AsyncDecentralized:
             print('source is %d and rank is %d' % (node, self.rank))
             self.comm.Recv(worker_model, source=node, tag=node)
             print('after recv')
-            self.avg_model.add_(worker_model, alpha=self.neighbor_weights[node])
+            self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[node])
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
