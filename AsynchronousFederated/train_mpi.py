@@ -69,7 +69,6 @@ def run(rank, size):
     # select neural network model
     num_class = 10
     model = resnet.ResNet(args.resSize, num_class)
-    print('test')
 
     # split up GPUs                                                                                                                                              
     num_gpus = torch.cuda.device_count()
@@ -99,7 +98,6 @@ def run(rank, size):
     # itr = 0
 
     # start training
-    print('starting training!')
     for epoch in range(args.epoch):
         model.train()
 
