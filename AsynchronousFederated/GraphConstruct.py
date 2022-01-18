@@ -36,7 +36,6 @@ class GraphConstruct:
         
         neighbors = [[] for _ in range(self.size)]
         for edge in self.graph:
-            print(edge)
             node1, node2 = edge[0], edge[1]
             if node1 == node2:
                 print("Invalid input graph! Circle! ("+str(node1) +", "+ str(node2)+")")

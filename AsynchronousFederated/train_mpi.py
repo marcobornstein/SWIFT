@@ -60,7 +60,7 @@ def run(rank, size):
     # num_batches = ceil(len(train_loader.dataset) / float(args.bs))
 
     # load base network topology
-    Graph = [[(0, 1)]]
+    Graph = [(0, 1)]
 
     GP = GraphConstruct(Graph, rank, size)
     sgd_steps = 3
