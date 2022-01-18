@@ -52,7 +52,7 @@ class AsyncDecentralized:
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for node in self.neighbor_list:
-            print('before recv')
+            print('source is %d and rank is %d' %(node, self.rank))
             worker_model = self.comm.recv(source=node, tag=node)
             print('after recv')
             self.avg_model.add_(worker_model, alpha=self.neighbor_weights[node])
@@ -79,6 +79,7 @@ class AsyncDecentralized:
 
         for idx, node in enumerate(self.neighbor_list):
             self.requests[idx] = self.comm.isend(self.send_buffer, dest=node, tag=self.rank)
+        print('sent')
 
         toc = time.time()
 
