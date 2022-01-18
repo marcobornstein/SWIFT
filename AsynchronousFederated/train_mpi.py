@@ -200,8 +200,6 @@ def update_learning_rate(optimizer, epoch, itr=None, itr_per_epoch=None):
 
 if __name__ == "__main__":
 
-    print('hi')
-
     parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
     parser.add_argument('--name', '-n', default="default", type=str, help='experiment name')
     parser.add_argument('--description', type=str, help='experiment description')
