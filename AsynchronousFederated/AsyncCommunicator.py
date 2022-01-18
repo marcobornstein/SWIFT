@@ -52,7 +52,9 @@ class AsyncDecentralized:
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for node in self.neighbor_list:
+            print('before recv')
             worker_model = self.comm.recv(source=node, tag=node)
+            print('after recv')
             self.avg_model.add_(worker_model, alpha=self.neighbor_weights[node])
 
         # compute self weight according to degree
