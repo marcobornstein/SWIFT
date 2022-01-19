@@ -80,6 +80,8 @@ class AsyncDecentralized:
         for idx, node in enumerate(self.neighbor_list):
             if self.comm.Iprobe(source=self.rank, tag=self.rank):
                 print('Recv')
+            elif not(self.comm.Iprobe(source=self.rank, tag=self.rank)) and self.iter == 1:
+                print('First Send')
             else:
                 print('Not Recv')
                 self.requests[idx].Cancel()
