@@ -14,6 +14,7 @@ class AsyncDecentralized:
         self.topology = topology
         self.neighbor_list = self.topology.neighbor_list
         self.neighbor_weights = topology.neighbor_weights
+        print(self.neighbor_weights)
         self.degree = len(self.neighbor_list)
 
         # Initialize MPI variables
@@ -55,7 +56,7 @@ class AsyncDecentralized:
         for node in self.neighbor_list:
             self.comm.Recv(worker_model, source=node, tag=node)
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[node])
-        print(self.avg_model)
+
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
