@@ -435,6 +435,5 @@ def test(model, test_loader):
         inputs, targets = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True)
         outputs = model(inputs)
         acc1 = comp_accuracy(outputs, targets)
-        # top1.update(acc1[0], inputs.size(0))
-        top1.update(acc1[0][0], inputs.size(0))
+        top1.update(acc1[0], inputs.size(0))
     return top1.avg

@@ -14,8 +14,8 @@ class GraphConstruct:
         self.graph = graph
 
         # Determine each node's neighbors and the weights for each node in the Graph
-        self.neighbor_weights = self.getWeights()
         self.neighbor_list = self.getNeighbors(rank)
+        self.neighbor_weights = self.getWeights()
 
     def getWeights(self, weight_type=None):
         
@@ -28,7 +28,8 @@ class GraphConstruct:
             weights = np.ones(self.size)
             
         else:
-            weights = (1/self.size) * np.ones(self.size)
+            num_neighbors = len(self.neighbor_list)
+            weights = (1/self.size) * np.ones(num_neighbors)
             
         return weights
 
