@@ -428,6 +428,7 @@ class Recorder(object):
 
 def test(model, test_loader):
     model.eval()
+    print(model.parameters()[0:10])
     top1 = AverageMeter()
     # correct = 0
     # total = 0
