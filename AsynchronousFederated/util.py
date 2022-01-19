@@ -434,7 +434,7 @@ def test(model, test_loader):
     for batch_idx, (inputs, targets) in enumerate(test_loader):
         inputs, targets = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True)
         outputs = model(inputs)
-        print(outputs[0:10])
         acc1 = comp_accuracy(outputs, targets)
+        print(acc1)
         top1.update(acc1[0], inputs.size(0))
     return top1.avg
