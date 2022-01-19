@@ -136,8 +136,8 @@ def run(rank, size):
             comm_time += d_comm_time
 
             # Marco comment out for now
-            print("batch_idx: %d, rank: %d, comp_time: %.3f, comm_time: %.3f,epoch time: %.3f "
-                  % (batch_idx + 1, rank, d_comp_time, d_comm_time, comp_time + comm_time), end='\r')
+            # print("batch_idx: %d, rank: %d, comp_time: %.3f, comm_time: %.3f,epoch time: %.3f "
+            #      % (batch_idx + 1, rank, d_comp_time, d_comm_time, comp_time + comm_time), end='\r')
 
             gc.collect()
             del data, target, output, d_comm_time, d_comp_time
