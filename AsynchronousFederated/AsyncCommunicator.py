@@ -63,7 +63,6 @@ class AsyncDecentralized:
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.avg_model.add_(self.send_buffer, alpha=selfweight)
 
-
         toc = time.time()
 
         # update local models
@@ -79,13 +78,13 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            if self.requests[idx].Get_status():
+            if self.requests[idx].Test():
                 print('Recv')
-            elif not(self.requests[idx].Get_status()) and self.iter == self.sgd_updates-1:
+            elif not(self.requests[idx].Test()) and self.iter == self.sgd_updates-1:
                 print('First Send')
             else:
                 self.requests[idx].Cancel()
-                print(self.requests[idx].Get_status())
+                print(self.requests[idx].Test())
 
             self.requests[idx] = self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
 
