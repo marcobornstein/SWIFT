@@ -78,14 +78,6 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            if self.requests[idx].Test():
-                print('Recv')
-            elif not(self.requests[idx].Test()) and self.iter == self.sgd_updates-1:
-                print('First Send')
-            else:
-                self.requests[idx].Cancel()
-                print(self.requests[idx].Test())
-
             self.requests[idx] = self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
 
         toc = time.time()
