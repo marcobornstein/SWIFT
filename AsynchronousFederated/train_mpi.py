@@ -63,7 +63,7 @@ def run(rank, size):
     Graph = [(0, 1)]
 
     GP = GraphConstruct(Graph, rank, size)
-    sgd_steps = 3
+    sgd_steps = 2
     communicator = AsyncDecentralized(rank, size, GP, sgd_steps)
 
     # select neural network model
