@@ -47,13 +47,15 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
+        worker_model = np.empty_like(self.avg_model)
 
         tic = time.time()
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
-        for node in self.neighbor_list:
-            worker_model = self.comm.recv(source=node, tag=node)
-            self.avg_model.add_(worker_model, alpha=self.neighbor_weights[node])
+        for idx, node in enumerate(self.neighbor_list):
+            self.comm.Recv(worker_model, source=node, tag=node)
+            self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
+
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
@@ -76,7 +78,7 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            self.requests[idx] = self.comm.isend(self.send_buffer, dest=node, tag=self.rank)
+            self.requests[idx] = self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
 
         toc = time.time()
 
@@ -84,11 +86,14 @@ class AsyncDecentralized:
 
     def communicate(self, model):
 
-        if self.iter % self.sgd_updates == 0:
-            comm_time = self.averaging(model)
-        else:
-            comm_time = self.broadcast(model)
-
         self.iter += 1
+
+        if self.iter % self.sgd_updates == 0:
+            a = self.broadcast(model)
+            b = self.averaging(model)
+            comm_time = a+b
+        else:
+            comm_time = 0
+            # comm_time = self.broadcast(model)
 
         return comm_time

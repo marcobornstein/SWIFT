@@ -78,6 +78,12 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
+            if self.comm.Iprobe(source=self.rank, tag=self.rank):
+                print('Recv')
+            else:
+                print('Not Recv')
+                self.requests[idx].Cancel()
+
             self.requests[idx] = self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
 
         toc = time.time()
@@ -93,7 +99,7 @@ class AsyncDecentralized:
             b = self.averaging(model)
             comm_time = a+b
         elif self.iter % (self.sgd_updates-1) == 0:
-            comm_time = 0
+            comm_time = self.broadcast(model)
         else:
             comm_time = 0
             # comm_time = self.broadcast(model)
