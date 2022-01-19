@@ -56,12 +56,13 @@ class AsyncDecentralized:
             self.comm.Recv(worker_model, source=node, tag=node)
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
 
+        print(self.avg_model)
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.avg_model.add_(self.send_buffer, alpha=selfweight)
-        print(self.avg_model)
+
 
         toc = time.time()
 
@@ -78,9 +79,9 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            if self.comm.Iprobe(source=self.rank, tag=self.rank):
+            if self.requests[idx].Get_status():
                 print('Recv')
-            elif not(self.comm.Iprobe(source=self.rank, tag=self.rank)) and self.iter == self.sgd_updates-1:
+            elif not(self.requests[idx].Get_status()) and self.iter == self.sgd_updates-1:
                 print('First Send')
             else:
                 self.requests[idx].Cancel()
