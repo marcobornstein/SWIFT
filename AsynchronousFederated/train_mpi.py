@@ -148,6 +148,7 @@ def run(rank, size):
 
         # evaluate test accuracy at the end of each epoch
         test_acc = util.test(model, test_loader)[0].item()
+        print(test_acc)
 
         recorder.add_new(record_time, comp_time, comm_time, epoch_time, top1.avg, losses.avg, test_acc)
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f epoch time: %.3f"
