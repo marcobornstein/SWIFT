@@ -54,9 +54,9 @@ class AsyncDecentralized:
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
 
-            self.comm.Recv(worker_model, source=node, tag=node)
+            while self.comm.Iprobe(source=node, tag=node):
+                self.comm.Recv(worker_model, source=node, tag=node)
             print('recv')
-            self.comm.Recv(worker_model, source=node, tag=node)
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
 
         # compute self weight according to degree
