@@ -431,10 +431,17 @@ def test(model, test_loader):
     top1 = AverageMeter()
     # correct = 0
     # total = 0
+    sum = 0
+    count = 0
     for batch_idx, (inputs, targets) in enumerate(test_loader):
         inputs, targets = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True)
         outputs = model(inputs)
         acc1 = comp_accuracy(outputs, targets)
+        sum += acc1
+        count += inputs.size(0)
         top1.update(acc1[0], inputs.size(0))
+    print(sum)
+    print(count)
     print(top1.avg)
+    print('=====')
     return top1.avg
