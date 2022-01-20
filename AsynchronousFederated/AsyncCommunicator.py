@@ -51,13 +51,12 @@ class AsyncDecentralized:
 
         tic = time.time()
 
-        delay = 10
-        req = MPI.REQUEST_NULL
+        flag = True
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
-            for count in range(delay):
+            while flag:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
-                print(req.Test())
+                flag = req.Test()
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
 
         # compute self weight according to degree
