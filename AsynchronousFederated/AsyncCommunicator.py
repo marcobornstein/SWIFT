@@ -56,7 +56,9 @@ class AsyncDecentralized:
         for idx, node in enumerate(self.neighbor_list):
             for i in range(10):
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
-                print(req.Test())
+                if not req.Test():
+                    print('hi')
+                    req.Cancel()
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
 
         # compute self weight according to degree
