@@ -51,14 +51,19 @@ class AsyncDecentralized:
 
         tic = time.time()
 
-        flag = True
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
+            flag = True
+            count = 0
             while flag:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
                 if not req.Test():
+                    if count == 0:
+                        # If no messages available, take one's own model as the model to average
+                        worker_model = self.send_buffer
                     req.Cancel()
                     flag = False
+                count += 1
 
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
 
