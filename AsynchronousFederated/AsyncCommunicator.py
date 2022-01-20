@@ -60,8 +60,9 @@ class AsyncDecentralized:
                 if not req.Test():
                     if count == 0:
                         print(req.Test())
-                        time.sleep(5)
+                        time.sleep(2)
                         print(req.Test())
+                        print('===========')
                         # If no messages available, take one's own model as the model to average
                         worker_model = self.send_buffer.detach().numpy()
                     req.Cancel()
