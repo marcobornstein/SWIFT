@@ -54,7 +54,7 @@ class AsyncDecentralized:
         flag = True
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
-            while flag:
+            for i in range(10):
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
                 print(req.Test())
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
