@@ -2,7 +2,6 @@ import numpy as np
 import time
 from mpi4py import MPI
 import torch
-import copy
 from comm_helpers import flatten_tensors, unflatten_tensors
 
 
@@ -97,6 +96,7 @@ class AsyncDecentralized:
                         # time.sleep(2)
                         # print(req.Test())
                         # print('===========')
+                        print('Bad')
 
                         # If no messages available, take one's own model as the model to average
                         req.Cancel()
