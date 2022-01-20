@@ -90,7 +90,6 @@ class AsyncDecentralized:
             count = 0
             while flag:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
-                time.sleep(0.25)
                 if not req.Test():
                     if count == 0:
                         # print(req.Test())
@@ -104,10 +103,11 @@ class AsyncDecentralized:
                         self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                         flag = False
                     else:
+                        print(count)
                         req.Cancel()
                         self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
                         flag = False
-                count = 1
+                count += 1
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
