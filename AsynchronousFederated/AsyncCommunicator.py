@@ -59,8 +59,9 @@ class AsyncDecentralized:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
                 if not req.Test():
                     if count == 0:
+                        print(req.Test())
                         # If no messages available, take one's own model as the model to average
-                        worker_model = self.send_buffer
+                        worker_model = self.send_buffer.detach().numpy()
                     req.Cancel()
                     flag = False
                 count += 1
