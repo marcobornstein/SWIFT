@@ -2,6 +2,7 @@ import numpy as np
 import time
 from mpi4py import MPI
 import torch
+import copy
 from comm_helpers import flatten_tensors, unflatten_tensors
 
 
@@ -52,8 +53,38 @@ class AsyncDecentralized:
         tic = time.time()
 
         # make list of booleans and then put while loop outside of for loop. if the request is false then make boolean false, etc.
+        '''
+        flag = [False for _ in range(self.degree)]
+        req = [MPI.REQUEST_NULL for _ in range(self.degree)]
+        count = 0
+        while not all(flag):
+            for idx, node in enumerate(self.neighbor_list):
+                req[idx] = self.comm.Irecv(worker_model, source=node, tag=node)
 
-        # '''
+                
+            for i in range(self.degree):
+                if not req[i].Test():
+                    req[i].Cancel()
+                    flag[i] = True
+            count +=1
+
+        # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
+        for idx, node in enumerate(self.neighbor_list):
+            flag = True
+            count = 0
+            while flag:
+                req = self.comm.Irecv(worker_model, source=node, tag=node)
+                if not req.Test():
+                    if count == 0:
+                        # If no messages available, take one's own model as the model to average
+                        worker_model = self.send_buffer.detach().numpy()
+                    req.Cancel()
+                    flag = False
+                count += 1
+
+            self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
+
+        '''
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
             flag = True
@@ -63,18 +94,19 @@ class AsyncDecentralized:
                 if not req.Test():
                     if count == 0:
                         # print(req.Test())
-                        print('Bad')
                         # time.sleep(2)
                         # print(req.Test())
                         # print('===========')
-                        # If no messages available, take one's own model as the model to average
-                        worker_model = self.send_buffer.detach().numpy()
-                    req.Cancel()
-                    flag = False
-                count += 1
 
-            self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
-        # '''
+                        # If no messages available, take one's own model as the model to average
+                        req.Cancel()
+                        self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
+                        flag = False
+                    else:
+                        req.Cancel()
+                        self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
+                        flag = False
+                count += 1
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
