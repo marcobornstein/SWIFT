@@ -51,10 +51,63 @@ class AsyncDecentralized:
 
         tic = time.time()
 
+        # make list of booleans and then put while loop outside of for loop. if the request is false then make boolean false, etc.
+        '''
+        flag = [False for _ in range(self.degree)]
+        req = [MPI.REQUEST_NULL for _ in range(self.degree)]
+        count = 0
+        while not all(flag):
+            for idx, node in enumerate(self.neighbor_list):
+                req[idx] = self.comm.Irecv(worker_model, source=node, tag=node)
+
+
+            for i in range(self.degree):
+                if not req[i].Test():
+                    req[i].Cancel()
+                    flag[i] = True
+            count +=1
+
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
-            self.comm.Recv(worker_model, source=node, tag=node)
+            flag = True
+            count = 0
+            while flag:
+                req = self.comm.Irecv(worker_model, source=node, tag=node)
+                if not req.Test():
+                    if count == 0:
+                        # If no messages available, take one's own model as the model to average
+                        worker_model = self.send_buffer.detach().numpy()
+                    req.Cancel()
+                    flag = False
+                count += 1
+
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
+
+        '''
+
+        # Im sending maybe an incorrect model, needs to be a previous model
+
+        # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
+        for idx, node in enumerate(self.neighbor_list):
+            flag = True
+            count = 0
+            prev_model = np.empty_like(self.avg_model)
+            while flag:
+                req = self.comm.Irecv(worker_model, source=node, tag=node)
+                if not req.Test():
+                    if count == 0:
+                        # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
+                        # If no messages available, take one's own model as the model to average
+                        req.Cancel()
+                        self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
+                        flag = False
+                    else:
+                        # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
+                        req.Cancel()
+                        self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
+                        flag = False
+                prev_model = worker_model
+                count += 1
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
@@ -90,9 +143,8 @@ class AsyncDecentralized:
         if self.iter % self.sgd_updates == 0:
             a = self.broadcast(model)
             b = self.averaging(model)
-            comm_time = a+b
+            comm_time = a + b
         else:
-            comm_time = 0
-            # comm_time = self.broadcast(model)
+            comm_time = self.broadcast(model)
 
         return comm_time
