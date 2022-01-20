@@ -106,7 +106,7 @@ class AsyncDecentralized:
                         req.Cancel()
                         self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
                         flag = False
-                count += 1
+                count = 1
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
