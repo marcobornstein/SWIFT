@@ -103,10 +103,7 @@ class AsyncDecentralized:
             a = self.broadcast(model)
             b = self.averaging(model)
             comm_time = a+b
-        elif self.iter % (self.sgd_updates-1) == 0:
-            comm_time = self.broadcast(model)
         else:
-            comm_time = 0
-            # comm_time = self.broadcast(model)
+            comm_time = self.broadcast(model)
 
         return comm_time
