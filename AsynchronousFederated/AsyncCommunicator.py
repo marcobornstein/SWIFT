@@ -96,13 +96,13 @@ class AsyncDecentralized:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
                 if not req.Test():
                     if count == 0:
-                        print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
+                        # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
                         # If no messages available, take one's own model as the model to average
                         req.Cancel()
                         self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                         flag = False
                     else:
-                        print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
+                        # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
                         req.Cancel()
                         self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                         flag = False
