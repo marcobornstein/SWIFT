@@ -90,6 +90,7 @@ class AsyncDecentralized:
             count = 0
             while flag:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
+                time.sleep(0.25)
                 if not req.Test():
                     if count == 0:
                         # print(req.Test())
