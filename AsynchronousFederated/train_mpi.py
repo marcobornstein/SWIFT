@@ -61,7 +61,7 @@ def run(rank, size):
 
     # load base network topology
     Graph = [(0, 1)]  # Simple Link
-    Graph = [(0, 1), (0, 2), (1, 2)]  # Simple Triangle
+    # Graph = [(0, 1), (0, 2), (1, 2)]  # Simple Triangle
 
     GP = GraphConstruct(Graph, rank, size)
     sgd_steps = 3
@@ -153,6 +153,7 @@ def run(rank, size):
         recorder.add_new(record_time, comp_time, comm_time, epoch_time, top1.avg, losses.avg, test_acc)
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f epoch time: %.3f"
               % (rank, epoch, losses.avg, top1.avg, test_acc, epoch_time))
+
         if rank == 0:
             print("comp_time: %.3f, comm_time: %.3f, comp_time_budget: %.3f, comm_time_budget: %.3f"
                   % (comp_time, comm_time, comp_time/epoch_time, comm_time/epoch_time))
