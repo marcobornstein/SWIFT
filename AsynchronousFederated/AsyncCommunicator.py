@@ -20,7 +20,6 @@ class AsyncDecentralized:
         self.comm = MPI.COMM_WORLD
         self.rank = rank
         self.size = size
-        self.requests = [MPI.REQUEST_NULL for _ in range(self.degree)]
 
         self.sgd_updates = sgd_updates
         self.iter = 0
@@ -50,6 +49,8 @@ class AsyncDecentralized:
         worker_model = np.empty_like(self.avg_model)
 
         tic = time.time()
+
+        # make list of booleans and then put while loop outside of for loop. if the request is false then make boolean false, etc.
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
@@ -92,8 +93,7 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            self.requests[idx] = self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
-            # self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
+            self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
 
         toc = time.time()
 
