@@ -57,7 +57,6 @@ class AsyncDecentralized:
             for i in range(10):
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
                 if not req.Test():
-                    print('hi')
                     req.Cancel()
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
 
