@@ -60,7 +60,8 @@ def run(rank, size):
     # num_batches = ceil(len(train_loader.dataset) / float(args.bs))
 
     # load base network topology
-    Graph = [(0, 1)]
+    Graph = [(0, 1)]  # Simple Link
+    # Graph = [(0, 1), (0, 2), (1, 2)]  # Simple Triangle
 
     GP = GraphConstruct(Graph, rank, size)
     sgd_steps = 3

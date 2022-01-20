@@ -53,6 +53,7 @@ class AsyncDecentralized:
 
         # make list of booleans and then put while loop outside of for loop. if the request is false then make boolean false, etc.
 
+        # '''
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
             flag = True
@@ -62,6 +63,7 @@ class AsyncDecentralized:
                 if not req.Test():
                     if count == 0:
                         # print(req.Test())
+                        print('Bad')
                         # time.sleep(2)
                         # print(req.Test())
                         # print('===========')
@@ -72,6 +74,7 @@ class AsyncDecentralized:
                 count += 1
 
             self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
+        # '''
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
@@ -95,7 +98,6 @@ class AsyncDecentralized:
 
         for idx, node in enumerate(self.neighbor_list):
             self.requests[idx] = self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
-            # self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
 
         toc = time.time()
 
