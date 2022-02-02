@@ -78,7 +78,6 @@ class AsyncDecentralized:
                         print('Received NaN')
                 prev_model = worker_model
                 count += 1
-                worker_model.fill(np.nan)
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
