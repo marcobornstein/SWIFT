@@ -47,7 +47,7 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-        worker_model = np.empty_like(self.avg_model)
+        worker_model = np.zeros_like(self.avg_model)
 
         if any(np.isnan(self.send_buffer.detach().numpy())):
             print('NaN')
@@ -61,8 +61,6 @@ class AsyncDecentralized:
             prev_model = np.empty_like(self.avg_model)
             while flag:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
-                if any(np.isnan(worker_model)):
-                    print('Received NaN')
                 if not req.Test():
                     if count == 0:
                         # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
@@ -75,6 +73,9 @@ class AsyncDecentralized:
                         req.Cancel()
                         self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                         flag = False
+                else:
+                    if any(np.isnan(worker_model)):
+                        print('Received NaN')
                 prev_model = worker_model
                 count += 1
 
