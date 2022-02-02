@@ -47,7 +47,7 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-        worker_model = np.zeros_like(self.avg_model)
+        worker_model = np.zeros_like(self.avg_model, dtype=np.double)
 
         if any(np.isnan(self.send_buffer.detach().numpy())):
             print('NaN')
@@ -58,7 +58,7 @@ class AsyncDecentralized:
         for idx, node in enumerate(self.neighbor_list):
             flag = True
             count = 0
-            prev_model = np.empty_like(self.avg_model)
+            prev_model = np.empty_like(self.avg_model, dtype=np.double)
             while flag:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
                 if not req.Test():
@@ -78,6 +78,7 @@ class AsyncDecentralized:
                         print('Received NaN')
                 prev_model = worker_model
                 count += 1
+                worker_model.fill(np.nan)
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
