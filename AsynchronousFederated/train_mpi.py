@@ -133,7 +133,7 @@ def run(rank, size):
             comp_time += d_comp_time
 
             # Test Sync Style
-            # MPI.COMM_WORLD.Barrier()
+            MPI.COMM_WORLD.Barrier()
 
             # communication happens here
             d_comm_time = communicator.communicate(model)
