@@ -75,9 +75,15 @@ class AsyncDecentralized:
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
+        if count == 0:
+            print(self.send_buffer[0:10])
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.avg_model.add_(self.send_buffer, alpha=selfweight)
+
+        if count == 0:
+            print(self.avg_model[0:10])
+            print('===========')
 
         toc = time.time()
 
