@@ -102,6 +102,8 @@ class AsyncDecentralized:
 
         for idx, node in enumerate(self.neighbor_list):
             self.requests[idx] = self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
+            if any(np.isnan(self.send_buffer.detach().numpy())):
+                print('Sending NaN')
 
         toc = time.time()
 
