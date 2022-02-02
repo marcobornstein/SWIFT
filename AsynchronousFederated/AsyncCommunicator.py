@@ -51,42 +51,6 @@ class AsyncDecentralized:
 
         tic = time.time()
 
-        # make list of booleans and then put while loop outside of for loop. if the request is false then make boolean false, etc.
-        '''
-        flag = [False for _ in range(self.degree)]
-        req = [MPI.REQUEST_NULL for _ in range(self.degree)]
-        count = 0
-        while not all(flag):
-            for idx, node in enumerate(self.neighbor_list):
-                req[idx] = self.comm.Irecv(worker_model, source=node, tag=node)
-
-                
-            for i in range(self.degree):
-                if not req[i].Test():
-                    req[i].Cancel()
-                    flag[i] = True
-            count +=1
-
-        # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
-        for idx, node in enumerate(self.neighbor_list):
-            flag = True
-            count = 0
-            while flag:
-                req = self.comm.Irecv(worker_model, source=node, tag=node)
-                if not req.Test():
-                    if count == 0:
-                        # If no messages available, take one's own model as the model to average
-                        worker_model = self.send_buffer.detach().numpy()
-                    req.Cancel()
-                    flag = False
-                count += 1
-
-            self.avg_model.add_(torch.from_numpy(worker_model), alpha=self.neighbor_weights[idx])
-
-        '''
-
-        # Im sending maybe an incorrect model, needs to be a previous model
-
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
             flag = True
