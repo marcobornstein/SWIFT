@@ -124,9 +124,10 @@ class AsyncDecentralized:
 
     def broadcast(self, model):
 
-        # necessary preprocess
+        # Preprocess
         self.prepare_send_buffer(model)
 
+        # Time
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
@@ -145,7 +146,7 @@ class AsyncDecentralized:
             b = self.averaging(model)
             comm_time = a+b
         else:
-            comm_time = self.broadcast(model)
-            # comm_time = 0
+            # comm_time = self.broadcast(model)
+            comm_time = 0
 
         return comm_time
