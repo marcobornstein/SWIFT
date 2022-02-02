@@ -77,13 +77,13 @@ class AsyncDecentralized:
         selfweight = 1 - np.sum(self.neighbor_weights)
 
         if count == 1:
-            print(self.send_buffer[0:10])
+            print('Rank %d has Max Parameter %f' % (self.rank, max(self.avg_model)))
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.avg_model.add_(self.send_buffer, alpha=selfweight)
 
         if count == 1:
-            print(self.avg_model[0:10])
+            print('Rank %d has Max Parameter %f' % (self.rank, max(self.avg_model)))
             print('===========')
 
         toc = time.time()
