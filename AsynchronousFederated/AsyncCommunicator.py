@@ -32,8 +32,9 @@ class AsyncDecentralized:
 
         for param in model.parameters():
             self.tensor_list.append(param)
-            if np.isnan(param):
-                print('Is NaN')
+
+        if any(np.isnan(self.tensor_list)):
+            print('NaN')
 
         # flatten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
