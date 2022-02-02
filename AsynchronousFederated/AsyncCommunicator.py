@@ -71,11 +71,11 @@ class AsyncDecentralized:
                     else:
                         # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
                         req.Cancel()
+                        if any(np.isnan(prev_model)):
+                            print('Using NaN')
                         self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                         flag = False
-                else:
-                    if any(np.isnan(worker_model)):
-                        print('Received NaN')
+
                 prev_model = worker_model
                 count += 1
 
@@ -118,7 +118,7 @@ class AsyncDecentralized:
             b = self.averaging(model)
             comm_time = a+b
         else:
-            # comm_time = self.broadcast(model)
-            comm_time = 0
+            comm_time = self.broadcast(model)
+            # comm_time = 0
 
         return comm_time
