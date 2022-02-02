@@ -49,7 +49,7 @@ class AsyncDecentralized:
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.empty_like(self.avg_model)
 
-        if any(np.isnan(self.send_buffer.numpy())):
+        if any(np.isnan(self.send_buffer.detach().numpy())):
             print('NaN')
 
         tic = time.time()
