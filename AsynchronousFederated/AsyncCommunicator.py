@@ -33,9 +33,6 @@ class AsyncDecentralized:
         for param in model.parameters():
             self.tensor_list.append(param)
 
-        if any(np.isnan(self.tensor_list)):
-            print('NaN')
-
         # flatten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
 
@@ -51,6 +48,9 @@ class AsyncDecentralized:
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.empty_like(self.avg_model)
+
+        if any(np.isnan(torch.from_numpy(self.send_buffer))):
+            print('NaN')
 
         tic = time.time()
 
