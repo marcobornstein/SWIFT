@@ -61,6 +61,8 @@ class AsyncDecentralized:
             prev_model = np.empty_like(self.avg_model)
             while flag:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
+                if any(np.isnan(worker_model)):
+                    print('Received NaN')
                 if not req.Test():
                     if count == 0:
                         # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
