@@ -17,7 +17,7 @@ def unpack_data(directory_path, epoch, num_workers, datatype):
                     i = 0
                     time_sum = 0
                     for line in f:
-                        time_sum += line
+                        time_sum += float(line)
                         data[i, j] = time_sum
                         i += 1
                     j += 1
