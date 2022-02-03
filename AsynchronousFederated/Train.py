@@ -96,7 +96,7 @@ def run(rank, size):
 
             # backward pass
             loss.backward()
-            update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=20.0, decay_epoch=50,
+            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,
                                  itr=batch_idx, itr_per_epoch=len(train_loader))
 
             # gradient step
