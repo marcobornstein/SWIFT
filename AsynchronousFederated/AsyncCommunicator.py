@@ -66,6 +66,8 @@ class AsyncDecentralized:
                         # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
                         # If no messages available, take one's own model as the model to average
                         req.Cancel()
+                        if any(np.isnan(self.send_buffer.detach().numpy())):
+                            print('Using Own NaN')
                         self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                         flag = False
                     else:
