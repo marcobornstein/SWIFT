@@ -68,6 +68,7 @@ if __name__ == "__main__":
 
         plt.savefig(output_folder+output_name+'-'+ylabels[i]+'.png')
 
+        plt.clf()
         for j in range(num_workers):
             plt.plot(range(1, epoch+1), time_data[:, j])
             plt.xlabel('Wall Time (Seconds)')
