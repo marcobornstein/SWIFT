@@ -88,7 +88,7 @@ def run(rank, size):
     
     # guarantee all local models start from the same point
     # can be removed    
-    sync_allreduce(model, rank, size)
+    # sync_allreduce(model, rank, size)
 
     # init recorder
     comp_time, comm_time = 0, 0
@@ -97,7 +97,6 @@ def run(rank, size):
     top1 = util.AverageMeter()
     init_time = time.time()
     tic = time.time()
-    # itr = 0
 
     # start training
     for epoch in range(args.epoch):
