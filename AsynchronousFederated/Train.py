@@ -96,7 +96,8 @@ def run(rank, size):
 
             # backward pass
             loss.backward()
-            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=20.0, itr=batch_idx, itr_per_epoch=len(train_loader))
+            update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=20.0, decay_epoch=50,
+                                 itr=batch_idx, itr_per_epoch=len(train_loader))
 
             # gradient step
             optimizer.step()
@@ -134,10 +135,10 @@ def run(rank, size):
     recorder.save_to_file()
 
 
-def update_learning_rate(optimizer, epoch, drop, epochs_drop, itr=None, itr_per_epoch=None):
+def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=None, itr_per_epoch=None):
     """
     1) Linearly warmup to reference learning rate (5 epochs)
-    2) Decay learning rate exponentially
+    2) Decay learning rate exponentially starting at decay_epoch
     ** note: args.lr is the reference learning rate from which to scale up
     ** note: minimum global batch-size is 256
     """
@@ -150,7 +151,7 @@ def update_learning_rate(optimizer, epoch, drop, epochs_drop, itr=None, itr_per_
             count = epoch * itr_per_epoch + itr + 1
             incr = (lr - base_lr) * (count / (5 * itr_per_epoch))
             lr = base_lr + incr
-    else:
+    elif epoch >= decay_epoch:
         lr *= np.power(drop, np.floor((1 + epoch) / epochs_drop))
 
     if lr is not None:
