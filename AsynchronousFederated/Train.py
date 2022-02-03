@@ -72,7 +72,7 @@ def run(rank, size):
     top1 = util.AverageMeter()
     init_time = time.time()
 
-    MPI.COMM_WORLD.barrier()
+    MPI.COMM_WORLD.Barrier()
     # start training
     for epoch in range(args.epoch):
         model.train()
@@ -167,13 +167,13 @@ def sync_allreduce(model, size):
         senddata[param] = tmp.numpy()
         recvdata[param] = np.empty(senddata[param].shape, dtype=senddata[param].dtype)
     torch.cuda.synchronize()
-    MPI.COMM_WORLD.barrier()
+    MPI.COMM_WORLD.Barrier()
 
     comm_start = time.time()
     for param in model.parameters():
         MPI.COMM_WORLD.Allreduce(senddata[param], recvdata[param], op=MPI.SUM)
     torch.cuda.synchronize()
-    MPI.COMM_WORLD.barrier()
+    MPI.COMM_WORLD.Barrier()
 
     comm_end = time.time()
     comm_t = (comm_end - comm_start)

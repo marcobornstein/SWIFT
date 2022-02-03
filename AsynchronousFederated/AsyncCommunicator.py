@@ -57,7 +57,7 @@ class AsyncDecentralized:
             flag = True
             count = 0
             # prev_model = np.empty_like(self.avg_model)
-            # prev_model = np.empty(len(self.avg_model))
+            prev_model = np.empty(len(self.avg_model))
             while flag:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
                 if not req.Test():
