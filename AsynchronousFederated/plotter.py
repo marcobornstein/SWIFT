@@ -15,8 +15,10 @@ def unpack_data(directory_path, epoch, num_workers, datatype):
                 if file.endswith(datatype + ".log"):
                     f = open(directory_path + '/' + file, 'r')
                     i = 0
+                    time_sum = 0
                     for line in f:
-                        data[i, j] += line
+                        time_sum += line
+                        data[i, j] = time_sum
                         i += 1
                     j += 1
     else:
