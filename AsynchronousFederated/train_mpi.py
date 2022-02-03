@@ -95,6 +95,7 @@ def run(rank, size):
     recorder = util.Recorder(args, rank)
     losses = util.AverageMeter()
     top1 = util.AverageMeter()
+    init_time = time.time()
     tic = time.time()
     # itr = 0
 
@@ -153,14 +154,14 @@ def run(rank, size):
         # evaluate test accuracy at the end of each epoch
         test_acc = util.test(model, test_loader)[0].item()
 
-        recorder.add_new(record_time, comp_time, comm_time, epoch_time, top1.avg, losses.avg, test_acc)
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f epoch time: %.3f"
               % (rank, epoch, losses.avg, top1.avg, test_acc, epoch_time))
 
         if rank == 0:
             print("comp_time: %.3f, comm_time: %.3f, comp_time_budget: %.3f, comm_time_budget: %.3f"
                   % (comp_time, comm_time, comp_time/epoch_time, comm_time/epoch_time))
-       
+
+        recorder.add_new(record_time, comp_time, comm_time, epoch_time, time.time()-init_time, top1.avg, losses.avg, test_acc)
         if epoch % 10 == 0:
             recorder.save_to_file()
 

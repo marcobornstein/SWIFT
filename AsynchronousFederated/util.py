@@ -385,6 +385,7 @@ class Recorder(object):
     def __init__(self, args, rank):
         self.record_accuracy = list()
         self.record_timing = list()
+        self.record_total_timing = list()
         self.record_comp_timing = list()
         self.record_comm_timing = list()
         self.record_losses = list()
@@ -397,9 +398,10 @@ class Recorder(object):
         #if rank == 0 and os.path.isdir(self.saveFolderName)==False and self.args.save:
         #    os.mkdir(self.saveFolderName)
             
-    def add_new(self,record_time,comp_time,comm_time,epoch_time,top1,losses,test_acc):
+    def add_new(self,record_time,comp_time,comm_time,epoch_time,total_time,top1,losses,test_acc):
         self.total_record_timing.append(record_time)
         self.record_timing.append(epoch_time)
+        self.record_total_timing.append(total_time)
         self.record_comp_timing.append(comp_time)
         self.record_comm_timing.append(comm_time)
         self.record_trainacc.append(top1)
@@ -414,7 +416,8 @@ class Recorder(object):
             os.makedirs(subfolder)
 
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-recordtime.log', self.total_record_timing, delimiter=',')
-        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-time.log',  self.record_timing, delimiter=',')
+        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-epoch-time.log',  self.record_timing, delimiter=',')
+        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-total-time.log', self.record_total_timing, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-comptime.log',  self.record_comp_timing, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-commtime.log',  self.record_comm_timing, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-losses.log',  self.record_losses, delimiter=',')

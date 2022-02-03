@@ -8,30 +8,16 @@ def unpack_data(directory_path, epoch, num_workers, datatype):
     directory = os.path.join(directory_path)
     data = np.zeros((epoch, num_workers))
 
-    if datatype == '-time':
-        for root, dirs, files in os.walk(directory):
-            j = 0
-            for file in files:
-                if file.endswith(datatype + ".log"):
-                    f = open(directory_path + '/' + file, 'r')
-                    i = 0
-                    time_sum = 0
-                    for line in f:
-                        time_sum += float(line)
-                        data[i, j] = time_sum
-                        i += 1
-                    j += 1
-    else:
-        for root, dirs, files in os.walk(directory):
-            j = 0
-            for file in files:
-                if file.endswith(datatype+".log"):
-                    f = open(directory_path+'/'+file, 'r')
-                    i = 0
-                    for line in f:
-                        data[i, j] = line
-                        i += 1
-                    j += 1
+    for root, dirs, files in os.walk(directory):
+        j = 0
+        for file in files:
+            if file.endswith(datatype+".log"):
+                f = open(directory_path+'/'+file, 'r')
+                i = 0
+                for line in f:
+                    data[i, j] = line
+                    i += 1
+                j += 1
 
     return data
 
@@ -54,7 +40,7 @@ if __name__ == "__main__":
     output_folder = './Figures/'
     output_name = args[4]
 
-    time_data = unpack_data(path, epoch, num_workers, '-time')
+    time_data = unpack_data(path, epoch, num_workers, '-total-time')
 
     for i in range(len(datatypes)):
         
