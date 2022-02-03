@@ -41,6 +41,7 @@ class GraphConstruct:
             if node1 == node2:
                 print("Invalid input graph! Circle! ("+str(node1) +", "+ str(node2)+")")
                 exit()
+            print(node2)
             neighbors[node1].append(node2)
             neighbors[node2].append(node1)
             
