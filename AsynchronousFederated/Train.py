@@ -72,6 +72,7 @@ def run(rank, size):
     top1 = util.AverageMeter()
     init_time = time.time()
 
+    MPI.COMM_WORLD.barrier()
     # start training
     for epoch in range(args.epoch):
         model.train()
