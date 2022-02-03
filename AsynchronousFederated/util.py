@@ -398,8 +398,7 @@ class Recorder(object):
         #if rank == 0 and os.path.isdir(self.saveFolderName)==False and self.args.save:
         #    os.mkdir(self.saveFolderName)
             
-    def add_new(self,record_time,comp_time,comm_time,epoch_time,total_time,top1,losses,test_acc):
-        self.total_record_timing.append(record_time)
+    def add_new(self,comp_time,comm_time,epoch_time,total_time,top1,losses,test_acc):
         self.record_timing.append(epoch_time)
         self.record_total_timing.append(total_time)
         self.record_comp_timing.append(comp_time)
@@ -415,7 +414,6 @@ class Recorder(object):
         if not isExist:
             os.makedirs(subfolder)
 
-        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-recordtime.log', self.total_record_timing, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-epoch-time.log',  self.record_timing, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-total-time.log', self.record_total_timing, delimiter=',')
         np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-comptime.log',  self.record_comp_timing, delimiter=',')
