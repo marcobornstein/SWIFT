@@ -88,7 +88,7 @@ def run(rank, size):
     
     # guarantee all local models start from the same point
     # can be removed    
-    # sync_allreduce(model, rank, size)
+    sync_allreduce(model, rank, size)
 
     # init recorder
     comp_time, comm_time = 0, 0
