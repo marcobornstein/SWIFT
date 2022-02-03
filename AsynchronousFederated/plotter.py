@@ -7,16 +7,30 @@ import sys
 def unpack_data(directory_path, epoch, num_workers, datatype):
     directory = os.path.join(directory_path)
     data = np.zeros((epoch, num_workers))
-    for root, dirs, files in os.walk(directory):
-        j = 0
-        for file in files:
-            if file.endswith(datatype+".log"):
-                f = open(directory_path+'/'+file, 'r')
-                i = 0
-                for line in f:
-                    data[i,j] = line
-                    i += 1
-                j += 1
+
+    if datatype == 'time':
+        for root, dirs, files in os.walk(directory):
+            j = 0
+            for file in files:
+                if file.endswith(datatype + ".log"):
+                    f = open(directory_path + '/' + file, 'r')
+                    i = 0
+                    for line in f:
+                        data[i, j] += line
+                        i += 1
+                    j += 1
+    else:
+        for root, dirs, files in os.walk(directory):
+            j = 0
+            for file in files:
+                if file.endswith(datatype+".log"):
+                    f = open(directory_path+'/'+file, 'r')
+                    i = 0
+                    for line in f:
+                        data[i, j] = line
+                        i += 1
+                    j += 1
+
     return data
 
 
@@ -31,12 +45,14 @@ if __name__ == "__main__":
     epoch = int(args[2])
     num_workers = int(args[3])
 
-    #datatypes = ['tacc', 'acc', 'losses', 'time', 'comptime', 'commtime']
-    datatypes = ['-tacc', '-acc', '-losses']
+    # datatypes = ['tacc', 'acc', 'losses', 'time', 'comptime', 'commtime']
+    datatypes = ['tacc', 'acc', 'losses']
     ylabels = ['Training-Accuracy', 'Test-Accuracy', 'Training-Loss']
 
     output_folder = './Figures/'
     output_name = args[4]
+
+    time_data = unpack_data(path, epoch, num_workers, 'time')
 
     for i in range(len(datatypes)):
         
@@ -45,8 +61,14 @@ if __name__ == "__main__":
         fig = plt.figure()
         for j in range(num_workers):
             plt.plot(range(1, epoch+1), data[:, j])
-
             plt.xlabel('Epochs')
             plt.ylabel(ylabels[i])
 
         plt.savefig(output_folder+output_name+'-'+ylabels[i]+'.png')
+
+        for j in range(num_workers):
+            plt.plot(range(1, epoch+1), time_data[:, j])
+            plt.xlabel('Wall Time (Seconds)')
+            plt.ylabel(ylabels[i])
+
+        plt.savefig(output_folder+output_name+'-WallTime-'+ylabels[i]+'.png')
