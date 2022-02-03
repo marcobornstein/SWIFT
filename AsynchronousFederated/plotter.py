@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
         plt.clf()
         for j in range(num_workers):
-            plt.plot(range(1, epoch+1), time_data[:, j])
+            plt.plot(time_data[:, j], data[:, j])
             plt.xlabel('Wall Time (Seconds)')
             plt.ylabel(ylabels[i])
 
