@@ -8,7 +8,7 @@ def unpack_data(directory_path, epoch, num_workers, datatype):
     directory = os.path.join(directory_path)
     data = np.zeros((epoch, num_workers))
 
-    if datatype == 'time':
+    if datatype == '-time':
         for root, dirs, files in os.walk(directory):
             j = 0
             for file in files:
@@ -48,13 +48,13 @@ if __name__ == "__main__":
     num_workers = int(args[3])
 
     # datatypes = ['tacc', 'acc', 'losses', 'time', 'comptime', 'commtime']
-    datatypes = ['tacc', 'acc', 'losses']
+    datatypes = ['-tacc', '-acc', '-losses']
     ylabels = ['Training-Accuracy', 'Test-Accuracy', 'Training-Loss']
 
     output_folder = './Figures/'
     output_name = args[4]
 
-    time_data = unpack_data(path, epoch, num_workers, 'time')
+    time_data = unpack_data(path, epoch, num_workers, '-time')
 
     for i in range(len(datatypes)):
         
