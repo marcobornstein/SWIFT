@@ -49,9 +49,6 @@ class AsyncDecentralized:
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.zeros_like(self.avg_model)
 
-        if any(np.isnan(self.send_buffer.detach().numpy())):
-            print('NaN')
-
         tic = time.time()
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
@@ -104,8 +101,6 @@ class AsyncDecentralized:
 
         for idx, node in enumerate(self.neighbor_list):
             self.requests[idx] = self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
-            if any(np.isnan(self.send_buffer.detach().numpy())):
-                print('Sending NaN')
 
         toc = time.time()
 
