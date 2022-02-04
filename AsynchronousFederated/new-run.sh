@@ -16,4 +16,4 @@
 module load openmpi
 module load cuda/11.2.2
 
-mpirun -np 3 python Train.py --description asyncDecentralized --resSize 50 --randomSeed 9001 --datasetRoot ./data --outputFolder Output --bs 64 --epoch 80 --name new-decay-triangle
+mpirun -np 3 python Train.py --description asyncDecentralized --resSize 50 --randomSeed 9001 --datasetRoot ./data --outputFolder Output --bs 64 --epoch 80 --name find-error
