@@ -36,7 +36,8 @@ def run(rank, size):
 
     # load base network topology
     # Graph = [(0, 1)]  # Simple Link
-    Graph = [(0, 1), (0, 2), (1, 2)]  # Simple Triangle
+    # Graph = [(0, 1), (0, 2), (1, 2)]  # Simple Triangle
+    Graph = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]  # Inter-connected Square
 
     GP = GraphConstruct(Graph, rank, size)
     sgd_steps = 3
