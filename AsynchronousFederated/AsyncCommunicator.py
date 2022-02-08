@@ -47,7 +47,7 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-        worker_model = np.zeros_like(self.avg_model)
+        worker_model = np.ones_like(self.avg_model)
         prev_model = np.empty_like(self.avg_model)
 
         tic = time.time()
