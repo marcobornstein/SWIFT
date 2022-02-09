@@ -54,7 +54,7 @@ class AsyncDecentralized:
         for idx, node in enumerate(self.neighbor_list):
                     count = 0
                     while True:
-                        req2 = self.comm.Irecv(buf=worker_buff, source=node, tag=node+self.size)
+                        req2 = self.comm.Irecv(worker_buff, source=node, tag=node+self.size)
                         if not req2.Test():
                             if count == 0:
                                 # If no messages available, keep unchanged
