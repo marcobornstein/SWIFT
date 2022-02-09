@@ -63,15 +63,15 @@ class AsyncDecentralized:
                                 # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
                                 # If no messages available, take one's own model as the model to average
                                 req.Cancel()
-                                if any(np.isnan(self.send_buffer.detach().numpy())):
-                                    print('Using Own NaN')
+                                # if any(np.isnan(self.send_buffer.detach().numpy())):
+                                #    print('Using Own NaN')
                                 self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                                 break
                             else:
                                 # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
                                 req.Cancel()
-                                if any(np.isnan(prev_model)):
-                                    print('Using NaN')
+                                # if any(np.isnan(prev_model)):
+                                #     print('Using NaN')
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                                 break
                         print('Rank %d Has a Value of %f From %d' % (self.rank, worker_model[-1], node))
