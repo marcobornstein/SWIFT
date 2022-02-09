@@ -26,7 +26,6 @@ class AsyncDecentralized:
         self.sgd_updates = sgd_updates
         self.init_sgd_updates = sgd_updates
         self.iter = 0
-        # self.num_comms = 0
 
     def prepare_send_buffer(self, model):
 
@@ -80,8 +79,11 @@ class AsyncDecentralized:
                                 req.Cancel()
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                                 print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
+                                print('Rank %d Has Received Test Accuracy of %f From Rank %d' % (self.rank, test_acc, node))
+                                self.testAcc[idx] = test_acc
                                 break
                         prev_model = worker_model[:-1]
+                        test_acc = worker_model[-1]
                         count += 1
 
         # compute self weight according to degree
@@ -112,8 +114,6 @@ class AsyncDecentralized:
 
         toc = time.time()
 
-        # self.num_comms += 1
-
         return toc - tic
 
     def communicate(self, model, test_acc):
@@ -125,7 +125,6 @@ class AsyncDecentralized:
             b = self.averaging(model)
             self.personalize(test_acc)
             comm_time = a+b
-            # self.num_comms = 0
         else:
             comm_time = self.broadcast(model, test_acc)
             # comm_time = 0
