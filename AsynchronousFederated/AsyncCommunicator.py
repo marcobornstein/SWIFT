@@ -64,6 +64,7 @@ class AsyncDecentralized:
                                 break
 
                         worker_acc = req2.wait()
+                        print(worker_acc)
                         count += 1
 
         toc = time.time()
