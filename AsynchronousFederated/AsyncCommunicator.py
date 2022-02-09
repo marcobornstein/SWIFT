@@ -36,7 +36,7 @@ class AsyncDecentralized:
         for param in model.parameters():
             self.tensor_list.append(param)
 
-        self.tensor_list.append(torch.from_numpy(np.array([test_acc])))
+        self.tensor_list.append(test_acc*torch.ones(1))
 
         # flatten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
