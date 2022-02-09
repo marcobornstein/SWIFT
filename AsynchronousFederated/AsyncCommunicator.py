@@ -128,6 +128,5 @@ class AsyncDecentralized:
             comm_time = a+b
         else:
             comm_time = self.broadcast(model, test_acc)
-            # comm_time = 0
 
         return comm_time
