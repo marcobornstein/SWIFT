@@ -66,16 +66,16 @@ class AsyncDecentralized:
                                 break
 
                         worker_acc = worker_buff[0]
-                        print(worker_acc)
                         count += 1
 
         toc = time.time()
-
+        '''
         if not any(self.testAcc == -1.0):
             if test_acc <= np.min(self.testAcc):
                 self.sgd_updates += 1
             elif test_acc > np.min(self.testAcc) and self.init_sgd_updates > self.sgd_updates:
                 self.sgd_updates -= 1
+        '''
 
         return toc - tic
 
