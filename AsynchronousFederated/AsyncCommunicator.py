@@ -22,7 +22,9 @@ class AsyncDecentralized:
         self.size = size
         self.requests = [MPI.REQUEST_NULL for _ in range(self.degree)]
 
+        self.testAcc = -1 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
+        self.init_sgd_updates = sgd_updates
         self.iter = 0
         # self.num_comms = 0
 
@@ -42,6 +44,13 @@ class AsyncDecentralized:
         for f, t in zip(unflatten_tensors(self.avg_model.cuda(), self.tensor_list), self.tensor_list):
             with torch.no_grad():
                 t.set_(f)
+
+    def personalize(self, test_acc):
+        if not any(self.testAcc == -1):
+            if test_acc <= np.min(self.testAcc):
+                self.sgd_updates += 1
+            elif test_acc > np.min(self.testAcc) and self.init_sgd_updates > self.sgd_updates:
+                self.sgd_updates -= 1
 
     def averaging(self, model):
 
