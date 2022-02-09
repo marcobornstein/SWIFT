@@ -46,14 +46,14 @@ class AsyncDecentralized:
 
     def personalize(self, test_acc):
 
-        worker_buff = [-1]
+        worker_buff = 1
         worker_acc = 0
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
                     count = 0
                     while True:
-                        req2 = self.comm.irecv(worker_buff, source=node, tag=node+self.size)
+                        req2 = self.comm.irecv(buf=worker_buff, source=node, tag=node+self.size)
                         if not req2.test():
                             if count == 0:
                                 # If no messages available, keep unchanged
