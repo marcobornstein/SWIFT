@@ -159,7 +159,7 @@ class AsyncDecentralized:
         # Time
         tic = time.time()
         for node in self.neighbor_list:
-            self.comm.isend(str(test_acc), dest=node, tag=self.rank+self.size)
+            self.comm.isend(test_acc, dest=node, tag=self.rank+self.size)
         toc = time.time()
 
         return toc - tic
