@@ -24,7 +24,7 @@ class AsyncDecentralized:
 
         self.sgd_updates = sgd_updates
         self.iter = 0
-        self.num_comms = 0
+        # self.num_comms = 0
 
     def prepare_send_buffer(self, model):
 
@@ -54,8 +54,6 @@ class AsyncDecentralized:
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
                     count = 0
-                    # prev_model = np.empty_like(self.avg_model)
-                    # prev_model = np.empty(len(self.avg_model))
                     while True:
                         req = self.comm.Irecv(worker_model, source=node, tag=node)
                         if not req.Test():
@@ -63,18 +61,14 @@ class AsyncDecentralized:
                                 # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
                                 # If no messages available, take one's own model as the model to average
                                 req.Cancel()
-                                # if any(np.isnan(self.send_buffer.detach().numpy())):
-                                #    print('Using Own NaN')
                                 self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                                 break
                             else:
                                 # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
                                 req.Cancel()
-                                # if any(np.isnan(prev_model)):
-                                #     print('Using NaN')
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
+                                print('Rank %d Has a Value of %f From %d' % (self.rank, prev_model[-1], node))
                                 break
-                        print('Rank %d Has a Value of %f From %d' % (self.rank, worker_model[-1], node))
                         prev_model = worker_model
                         count += 1
 
@@ -101,12 +95,12 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            #self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank+self.num_comms)
+            # self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank+self.num_comms)
             self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
 
         toc = time.time()
 
-        self.num_comms += 1
+        # self.num_comms += 1
 
         return toc - tic
 
@@ -118,7 +112,7 @@ class AsyncDecentralized:
             a = self.broadcast(model)
             b = self.averaging(model)
             comm_time = a+b
-            self.num_comms = 0
+            # self.num_comms = 0
         else:
             comm_time = self.broadcast(model)
             # comm_time = 0
