@@ -49,6 +49,7 @@ class AsyncDecentralized:
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.ones_like(self.avg_model)
+        prev_model = np.ones_like(self.avg_model)
 
         tic = time.time()
 
@@ -56,7 +57,6 @@ class AsyncDecentralized:
         for idx, node in enumerate(self.neighbor_list):
             count = 0
             # prev_model = np.empty_like(self.avg_model)
-            prev_model = np.empty(len(self.avg_model))
             while True:
                 req = self.comm.Irecv(worker_model, source=node, tag=node+count)
 
@@ -69,6 +69,7 @@ class AsyncDecentralized:
                         req.Cancel()
                         self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                         break
+
                     else:
                         # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
                         # if any(np.isnan(prev_model)):
