@@ -57,7 +57,7 @@ class AsyncDecentralized:
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.ones_like(self.avg_model)
-        worker_model = np.append(worker_model, 1)
+        # worker_model = np.append(worker_model, 1)
         prev_model = np.ones_like(self.avg_model)
         # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
         # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
@@ -80,10 +80,11 @@ class AsyncDecentralized:
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                                 # print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
                                 # print('Rank %d Has Received Test Accuracy of %f From Rank %d' % (self.rank, test_acc, node))
-                                self.testAcc[idx] = test_acc
+                                # self.testAcc[idx] = test_acc
                                 break
-                        prev_model = worker_model[:-1]
-                        test_acc = worker_model[-1]
+                        prev_model = worker_model
+                        #prev_model = worker_model[:-1]
+                        #test_acc = worker_model[-1]
                         count += 1
 
         # compute self weight according to degree
@@ -104,7 +105,7 @@ class AsyncDecentralized:
         # Preprocess
         self.prepare_send_buffer(model)
         send_buffer = self.send_buffer.detach().numpy()
-        send_buffer = np.append(send_buffer, test_acc)
+        # send_buffer = np.append(send_buffer, test_acc)
 
         # Time
         tic = time.time()
