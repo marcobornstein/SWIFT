@@ -78,8 +78,8 @@ class AsyncDecentralized:
                                 # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
                                 req.Cancel()
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
-                                print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
-                                print('Rank %d Has Received Test Accuracy of %f From Rank %d' % (self.rank, test_acc, node))
+                                # print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
+                                # print('Rank %d Has Received Test Accuracy of %f From Rank %d' % (self.rank, test_acc, node))
                                 self.testAcc[idx] = test_acc
                                 break
                         prev_model = worker_model[:-1]
