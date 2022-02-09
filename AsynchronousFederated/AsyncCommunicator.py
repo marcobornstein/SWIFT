@@ -108,7 +108,6 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            # self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank+self.num_comms)
             self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
 
         toc = time.time()
@@ -124,6 +123,7 @@ class AsyncDecentralized:
         if self.iter % self.sgd_updates == 0:
             a = self.broadcast(model, test_acc)
             b = self.averaging(model)
+            self.personalize(test_acc)
             comm_time = a+b
             # self.num_comms = 0
         else:
