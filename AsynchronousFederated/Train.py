@@ -72,6 +72,7 @@ def run(rank, size):
     losses = util.AverageMeter()
     top1 = util.AverageMeter()
     init_time = time.time()
+    test_acc = -1
 
     MPI.COMM_WORLD.Barrier()
     # start training
@@ -110,7 +111,7 @@ def run(rank, size):
             comp_time += d_comp_time
 
             # communication happens here
-            d_comm_time = communicator.communicate(model)
+            d_comm_time = communicator.communicate(model, test_acc)
             comm_time += d_comm_time
 
         # total time spent in algorithm

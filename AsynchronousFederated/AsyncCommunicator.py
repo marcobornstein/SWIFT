@@ -28,13 +28,15 @@ class AsyncDecentralized:
         self.iter = 0
         # self.num_comms = 0
 
-    def prepare_send_buffer(self, model):
+    def prepare_send_buffer(self, model, test_acc):
 
         # stack all model parameters into one tensor list
         self.tensor_list = list()
 
         for param in model.parameters():
             self.tensor_list.append(param)
+
+        self.tensor_list.append(test_acc)
 
         # flatten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
@@ -52,15 +54,15 @@ class AsyncDecentralized:
             elif test_acc > np.min(self.testAcc) and self.init_sgd_updates > self.sgd_updates:
                 self.sgd_updates -= 1
 
-    def averaging(self, model):
+    def averaging(self, model, test_acc):
 
         # necessary preprocess
-        self.prepare_send_buffer(model)
+        self.prepare_send_buffer(model, test_acc)
         self.avg_model = torch.zeros_like(self.send_buffer)
-        # worker_model = np.ones_like(self.avg_model)
-        # prev_model = np.ones_like(self.avg_model)
-        worker_model = np.ones(len(self.avg_model))
-        prev_model = np.ones(len(self.avg_model))
+        worker_model = np.ones_like(self.avg_model)
+        prev_model = np.ones_like(self.avg_model)
+        # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
+        # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
@@ -80,7 +82,7 @@ class AsyncDecentralized:
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                                 print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
                                 break
-                        prev_model = worker_model
+                        prev_model = worker_model[:-1]
                         count += 1
 
         # compute self weight according to degree
@@ -96,10 +98,10 @@ class AsyncDecentralized:
 
         return toc - tic
 
-    def broadcast(self, model):
+    def broadcast(self, model, test_acc):
 
         # Preprocess
-        self.prepare_send_buffer(model)
+        self.prepare_send_buffer(model, test_acc)
         send_buffer = self.send_buffer.detach().numpy()
 
         # Time
@@ -115,17 +117,17 @@ class AsyncDecentralized:
 
         return toc - tic
 
-    def communicate(self, model):
+    def communicate(self, model, test_acc):
 
         self.iter += 1
 
         if self.iter % self.sgd_updates == 0:
-            a = self.broadcast(model)
-            b = self.averaging(model)
+            a = self.broadcast(model, test_acc)
+            b = self.averaging(model, test_acc)
             comm_time = a+b
             # self.num_comms = 0
         else:
-            comm_time = self.broadcast(model)
+            comm_time = self.broadcast(model, test_acc)
             # comm_time = 0
 
         return comm_time
