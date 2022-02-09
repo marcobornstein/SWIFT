@@ -59,7 +59,7 @@ class AsyncDecentralized:
             # prev_model = np.empty_like(self.avg_model)
             prev_model = np.empty(len(self.avg_model))
             while flag:
-                req = self.comm.Irecv(worker_model, source=node, tag=node)
+                req = self.comm.Irecv(worker_model, source=node, tag=MPI.ANY_TAG)
                 if not req.Test():
                     if count == 0:
                         # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
