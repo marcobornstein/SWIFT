@@ -70,13 +70,14 @@ class AsyncDecentralized:
         toc = time.time()
         # print('Rank %d has first and last acc %f and %f' % (self.rank, self.testAcc[0], self.testAcc[-1]))
 
-        '''
+        # '''
         if not any(self.testAcc == -1.0):
             if test_acc <= np.min(self.testAcc):
                 self.sgd_updates += 1
+                print('Rank %d Had The Worst Accuracy at %f' % (self.rank, test_acc))
             elif test_acc > np.min(self.testAcc) and self.init_sgd_updates > self.sgd_updates:
                 self.sgd_updates -= 1
-        '''
+        # '''
 
         return toc - tic
 
