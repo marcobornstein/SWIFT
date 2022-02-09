@@ -76,7 +76,7 @@ class AsyncDecentralized:
                             print('Using NaN')
                         self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                         flag = False
-                print('Rank %d Has a Value of %f' % (self.rank, worker_model[-1]))
+                print('Rank %d Has a Value of %f From %d' % (self.rank, worker_model[-1], node))
                 prev_model = worker_model
                 count += 1
 
