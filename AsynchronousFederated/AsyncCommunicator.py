@@ -35,7 +35,7 @@ class AsyncDecentralized:
         for param in model.parameters():
             self.tensor_list.append(param)
 
-        self.tensor_list.append(test_acc*torch.ones(1))
+        self.tensor_list.append(test_acc*torch.ones(1).cuda())
 
         # flatten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
