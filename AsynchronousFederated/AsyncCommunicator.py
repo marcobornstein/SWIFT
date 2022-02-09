@@ -49,34 +49,34 @@ class AsyncDecentralized:
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.ones_like(self.avg_model)
-        prev_model = np.empty_like(self.avg_model)
 
         tic = time.time()
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
-            flag = True
             count = 0
             # prev_model = np.empty_like(self.avg_model)
             prev_model = np.empty(len(self.avg_model))
-            while flag:
+            while True:
                 req = self.comm.Irecv(worker_model, source=node, tag=node+count)
+
                 if not req.Test():
                     if count == 0:
                         # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
                         # If no messages available, take one's own model as the model to average
+                        # if any(np.isnan(self.send_buffer.detach().numpy())):
+                        #    print('Using Own NaN')
                         req.Cancel()
-                        if any(np.isnan(self.send_buffer.detach().numpy())):
-                            print('Using Own NaN')
                         self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
-                        flag = False
+                        break
                     else:
                         # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
+                        # if any(np.isnan(prev_model)):
+                        #    print('Using NaN')
                         req.Cancel()
-                        if any(np.isnan(prev_model)):
-                            print('Using NaN')
                         self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
-                        flag = False
+                        break
+
                 print('Rank %d Has a Value of %f From %d' % (self.rank, worker_model[-1], node))
                 prev_model = worker_model
                 count += 1
