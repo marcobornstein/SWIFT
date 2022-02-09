@@ -68,7 +68,7 @@ class AsyncDecentralized:
                         count += 1
 
         toc = time.time()
-        print('Rank %d has first and last acc %f and %f' % (self.rank, self.testAcc[0], self.testAcc[-1]))
+        # print('Rank %d has first and last acc %f and %f' % (self.rank, self.testAcc[0], self.testAcc[-1]))
 
         '''
         if not any(self.testAcc == -1.0):
@@ -151,9 +151,9 @@ class AsyncDecentralized:
         if self.iter % self.sgd_updates == 0:
             a = self.broadcast(model)
             b = self.averaging(model)
-            comm_time = a + b
-            # c = self.personalize(test_acc)
-            # comm_time = a+b+c
+            # comm_time = a + b
+            c = self.personalize(test_acc)
+            comm_time = a+b+c
         else:
             comm_time = self.broadcast(model)
 
