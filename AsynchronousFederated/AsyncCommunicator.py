@@ -27,7 +27,7 @@ class AsyncDecentralized:
         self.init_sgd_updates = sgd_updates
         self.iter = 0
 
-    def prepare_send_buffer(self, model, test_acc):
+    def prepare_send_buffer(self, model):
 
         # stack all model parameters into one tensor list
         self.tensor_list = list()
@@ -45,16 +45,41 @@ class AsyncDecentralized:
                 t.set_(f)
 
     def personalize(self, test_acc):
+
+        buffer = -1.0*np.ones_like(self.testAcc)
+        worker_acc = 0
+
+        tic = time.time()
+        for idx, node in enumerate(self.neighbor_list):
+                    count = 0
+                    while True:
+                        req2 = self.comm.irecv(buffer[idx], source=node, tag=node+self.size)
+                        if not req2.test():
+                            if count == 0:
+                                # If no messages available, keep unchanged
+                                req2.Cancel()
+                                break
+                            else:
+                                req2.Cancel()
+                                self.testAcc[idx] = worker_acc
+                                break
+                        worker_acc = buffer[idx]
+                        count += 1
+
+        toc = time.time()
+
         if not any(self.testAcc == -1.0):
             if test_acc <= np.min(self.testAcc):
                 self.sgd_updates += 1
             elif test_acc > np.min(self.testAcc) and self.init_sgd_updates > self.sgd_updates:
                 self.sgd_updates -= 1
 
+        return toc - tic
+
     def averaging(self, model):
 
         # necessary preprocess
-        self.prepare_send_buffer(model, -1.0)
+        self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.ones_like(self.avg_model)
         prev_model = np.ones_like(self.avg_model)
@@ -99,12 +124,11 @@ class AsyncDecentralized:
 
         return toc - tic
 
-    def broadcast(self, model, test_acc):
+    def broadcast(self, model):
 
         # Preprocess
-        self.prepare_send_buffer(model, test_acc)
+        self.prepare_send_buffer(model)
         send_buffer = self.send_buffer.detach().numpy()
-        # send_buffer = np.append(send_buffer, test_acc)
 
         # Time
         tic = time.time()
@@ -121,12 +145,12 @@ class AsyncDecentralized:
         self.iter += 1
 
         if self.iter % self.sgd_updates == 0:
-            a = self.broadcast(model, test_acc)
+            a = self.broadcast(model)
             b = self.averaging(model)
-            self.personalize(test_acc)
-            comm_time = a+b
+            c = self.personalize(test_acc)
+            comm_time = a+b+c
         else:
-            comm_time = self.broadcast(model, test_acc)
+            comm_time = self.broadcast(model)
 
         return comm_time
 
