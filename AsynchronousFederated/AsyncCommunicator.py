@@ -132,7 +132,8 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank+self.num_comms)
+            #self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank+self.num_comms)
+            self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
 
         toc = time.time()
 
