@@ -7,7 +7,7 @@ from comm_helpers import flatten_tensors, unflatten_tensors
 
 class AsyncDecentralized:
 
-    def __init__(self, rank, size, topology, sgd_updates):
+    def __init__(self, rank, size, topology, sgd_updates, sgd_max):
         """ Initialize the Asynchronous Decentralized Communicator """
 
         # Graph initialization
@@ -25,6 +25,7 @@ class AsyncDecentralized:
         self.testAcc = -1.0 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
         self.init_sgd_updates = sgd_updates
+        self.sgd_max = sgd_max
         self.iter = 0
 
     def prepare_send_buffer(self, model):
@@ -47,6 +48,7 @@ class AsyncDecentralized:
     def personalize(self, test_acc):
 
         worker_acc = -1
+        # Do something about this later...
         worker_buff = np.zeros(3)
 
         tic = time.time()
@@ -72,7 +74,7 @@ class AsyncDecentralized:
 
         # '''
         if not any(self.testAcc == -1.0):
-            if test_acc <= np.min(self.testAcc) and self.sgd_updates < 6:
+            if test_acc <= np.min(self.testAcc) and self.sgd_updates < self.sgd_max:
                 self.sgd_updates += 1
                 print('Rank %d Had The Worst Accuracy at %f' % (self.rank, test_acc))
             elif test_acc > np.min(self.testAcc) and self.sgd_updates > self.init_sgd_updates:
@@ -104,16 +106,11 @@ class AsyncDecentralized:
                                 self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                                 break
                             else:
-                                # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
                                 req.Cancel()
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                                 # print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
-                                # print('Rank %d Has Received Test Accuracy of %f From Rank %d' % (self.rank, test_acc, node))
-                                # self.testAcc[idx] = test_acc
                                 break
                         prev_model = worker_model
-                        # prev_model = worker_model[:-1]
-                        #test_acc = worker_model[-1]
                         count += 1
 
         # compute self weight according to degree
@@ -152,7 +149,6 @@ class AsyncDecentralized:
         if self.iter % self.sgd_updates == 0:
             a = self.broadcast(model)
             b = self.averaging(model)
-            # comm_time = a + b
             c = self.personalize(test_acc)
             comm_time = a+b+c
         else:

@@ -1,0 +1,3 @@
+Notes
+1) The test accuracy comparison can be improved potentially, since it may not be truly helping so much. The reason for this belief, is that while the worst worker will do more sgd updates, in the same time it does those, other workers may do equally many sgd updates. The only difference is that the other workers communicate with each other sooner. This does make sense, but need to think about more as well as other alternatives...
+2) 
