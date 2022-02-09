@@ -72,7 +72,7 @@ def run(rank, size):
     losses = util.AverageMeter()
     top1 = util.AverageMeter()
     init_time = time.time()
-    test_acc = -1
+    test_acc = -1.0
 
     MPI.COMM_WORLD.Barrier()
     # start training

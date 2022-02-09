@@ -22,7 +22,7 @@ class AsyncDecentralized:
         self.size = size
         self.requests = [MPI.REQUEST_NULL for _ in range(self.degree)]
 
-        self.testAcc = -1 * np.ones(self.degree)
+        self.testAcc = -1.0 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
         self.init_sgd_updates = sgd_updates
         self.iter = 0
@@ -48,7 +48,7 @@ class AsyncDecentralized:
                 t.set_(f)
 
     def personalize(self, test_acc):
-        if not any(self.testAcc == -1):
+        if not any(self.testAcc == -1.0):
             if test_acc <= np.min(self.testAcc):
                 self.sgd_updates += 1
             elif test_acc > np.min(self.testAcc) and self.init_sgd_updates > self.sgd_updates:
