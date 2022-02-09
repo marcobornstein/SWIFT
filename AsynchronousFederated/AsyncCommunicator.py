@@ -56,9 +56,8 @@ class AsyncDecentralized:
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         for idx, node in enumerate(self.neighbor_list):
             count = 0
-            flag = True
-            # prev_model = np.empty_like(self.avg_model)
-            while flag:
+            prev_model = np.empty_like(self.avg_model)
+            while True:
                 req = self.comm.Irecv(worker_model, source=node, tag=node+count)
 
                 if not req.Test():
@@ -69,7 +68,7 @@ class AsyncDecentralized:
                         #    print('Using Own NaN')
                         req.Cancel()
                         self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
-                        flag = False
+                        break
 
                     else:
                         # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
@@ -77,7 +76,7 @@ class AsyncDecentralized:
                         #    print('Using NaN')
                         req.Cancel()
                         self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
-                        flag = False
+                        break
 
                 print('Rank %d Has a Value of %f From %d' % (self.rank, worker_model[-1], node))
                 prev_model = worker_model
