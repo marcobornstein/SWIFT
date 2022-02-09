@@ -35,8 +35,6 @@ class AsyncDecentralized:
         for param in model.parameters():
             self.tensor_list.append(param)
 
-        self.tensor_list.append(test_acc*torch.ones(1).cuda())
-
         # flatten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
 
@@ -57,9 +55,8 @@ class AsyncDecentralized:
 
         # necessary preprocess
         self.prepare_send_buffer(model, -1.0)
-        self.avg_model = torch.zeros_like(self.send_buffer[:-1])
-        worker_model = np.ones_like(self.send_buffer)
-        # worker_model = np.ones_like(self.avg_model)
+        self.avg_model = torch.zeros_like(self.send_buffer)
+        worker_model = np.ones_like(self.avg_model)
         prev_model = np.ones_like(self.avg_model)
         # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
         # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
@@ -84,8 +81,8 @@ class AsyncDecentralized:
                                 # print('Rank %d Has Received Test Accuracy of %f From Rank %d' % (self.rank, test_acc, node))
                                 # self.testAcc[idx] = test_acc
                                 break
-                        # prev_model = worker_model
-                        prev_model = worker_model[:-1]
+                        prev_model = worker_model
+                        # prev_model = worker_model[:-1]
                         #test_acc = worker_model[-1]
                         count += 1
 
@@ -132,3 +129,13 @@ class AsyncDecentralized:
             comm_time = self.broadcast(model, test_acc)
 
         return comm_time
+
+    def send_accuracy(self, test_acc):
+
+        # Time
+        tic = time.time()
+        for node in self.neighbor_list:
+            self.comm.isend(test_acc, dest=node, tag=self.rank+self.size)
+        toc = time.time()
+
+        return toc - tic
