@@ -27,13 +27,15 @@ class AsyncDecentralized:
         self.init_sgd_updates = sgd_updates
         self.iter = 0
 
-    def prepare_send_buffer(self, model):
+    def prepare_send_buffer(self, model, test_acc):
 
         # stack all model parameters into one tensor list
         self.tensor_list = list()
 
         for param in model.parameters():
             self.tensor_list.append(param)
+
+        self.tensor_list.append(test_acc)
 
         # flatten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
@@ -54,10 +56,10 @@ class AsyncDecentralized:
     def averaging(self, model):
 
         # necessary preprocess
-        self.prepare_send_buffer(model)
-        self.avg_model = torch.zeros_like(self.send_buffer)
-        worker_model = np.ones_like(self.avg_model)
-        # worker_model = np.append(worker_model, 1)
+        self.prepare_send_buffer(model, -1.0)
+        self.avg_model = torch.zeros_like(self.send_buffer[:-1])
+        worker_model = np.ones_like(self.send_buffer)
+        # worker_model = np.ones_like(self.avg_model)
         prev_model = np.ones_like(self.avg_model)
         # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
         # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
@@ -72,7 +74,7 @@ class AsyncDecentralized:
                                 # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
                                 # If no messages available, take one's own model as the model to average
                                 req.Cancel()
-                                self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
+                                self.avg_model.add_(self.send_buffer[:-1], alpha=self.neighbor_weights[idx])
                                 break
                             else:
                                 # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
@@ -82,8 +84,8 @@ class AsyncDecentralized:
                                 # print('Rank %d Has Received Test Accuracy of %f From Rank %d' % (self.rank, test_acc, node))
                                 # self.testAcc[idx] = test_acc
                                 break
-                        prev_model = worker_model
-                        #prev_model = worker_model[:-1]
+                        # prev_model = worker_model
+                        prev_model = worker_model[:-1]
                         #test_acc = worker_model[-1]
                         count += 1
 
@@ -103,7 +105,7 @@ class AsyncDecentralized:
     def broadcast(self, model, test_acc):
 
         # Preprocess
-        self.prepare_send_buffer(model)
+        self.prepare_send_buffer(model, test_acc)
         send_buffer = self.send_buffer.detach().numpy()
         # send_buffer = np.append(send_buffer, test_acc)
 
