@@ -46,14 +46,13 @@ class AsyncDecentralized:
 
     def personalize(self, test_acc):
 
-        worker_buff = 1
-        worker_acc = 0
+        worker_acc = -1
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
                     count = 0
                     while True:
-                        req2 = self.comm.irecv(buf=worker_buff, source=node, tag=node+self.size)
+                        req2 = self.comm.irecv(source=node, tag=node+self.size)
                         if not req2.test():
                             if count == 0:
                                 # If no messages available, keep unchanged
@@ -63,7 +62,8 @@ class AsyncDecentralized:
                                 req2.Cancel()
                                 self.testAcc[idx] = worker_acc
                                 break
-                        worker_acc = worker_buff
+
+                        worker_acc = req2.wait()
                         count += 1
 
         toc = time.time()
@@ -159,7 +159,7 @@ class AsyncDecentralized:
         # Time
         tic = time.time()
         for node in self.neighbor_list:
-            self.comm.isend(test_acc, dest=node, tag=self.rank+self.size)
+            self.comm.isend(str(test_acc), dest=node, tag=self.rank+self.size)
         toc = time.time()
 
         return toc - tic
