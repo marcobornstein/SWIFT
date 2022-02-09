@@ -46,7 +46,7 @@ class AsyncDecentralized:
 
     def personalize(self, test_acc):
 
-        worker_buff = -1
+        worker_buff = [-1]
         worker_acc = 0
 
         tic = time.time()
