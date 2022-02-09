@@ -36,8 +36,6 @@ class AsyncDecentralized:
         for param in model.parameters():
             self.tensor_list.append(param)
 
-        self.tensor_list.append(test_acc*torch.ones(1))
-
         # flatten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
 
@@ -60,6 +58,7 @@ class AsyncDecentralized:
         self.prepare_send_buffer(model, test_acc)
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.ones_like(self.avg_model)
+        print(worker_model.shape)
         prev_model = np.ones_like(self.avg_model)
         # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
         # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
