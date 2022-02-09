@@ -48,7 +48,7 @@ class AsyncDecentralized:
 
         worker_acc = -1
         worker_buff = -1*np.ones_like(self.testAcc)
-        worker_buff = [0]
+        worker_buff = np.zeros(3)
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
@@ -65,7 +65,7 @@ class AsyncDecentralized:
                                 self.testAcc[idx] = worker_acc
                                 break
 
-                        worker_acc = worker_buff[idx]
+                        worker_acc = worker_buff[0]
                         print(worker_acc)
                         count += 1
 
@@ -159,10 +159,12 @@ class AsyncDecentralized:
 
     def send_accuracy(self, test_acc):
 
+        send_buff = test_acc*np.ones(3)
+
         # Time
         tic = time.time()
         for node in self.neighbor_list:
-            self.comm.Isend(np.array([test_acc]), dest=node, tag=self.rank+self.size)
+            self.comm.Isend(send_buff, dest=node, tag=self.rank+self.size)
         toc = time.time()
 
         return toc - tic
