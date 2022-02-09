@@ -71,7 +71,7 @@ class AsyncDecentralized:
                                 # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
                                 # If no messages available, take one's own model as the model to average
                                 req.Cancel()
-                                self.avg_model.add_(self.send_buffer[:-1], alpha=self.neighbor_weights[idx])
+                                self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                                 break
                             else:
                                 # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
