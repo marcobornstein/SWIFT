@@ -3,7 +3,7 @@
 # Lines that begin with #SBATCH specify commands to be used by SLURM for scheduling
 
 #SBATCH --job-name=AsyncDecentralized     # sets the job name if not set from environment
-#SBATCH --time=00:30:00                   # how long you think your job will take to complete; format=hh:mm:ss
+#SBATCH --time=00:45:00                   # how long you think your job will take to complete; format=hh:mm:ss
 #SBATCH --account=scavenger               # set QOS, this will determine what resources can be requested
 #SBATCH --qos=scavenger                   # set QOS, this will determine what resources can be requested
 #SBATCH --partition=scavenger
@@ -15,4 +15,4 @@
 
 module load openmpi
 
-mpirun -np 2 python train_mpi.py --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --budget 1 --outputFolder Output --downloadCifar 1 --epoch 1 --name trial --resSize 18
+mpirun -np 2 python Train.py --description InitialAsyncDecentralized --randomSeed 9001 --datasetRoot ./data  --outputFolder Output --downloadCifar 1 --epoch 10 --name initial_run --resSize 50
