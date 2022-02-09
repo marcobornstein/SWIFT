@@ -57,8 +57,10 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-        worker_model = np.ones_like(self.avg_model)
-        prev_model = np.ones_like(self.avg_model)
+        # worker_model = np.ones_like(self.avg_model)
+        # prev_model = np.ones_like(self.avg_model)
+        worker_model = np.ones(len(self.avg_model))
+        prev_model = np.ones(len(self.avg_model))
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
@@ -76,7 +78,7 @@ class AsyncDecentralized:
                                 # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
                                 req.Cancel()
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
-                                print('Rank %d Has a Value of %f From %d' % (self.rank, prev_model[-1], node))
+                                print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
                                 break
                         prev_model = worker_model
                         count += 1
