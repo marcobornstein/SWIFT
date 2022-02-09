@@ -75,7 +75,7 @@ class AsyncDecentralized:
             if test_acc <= np.min(self.testAcc) and self.sgd_updates < 6:
                 self.sgd_updates += 1
                 print('Rank %d Had The Worst Accuracy at %f' % (self.rank, test_acc))
-            elif test_acc > np.min(self.testAcc) and self.init_sgd_updates > self.sgd_updates:
+            elif test_acc > np.min(self.testAcc) and self.sgd_updates > self.init_sgd_updates:
                 self.sgd_updates -= 1
         # '''
 
