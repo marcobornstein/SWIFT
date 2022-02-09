@@ -28,7 +28,7 @@ class AsyncDecentralized:
         self.iter = 0
         # self.num_comms = 0
 
-    def prepare_send_buffer(self, model, test_acc):
+    def prepare_send_buffer(self, model):
 
         # stack all model parameters into one tensor list
         self.tensor_list = list()
@@ -52,13 +52,13 @@ class AsyncDecentralized:
             elif test_acc > np.min(self.testAcc) and self.init_sgd_updates > self.sgd_updates:
                 self.sgd_updates -= 1
 
-    def averaging(self, model, test_acc):
+    def averaging(self, model):
 
         # necessary preprocess
-        self.prepare_send_buffer(model, test_acc)
+        self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.ones_like(self.avg_model)
-        print(worker_model.shape)
+        worker_model = np.append(worker_model, 1)
         prev_model = np.ones_like(self.avg_model)
         # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
         # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
@@ -100,8 +100,9 @@ class AsyncDecentralized:
     def broadcast(self, model, test_acc):
 
         # Preprocess
-        self.prepare_send_buffer(model, test_acc)
+        self.prepare_send_buffer(model)
         send_buffer = self.send_buffer.detach().numpy()
+        send_buffer = np.append(send_buffer, test_acc)
 
         # Time
         tic = time.time()
@@ -122,7 +123,7 @@ class AsyncDecentralized:
 
         if self.iter % self.sgd_updates == 0:
             a = self.broadcast(model, test_acc)
-            b = self.averaging(model, test_acc)
+            b = self.averaging(model)
             comm_time = a+b
             # self.num_comms = 0
         else:
