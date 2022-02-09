@@ -24,6 +24,7 @@ class AsyncDecentralized:
 
         self.sgd_updates = sgd_updates
         self.iter = 0
+        self.num_comms = 0
 
     def prepare_send_buffer(self, model):
 
@@ -59,7 +60,7 @@ class AsyncDecentralized:
             # prev_model = np.empty_like(self.avg_model)
             prev_model = np.empty(len(self.avg_model))
             while flag:
-                req = self.comm.Irecv(worker_model, source=node, tag=MPI.ANY_TAG)
+                req = self.comm.Irecv(worker_model, source=node, tag=node+count)
                 if not req.Test():
                     if count == 0:
                         # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
@@ -97,14 +98,17 @@ class AsyncDecentralized:
 
         # Preprocess
         self.prepare_send_buffer(model)
+        send_buffer = self.send_buffer.detach().numpy()
 
         # Time
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            self.requests[idx] = self.comm.Isend(self.send_buffer.detach().numpy(), dest=node, tag=self.rank)
+            self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank+self.num_comms)
 
         toc = time.time()
+
+        self.num_comms += 1
 
         return toc - tic
 
@@ -116,6 +120,7 @@ class AsyncDecentralized:
             a = self.broadcast(model)
             b = self.averaging(model)
             comm_time = a+b
+            self.num_comms = 0
         else:
             comm_time = self.broadcast(model)
             # comm_time = 0
