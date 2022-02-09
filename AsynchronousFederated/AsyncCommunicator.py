@@ -47,7 +47,6 @@ class AsyncDecentralized:
     def personalize(self, test_acc):
 
         worker_acc = -1
-        worker_buff = -1*np.ones_like(self.testAcc)
         worker_buff = np.zeros(3)
 
         tic = time.time()
@@ -69,6 +68,8 @@ class AsyncDecentralized:
                         count += 1
 
         toc = time.time()
+        print('Rank %d has first and last acc %f and %f' % (self.rank, self.testAcc[0], self.testAcc[-1]))
+
         '''
         if not any(self.testAcc == -1.0):
             if test_acc <= np.min(self.testAcc):
