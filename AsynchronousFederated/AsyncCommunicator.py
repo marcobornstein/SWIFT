@@ -151,8 +151,9 @@ class AsyncDecentralized:
         if self.iter % self.sgd_updates == 0:
             a = self.broadcast(model)
             b = self.averaging(model)
-            c = self.personalize(test_acc)
-            comm_time = a+b+c
+            comm_time = a + b
+            # c = self.personalize(test_acc)
+            # comm_time = a+b+c
         else:
             comm_time = self.broadcast(model)
 
