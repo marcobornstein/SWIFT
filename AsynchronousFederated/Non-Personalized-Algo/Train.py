@@ -111,8 +111,7 @@ def run(rank, size):
             comp_time += d_comp_time
 
             # communication happens here
-            # d_comm_time = communicator.communicate(model, test_acc)
-            d_comm_time = communicator.communicate(model, top1.avg)
+            d_comm_time = communicator.communicate(model)
             comm_time += d_comm_time
 
         # total time spent in algorithm

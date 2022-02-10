@@ -45,6 +45,7 @@ class AsyncDecentralized:
                 t.set_(f)
 
     def personalize(self, test_acc):
+        # This isn't relevant for the non-personalized version -- can be deleted later
         if not any(self.testAcc == -1.0):
             if test_acc <= np.min(self.testAcc):
                 self.sgd_updates += 1
@@ -52,12 +53,10 @@ class AsyncDecentralized:
                 self.sgd_updates -= 1
 
     def averaging(self, model):
-
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
         worker_model = np.ones_like(self.avg_model)
-        # worker_model = np.append(worker_model, 1)
         prev_model = np.ones_like(self.avg_model)
         # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
         # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
@@ -65,6 +64,9 @@ class AsyncDecentralized:
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
                     count = 0
+                    # THESE SHOULD BE UNCOMMENTED TO TEST TRUE ACCURACY OF OUR METHOD
+                    # worker_model = np.ones_like(self.avg_model)
+                    # prev_model = np.ones_like(self.avg_model)
                     while True:
                         req = self.comm.Irecv(worker_model, source=node, tag=node)
                         if not req.Test():
@@ -80,11 +82,8 @@ class AsyncDecentralized:
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                                 # print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
                                 # print('Rank %d Has Received Test Accuracy of %f From Rank %d' % (self.rank, test_acc, node))
-                                # self.testAcc[idx] = test_acc
                                 break
                         prev_model = worker_model
-                        #prev_model = worker_model[:-1]
-                        #test_acc = worker_model[-1]
                         count += 1
 
         # compute self weight according to degree
@@ -100,12 +99,11 @@ class AsyncDecentralized:
 
         return toc - tic
 
-    def broadcast(self, model, test_acc):
+    def broadcast(self, model):
 
         # Preprocess
         self.prepare_send_buffer(model)
         send_buffer = self.send_buffer.detach().numpy()
-        # send_buffer = np.append(send_buffer, test_acc)
 
         # Time
         tic = time.time()
@@ -117,17 +115,17 @@ class AsyncDecentralized:
 
         return toc - tic
 
-    def communicate(self, model, test_acc):
+    def communicate(self, model):
 
         self.iter += 1
 
         if self.iter % self.sgd_updates == 0:
-            print("Before Update Test -- Rank %d, train_acc: %.3f" % (self.rank, test_acc))
-            a = self.broadcast(model, test_acc)
+            # print("Before Update Test -- Rank %d, train_acc: %.3f" % (self.rank, test_acc))
+            a = self.broadcast(model)
             b = self.averaging(model)
-            self.personalize(test_acc)
+            # self.personalize(test_acc)
             comm_time = a+b
         else:
-            comm_time = self.broadcast(model, test_acc)
+            comm_time = self.broadcast(model)
 
         return comm_time
