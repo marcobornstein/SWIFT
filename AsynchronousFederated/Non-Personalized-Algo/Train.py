@@ -116,7 +116,7 @@ def run(rank, size):
 
         # total time spent in algorithm
         epoch_time = comp_time + comm_time
-
+        print("Post Avg Pre Test -- Rank: %d, test_acc: %.3f" % (rank, test_acc))
         # evaluate test accuracy at the end of each epoch
         test_acc = util.test(model, test_loader)[0].item()
 
