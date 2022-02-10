@@ -41,7 +41,8 @@ def run(rank, size):
 
     GP = GraphConstruct(Graph, rank, size)
     sgd_steps = 3
-    communicator = AsyncDecentralized(rank, size, GP, sgd_steps)
+    sgd_max = 10
+    communicator = AsyncDecentralized(rank, size, GP, sgd_steps, sgd_max)
 
     # select neural network model
     num_class = 10
@@ -72,6 +73,7 @@ def run(rank, size):
     losses = util.AverageMeter()
     top1 = util.AverageMeter()
     init_time = time.time()
+    test_acc = -1.0
 
     MPI.COMM_WORLD.Barrier()
     # start training
@@ -110,14 +112,17 @@ def run(rank, size):
             comp_time += d_comp_time
 
             # communication happens here
-            d_comm_time = communicator.communicate(model)
+            d_comm_time = communicator.communicate(model, test_acc)
             comm_time += d_comm_time
-
-        # total time spent in algorithm
-        epoch_time = comp_time + comm_time
 
         # evaluate test accuracy at the end of each epoch
         test_acc = util.test(model, test_loader)[0].item()
+
+        comm_time2 = communicator.send_accuracy(test_acc)
+        total_comm_time = comm_time + comm_time2
+
+        # total time spent in algorithm
+        epoch_time = comp_time + total_comm_time
 
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f epoch time: %.3f"
               % (rank, epoch, losses.avg, top1.avg, test_acc, epoch_time))
@@ -126,7 +131,7 @@ def run(rank, size):
         #    print("comp_time: %.3f, comm_time: %.3f, comp_time_budget: %.3f, comm_time_budget: %.3f"
         #          % (comp_time, comm_time, comp_time/epoch_time, comm_time/epoch_time))
 
-        recorder.add_new(comp_time, comm_time, epoch_time, time.time()-init_time, top1.avg, losses.avg, test_acc)
+        recorder.add_new(comp_time, total_comm_time, epoch_time, time.time()-init_time, top1.avg, losses.avg, test_acc)
 
         # reset recorders
         comp_time, comm_time = 0, 0
