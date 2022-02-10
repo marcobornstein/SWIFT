@@ -16,4 +16,4 @@
 module load openmpi
 module load cuda/11.2.2
 
-mpirun -np 4 python Train.py --description asyncDecentralized --resSize 50 --randomSeed 9001 --datasetRoot ./data --outputFolder Output --bs 64 --epoch 80 --name inter-connect-square
+mpirun -np 2 python Train.py --description asyncDecentralized --resSize 50 --randomSeed 9001 --datasetRoot ./data --outputFolder Output --bs 64 --epoch 80 --name inter-connect-square
