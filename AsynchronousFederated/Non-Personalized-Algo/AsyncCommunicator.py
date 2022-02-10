@@ -122,8 +122,8 @@ class AsyncDecentralized:
         self.iter += 1
 
         if self.iter % self.sgd_updates == 0:
+            print("Before Update Test -- Rank %d, train_acc: %.3f" % (self.rank, test_acc))
             a = self.broadcast(model, test_acc)
-            print("Pre Avg Pre Test -- Rank %d, test_acc: %.3f" % (self.rank, test_acc))
             b = self.averaging(model)
             self.personalize(test_acc)
             comm_time = a+b

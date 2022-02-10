@@ -111,12 +111,13 @@ def run(rank, size):
             comp_time += d_comp_time
 
             # communication happens here
-            d_comm_time = communicator.communicate(model, test_acc)
+            # d_comm_time = communicator.communicate(model, test_acc)
+            d_comm_time = communicator.communicate(model, top1.avg)
             comm_time += d_comm_time
 
         # total time spent in algorithm
         epoch_time = comp_time + comm_time
-        print("Post Avg Pre Test -- Rank: %d, test_acc: %.3f" % (rank, test_acc))
+
         # evaluate test accuracy at the end of each epoch
         test_acc = util.test(model, test_loader)[0].item()
 
