@@ -44,6 +44,7 @@ class AsyncDecentralized:
             with torch.no_grad():
                 t.set_(f)
 
+    '''
     def personalize(self, test_acc):
         # This isn't relevant for the non-personalized version -- can be deleted later
         if not any(self.testAcc == -1.0):
@@ -51,6 +52,7 @@ class AsyncDecentralized:
                 self.sgd_updates += 1
             elif test_acc > np.min(self.testAcc) and self.init_sgd_updates > self.sgd_updates:
                 self.sgd_updates -= 1
+    '''
 
     def averaging(self, model):
         # necessary preprocess
@@ -58,10 +60,6 @@ class AsyncDecentralized:
         self.avg_model = torch.zeros_like(self.send_buffer)
         # worker_model = np.ones_like(self.avg_model)
         # prev_model = np.ones_like(self.avg_model)
-
-
-        # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
-        # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
@@ -73,17 +71,16 @@ class AsyncDecentralized:
                         req = self.comm.Irecv(worker_model, source=node, tag=node)
                         if not req.Test():
                             if count == 0:
-                                # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
                                 # If no messages available, take one's own model as the model to average
                                 req.Cancel()
                                 self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                                 break
                             else:
-                                # print('Rank %d Received %d Messages from Rank %d' % (self.rank, count, node))
                                 req.Cancel()
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
+                                if any(np.isnan(prev_model)) or prev_model[-1] == 1:
+                                    print('Buffer Issue When Updating From Rank %d' % self.rank)
                                 # print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
-                                # print('Rank %d Has Received Test Accuracy of %f From Rank %d' % (self.rank, test_acc, node))
                                 break
                         prev_model = worker_model
                         count += 1
@@ -122,7 +119,6 @@ class AsyncDecentralized:
         self.iter += 1
 
         if self.iter % self.sgd_updates == 0:
-            # print("Before Update Test -- Rank %d, train_acc: %.3f" % (self.rank, test_acc))
             a = self.broadcast(model)
             b = self.averaging(model)
             # self.personalize(test_acc)
