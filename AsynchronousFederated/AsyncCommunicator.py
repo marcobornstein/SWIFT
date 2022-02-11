@@ -135,7 +135,7 @@ class AsyncDecentralized:
         # Time
         tic = time.time()
 
-        if self.count == 10000:
+        if self.count >= 10000-self.degree:
             self.count = 0
 
         for idx, node in enumerate(self.neighbor_list):
@@ -164,7 +164,7 @@ class AsyncDecentralized:
     def send_accuracy(self, test_acc):
 
         send_buff = test_acc*np.ones(3)
-        if self.count2 == 10000:
+        if self.count2 >= 10000-self.degree:
             self.count2 = 0
 
         # Time
