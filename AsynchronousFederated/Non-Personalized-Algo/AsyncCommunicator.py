@@ -20,9 +20,6 @@ class AsyncDecentralized:
         self.comm = MPI.COMM_WORLD
         self.rank = rank
         self.size = size
-        self.requests = [MPI.REQUEST_NULL for _ in range(self.degree)]
-
-        # edits
         self.requests = [MPI.REQUEST_NULL for _ in range(10000)]
         self.count = 0
 
@@ -53,15 +50,13 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-        # worker_model = np.ones_like(self.avg_model)
-        # prev_model = np.ones_like(self.avg_model)
+
+        worker_model = np.empty_like(self.avg_model)
+        prev_model = np.empty_like(self.avg_model)
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
                     count = 0
-                    # THESE SHOULD BE UNCOMMENTED TO TEST TRUE ACCURACY OF OUR METHOD
-                    worker_model = np.ones_like(self.avg_model)
-                    prev_model = np.ones_like(self.avg_model)
                     while True:
                         req = self.comm.Irecv(worker_model, source=node, tag=node)
                         if not req.Test():
@@ -75,7 +70,6 @@ class AsyncDecentralized:
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                                 if any(np.isnan(prev_model)) or prev_model[-1] == 1:
                                     print('Buffer Issue With Value %f When Updating From Rank %d' % (prev_model[-1], self.rank))
-                                # print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
                                 break
                         prev_model = worker_model
                         count += 1
@@ -102,14 +96,12 @@ class AsyncDecentralized:
         # Time
         tic = time.time()
 
-        if self.count == 1000:
+        if self.count == 10000:
             self.count = 0
 
         for idx, node in enumerate(self.neighbor_list):
             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
             self.count += 1
-            # self.comm.Isend(send_buffer, dest=node, tag=self.rank)
-
 
         toc = time.time()
 
