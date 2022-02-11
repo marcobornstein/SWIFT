@@ -41,8 +41,7 @@ def run(rank, size):
 
     GP = GraphConstruct(Graph, rank, size)
     sgd_steps = 3
-    sgd_max = 10
-    communicator = AsyncDecentralized(rank, size, GP, sgd_steps, sgd_max)
+    communicator = AsyncDecentralized(rank, size, GP, sgd_steps, args.max_sgd)
 
     # select neural network model
     num_class = 10
@@ -202,6 +201,7 @@ if __name__ == "__main__":
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
     parser.add_argument('--epoch', '-e', default=1, type=int, help='total epoch')
     parser.add_argument('--bs', default=4, type=int, help='batch size on each worker')
+    parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
     parser.add_argument('--warmup', action='store_true', help='use lr warmup or not')
     parser.add_argument('--nesterov', action='store_true', help='use nesterov momentum or not')
     parser.add_argument('--dataset', default='cifar10', type=str, help='the dataset')

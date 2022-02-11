@@ -6,7 +6,7 @@ import resnet
 import util
 import gc
 from GraphConstruct import GraphConstruct
-from AsyncCommunicator import AsyncDecentralized
+from AsyncCommunicatorOld import AsyncDecentralized
 from mpi4py import MPI
 
 import torch

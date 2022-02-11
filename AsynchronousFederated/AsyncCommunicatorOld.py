@@ -20,11 +20,7 @@ class AsyncDecentralized:
         self.comm = MPI.COMM_WORLD
         self.rank = rank
         self.size = size
-        self.requests = [MPI.REQUEST_NULL for _ in range(10000)]
-        self.requests2 = [MPI.REQUEST_NULL for _ in range(10000)]
-        self.count = 0
-        self.count2 = 0
-
+        self.requests = [MPI.REQUEST_NULL for _ in range(self.degree)]
 
         self.testAcc = -1.0 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
@@ -53,7 +49,7 @@ class AsyncDecentralized:
 
         worker_acc = -1
         # Do something about this later...
-        worker_buff = np.empty(3)
+        worker_buff = np.zeros(3)
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
@@ -74,13 +70,16 @@ class AsyncDecentralized:
                         count += 1
 
         toc = time.time()
+        # print('Rank %d has first and last acc %f and %f' % (self.rank, self.testAcc[0], self.testAcc[-1]))
 
+        # '''
         if not any(self.testAcc == -1.0):
             if test_acc <= np.min(self.testAcc) and self.sgd_updates < self.sgd_max:
                 self.sgd_updates += 1
                 print('Rank %d Had The Worst Accuracy at %f' % (self.rank, test_acc))
             elif test_acc > np.min(self.testAcc) and self.sgd_updates > self.init_sgd_updates:
                 self.sgd_updates -= 1
+        # '''
 
         return toc - tic
 
@@ -89,9 +88,10 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-
-        worker_model = np.empty_like(self.avg_model)
-        prev_model = np.empty_like(self.avg_model)
+        worker_model = np.ones_like(self.avg_model)
+        prev_model = np.ones_like(self.avg_model)
+        # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
+        # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
@@ -100,6 +100,7 @@ class AsyncDecentralized:
                         req = self.comm.Irecv(worker_model, source=node, tag=node)
                         if not req.Test():
                             if count == 0:
+                                # print('Rank %d Received No Messages from Rank %d' % (self.rank, node))
                                 # If no messages available, take one's own model as the model to average
                                 req.Cancel()
                                 self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
@@ -107,8 +108,7 @@ class AsyncDecentralized:
                             else:
                                 req.Cancel()
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
-                                # if any(np.isnan(prev_model)) or prev_model[-1] == 1:
-                                #    print('Buffer Issue With Value %f When Updating From Rank %d' % (prev_model[-1], self.rank))
+                                # print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
                                 break
                         prev_model = worker_model
                         count += 1
@@ -135,12 +135,8 @@ class AsyncDecentralized:
         # Time
         tic = time.time()
 
-        if self.count == 10000:
-            self.count = 0
-
         for idx, node in enumerate(self.neighbor_list):
-            self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
-            self.count += 1
+            self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
 
         toc = time.time()
 
@@ -154,7 +150,7 @@ class AsyncDecentralized:
             a = self.broadcast(model)
             b = self.averaging(model)
             c = self.personalize(test_acc)
-            comm_time = a + b + c
+            comm_time = a+b+c
         else:
             comm_time = self.broadcast(model)
 
@@ -163,14 +159,11 @@ class AsyncDecentralized:
     def send_accuracy(self, test_acc):
 
         send_buff = test_acc*np.ones(3)
-        if self.count2 == 10000:
-            self.count2 = 0
 
         # Time
         tic = time.time()
         for node in self.neighbor_list:
-            self.requests2[self.count2] = self.comm.Isend(send_buff, dest=node, tag=self.rank+self.size)
-            self.count2 += 1
+            self.comm.Isend(send_buff, dest=node, tag=self.rank+self.size)
         toc = time.time()
 
         return toc - tic
