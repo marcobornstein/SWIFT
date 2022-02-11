@@ -98,6 +98,7 @@ class AsyncDecentralized:
 
         for idx, node in enumerate(self.neighbor_list):
             self.comm.Isend(send_buffer, dest=node, tag=self.rank)
+            self.comm.Isend(send_buffer, dest=node, tag=self.rank)
 
 
         toc = time.time()
