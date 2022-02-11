@@ -79,7 +79,7 @@ class AsyncDecentralized:
                                 req.Cancel()
                                 self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                                 if any(np.isnan(prev_model)) or prev_model[-1] == 1:
-                                    print('Buffer Issue When Updating From Rank %d' % self.rank)
+                                    print('Buffer Issue With Value %f When Updating From Rank %d' % (prev_model[-1], self.rank))
                                 # print('Rank %d Has a Value of %f From Rank %d' % (self.rank, prev_model[-1], node))
                                 break
                         prev_model = worker_model
