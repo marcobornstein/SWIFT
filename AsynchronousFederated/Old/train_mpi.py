@@ -1,4 +1,3 @@
-import os
 import numpy as np
 import time
 import argparse
@@ -6,19 +5,16 @@ import resnet
 import util
 import gc
 from GraphConstruct import GraphConstruct
-from AsyncCommunicatorOld import AsyncDecentralized
+from Old.AsyncCommunicatorOld_2_11_2022 import AsyncDecentralized
 from mpi4py import MPI
 
 import torch
 import torch.distributed as dist
 import torch.utils.data.distributed
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
 from torch.multiprocessing import Process
-from torch.autograd import Variable
 import torchvision
-from torchvision import datasets, transforms
 import torch.backends.cudnn as cudnn
 import torchvision.models as models
 cudnn.benchmark = True

@@ -146,17 +146,18 @@ class AsyncDecentralized:
 
         return toc - tic
 
-    def communicate(self, model, test_acc):
+    def communicate(self, model, test_acc, flag):
 
         self.iter += 1
+        comm_time = 0
 
         if self.iter % self.sgd_updates == 0:
-            a = self.broadcast(model)
-            b = self.averaging(model)
-            c = self.personalize(test_acc)
-            comm_time = a + b + c
+            comm_time += self.broadcast(model)
+            comm_time += self.averaging(model)
+            if flag:
+                comm_time += self.personalize(test_acc)
         else:
-            comm_time = self.broadcast(model)
+            comm_time += self.broadcast(model)
 
         return comm_time
 

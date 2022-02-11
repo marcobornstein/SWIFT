@@ -16,4 +16,4 @@
 module load openmpi
 module load cuda/11.2.2
 
-mpirun -np 2 python Train.py  --max_sgd 10 --resSize 50 --bs 64 --epoch 50 --name test-pers --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 2 python Train.py  --personalize 1 --max_sgd 10 --resSize 50 --bs 64 --epoch 50 --name test-pers --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output

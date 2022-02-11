@@ -111,13 +111,15 @@ def run(rank, size):
             comp_time += d_comp_time
 
             # communication happens here
-            d_comm_time = communicator.communicate(model, test_acc)
+            d_comm_time = communicator.communicate(model, test_acc, args.personalize)
             comm_time += d_comm_time
 
         # evaluate test accuracy at the end of each epoch
         test_acc = util.test(model, test_loader)[0].item()
 
-        comm_time2 = communicator.send_accuracy(test_acc)
+        comm_time2 = 0
+        if args.personalize:
+            comm_time2 = communicator.send_accuracy(test_acc)
         total_comm_time = comm_time + comm_time2
 
         # total time spent in algorithm
@@ -202,6 +204,7 @@ if __name__ == "__main__":
     parser.add_argument('--epoch', '-e', default=1, type=int, help='total epoch')
     parser.add_argument('--bs', default=4, type=int, help='batch size on each worker')
     parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
+    parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
     parser.add_argument('--warmup', action='store_true', help='use lr warmup or not')
     parser.add_argument('--nesterov', action='store_true', help='use nesterov momentum or not')
     parser.add_argument('--dataset', default='cifar10', type=str, help='the dataset')
