@@ -56,8 +56,10 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-        worker_model = np.ones_like(self.avg_model)
-        prev_model = np.ones_like(self.avg_model)
+        # worker_model = np.ones_like(self.avg_model)
+        # prev_model = np.ones_like(self.avg_model)
+
+
         # worker_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
         # prev_model = np.ones(len(self.avg_model)) THIS CAUSES THE ISSUE
 
@@ -65,8 +67,8 @@ class AsyncDecentralized:
         for idx, node in enumerate(self.neighbor_list):
                     count = 0
                     # THESE SHOULD BE UNCOMMENTED TO TEST TRUE ACCURACY OF OUR METHOD
-                    # worker_model = np.ones_like(self.avg_model)
-                    # prev_model = np.ones_like(self.avg_model)
+                    worker_model = np.ones_like(self.avg_model)
+                    prev_model = np.ones_like(self.avg_model)
                     while True:
                         req = self.comm.Irecv(worker_model, source=node, tag=node)
                         if not req.Test():
