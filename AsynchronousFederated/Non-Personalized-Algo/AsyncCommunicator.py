@@ -20,6 +20,7 @@ class AsyncDecentralized:
         self.comm = MPI.COMM_WORLD
         self.rank = rank
         self.size = size
+        self.requests = [MPI.REQUEST_NULL for _ in range(self.degree)]
 
         self.testAcc = -1.0 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
@@ -97,8 +98,8 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            self.comm.Isend(send_buffer, dest=node, tag=self.rank)
-            self.comm.Isend(send_buffer, dest=node, tag=self.rank)
+            self.requests[idx] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
+            # self.comm.Isend(send_buffer, dest=node, tag=self.rank)
 
 
         toc = time.time()
