@@ -110,7 +110,9 @@ def run(rank, size):
 
         comm_time2 = 0
         if args.personalize:
-            comm_time2 = communicator.send_accuracy(test_acc)
+            comm_time2 += communicator.send_accuracy(test_acc)
+            comm_time2 += communicator.personalize(test_acc)
+
         total_comm_time = comm_time + comm_time2
 
         # total time spent in algorithm
