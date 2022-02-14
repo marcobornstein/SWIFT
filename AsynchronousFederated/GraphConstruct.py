@@ -38,6 +38,7 @@ class GraphConstruct:
                         g.append((i, i+1))
                     else:
                         g.append((i, 0))
+
             elif graph == 'clique-ring':
                 per_c = int(self.size/num_c)
                 rem = self.size % num_c
