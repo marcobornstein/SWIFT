@@ -33,6 +33,7 @@ class GraphConstruct:
                         g.append((i, i+1))
                     else:
                         g.append((i, 0))
+            return g
 
     def getWeights(self, weight_type=None):
         
