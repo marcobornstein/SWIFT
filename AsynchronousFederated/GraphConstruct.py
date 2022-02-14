@@ -44,14 +44,14 @@ class GraphConstruct:
                     num_edges = np.zeros(1, dtype=np.int)
                 MPI.COMM_WORLD.Bcast(num_edges, root=0)
                 num_edges = num_edges[0]
-                print(num_edges)
                 if self.rank != 0:
-                    data = np.empty((num_edges, 2))
+                    data = np.empty((num_edges, 2), dtype=np.int)
                 else:
-                    data = np.array(g)
+                    data = np.array(g, dtype=np.int)
                 MPI.COMM_WORLD.Bcast(data, root=0)
                 if self.rank != 0:
                     for i in range(num_edges):
+                        print(data[i][0])
                         g.append((data[i][0], data[i][1]))
 
             return g
