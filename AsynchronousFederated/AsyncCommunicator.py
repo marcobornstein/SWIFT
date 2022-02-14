@@ -135,9 +135,6 @@ class AsyncDecentralized:
 
         toc = time.time()
 
-        if any(np.isnan(prev_model)) or prev_model[-1] == 1:
-            print('Buffer Issue With Value %f When Updating From Rank %d' % (prev_model[-1], self.rank))
-
         # update local models
         self.reset_model()
 

@@ -37,11 +37,14 @@ class GraphConstruct:
                         g.append((i, 0))
             elif graph == 'erdos-renyi':
                 if self.rank == 0:
-                    erdos_graph = nx.erdos_renyi_graph(self.size, p)
-                    g = erdos_graph.edges
-                    num_edges = len(g)*np.ones(1, dtype=np.int)
-                    print('Generated Erdos-Renyi Graph Edges:')
-                    print(g)
+                    while True:
+                        erdos_graph = nx.erdos_renyi_graph(self.size, p)
+                        if nx.is_connected(erdos_graph):
+                            g = erdos_graph.edges
+                            num_edges = len(g)*np.ones(1, dtype=np.int)
+                            print('Generated Erdos-Renyi Graph Edges:')
+                            print(g)
+                            break
                 else:
                     num_edges = np.zeros(1, dtype=np.int)
                 MPI.COMM_WORLD.Bcast(num_edges, root=0)
