@@ -1,23 +1,25 @@
 from mpi4py import MPI
 import numpy as np
+import networkx as nx
 
 
 class GraphConstruct:
 
-    def __init__(self, graph, rank, size):
+    def __init__(self, graph, rank, size, p=0.75):
 
         # Initialize MPI variables
         self.rank = rank  # index of worker
         self.size = size  # totoal number of workers
         self.comm = MPI.COMM_WORLD
 
-        self.graph = self.selectGraph(graph)
+        # Create graph from string input or return custom inputted graph
+        self.graph = self.selectGraph(graph, p)
 
         # Determine each node's neighbors and the weights for each node in the Graph
         self.neighbor_list = self.getNeighbors(rank)
         self.neighbor_weights = self.getWeights()
 
-    def selectGraph(self, graph):
+    def selectGraph(self, graph, p):
 
         if isinstance(graph, list):
             return graph
@@ -33,6 +35,9 @@ class GraphConstruct:
                         g.append((i, i+1))
                     else:
                         g.append((i, 0))
+            elif graph == 'erdos-renyi':
+                erdos_graph = nx.erdos_renyi_graph(self.size, p)
+                g = erdos_graph.edges
             return g
 
     def getWeights(self, weight_type=None):
@@ -47,7 +52,7 @@ class GraphConstruct:
             
         else:
             num_neighbors = len(self.neighbor_list)
-            weights = (1/self.size) * np.ones(num_neighbors)
+            weights = (1/num_neighbors) * np.ones(num_neighbors)
             
         return weights
 

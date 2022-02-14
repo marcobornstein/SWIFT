@@ -1,26 +1,17 @@
-import os
 import numpy as np
 import time
 import argparse
 import resnet
 import util
-import gc
 from GraphConstruct import GraphConstruct
 from AsyncCommunicator import AsyncDecentralized
 from mpi4py import MPI
 
 import torch
-import torch.distributed as dist
 import torch.utils.data.distributed
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
-from torch.multiprocessing import Process
-from torch.autograd import Variable
-import torchvision
-from torchvision import datasets, transforms
 import torch.backends.cudnn as cudnn
-import torchvision.models as models
 cudnn.benchmark = True
 
 
@@ -39,7 +30,8 @@ def run(rank, size):
     # Graph = [(0, 1), (0, 2), (1, 2)]  # Simple Triangle
     # Graph = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]  # Inter-connected Square
 
-    GP = GraphConstruct('fully-connected', rank, size)
+    GP = GraphConstruct('erdos-renyi', rank, size)
+    print(GP.graph)
     sgd_steps = 3
     communicator = AsyncDecentralized(rank, size, GP, sgd_steps, args.max_sgd)
 
