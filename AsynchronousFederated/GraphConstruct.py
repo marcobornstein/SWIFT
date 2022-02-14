@@ -40,6 +40,8 @@ class GraphConstruct:
                     erdos_graph = nx.erdos_renyi_graph(self.size, p)
                     g = erdos_graph.edges
                     num_edges = len(g)*np.ones(1, dtype=np.int)
+                    print('Generated Erdos-Renyi Graph Edges:')
+                    print(g)
                 else:
                     num_edges = np.zeros(1, dtype=np.int)
                 MPI.COMM_WORLD.Bcast(num_edges, root=0)
