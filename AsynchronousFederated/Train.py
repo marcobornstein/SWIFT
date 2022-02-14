@@ -30,7 +30,7 @@ def run(rank, size):
     # Graph = [(0, 1), (0, 2), (1, 2)]  # Simple Triangle
     # Graph = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]  # Inter-connected Square
 
-    GP = GraphConstruct('erdos-renyi', rank, size)
+    GP = GraphConstruct('ring', rank, size)
     sgd_steps = 3
     communicator = AsyncDecentralized(rank, size, GP, sgd_steps, args.max_sgd)
 
