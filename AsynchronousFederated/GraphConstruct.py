@@ -35,9 +35,6 @@ class GraphConstruct:
                         g.append((i, i+1))
                     else:
                         g.append((i, 0))
-            elif graph == 'erdos-renyi':
-                erdos_graph = nx.erdos_renyi_graph(self.size, p)
-                g = erdos_graph.edges
             return g
 
     def getWeights(self, weight_type=None):
