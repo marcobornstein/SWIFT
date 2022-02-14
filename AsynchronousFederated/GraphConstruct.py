@@ -39,9 +39,9 @@ class GraphConstruct:
                 if self.rank == 0:
                     erdos_graph = nx.erdos_renyi_graph(self.size, p)
                     g = erdos_graph.edges
-                    num_edges = len(g)*np.ones(1)
+                    num_edges = len(g)*np.ones(1, dtype=np.int)
                 else:
-                    num_edges = np.zeros(1)
+                    num_edges = np.zeros(1, dtype=np.int)
                 MPI.COMM_WORLD.Bcast(num_edges, root=0)
                 if self.rank != 0:
                     data = np.empty((num_edges[0], 2))
