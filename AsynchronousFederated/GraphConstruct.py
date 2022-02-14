@@ -35,6 +35,23 @@ class GraphConstruct:
                         g.append((i, i+1))
                     else:
                         g.append((i, 0))
+            elif graph == 'erdos-renyi':
+                if self.rank == 0:
+                    erdos_graph = nx.erdos_renyi_graph(self.size, p)
+                    g = erdos_graph.edges
+                    num_edges = len(g)
+                else:
+                    num_edges = 0
+                MPI.COMM_WORLD.bcast(num_edges, root=0)
+                if self.rank != 0:
+                    data = np.empty((num_edges, 2))
+                else:
+                    data = np.array(g)
+                MPI.COMM_WORLD.Bcast(data, root=0)
+                if self.rank != 0:
+                    for i in range(num_edges):
+                        g.append((data[i][0], data[i][1]))
+
             return g
 
     def getWeights(self, weight_type=None):
