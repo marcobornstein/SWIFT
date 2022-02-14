@@ -102,7 +102,7 @@ def run(rank, size):
             comp_time += d_comp_time
 
             # communication happens here
-            d_comm_time = communicator.communicate(model, test_acc, args.personalize)
+            d_comm_time = communicator.communicate(model)
             comm_time += d_comm_time
 
         # evaluate test accuracy at the end of each epoch
@@ -110,7 +110,6 @@ def run(rank, size):
 
         comm_time2 = 0
         if args.personalize:
-            comm_time2 += communicator.send_accuracy(test_acc)
             comm_time2 += communicator.personalize(test_acc)
 
         total_comm_time = comm_time + comm_time2

@@ -51,6 +51,19 @@ class AsyncDecentralized:
 
     def personalize(self, test_acc):
 
+        send_buff = test_acc * np.ones(3)
+        if self.count2 >= 10000 - self.degree:
+            self.count2 = 0
+
+        # Time the send
+        tic = time.time()
+        for node in self.neighbor_list:
+            self.requests2[self.count2] = self.comm.Isend(send_buff, dest=node, tag=self.rank + self.size)
+            self.count2 += 1
+        toc = time.time()
+
+        send_time = toc-tic
+
         worker_acc = -1
         # Do something about this later...
         worker_buff = np.empty(3)
@@ -74,6 +87,7 @@ class AsyncDecentralized:
                         count += 1
 
         toc = time.time()
+        recv_time = toc-tic
 
         if not any(self.testAcc == -1.0):
             if test_acc <= np.min(self.testAcc) and self.sgd_updates < self.sgd_max:
@@ -82,7 +96,7 @@ class AsyncDecentralized:
             elif test_acc > np.min(self.testAcc) and self.sgd_updates > self.init_sgd_updates:
                 self.sgd_updates -= 1
 
-        return toc - tic
+        return send_time+recv_time
 
     def averaging(self, model):
 
@@ -146,7 +160,7 @@ class AsyncDecentralized:
 
         return toc - tic
 
-    def communicate(self, model, test_acc, flag):
+    def communicate(self, model):
 
         self.iter += 1
         comm_time = 0
@@ -154,24 +168,7 @@ class AsyncDecentralized:
         if self.iter % self.sgd_updates == 0:
             comm_time += self.broadcast(model)
             comm_time += self.averaging(model)
-            # if flag:
-            #    comm_time += self.personalize(test_acc)
         else:
             comm_time += self.broadcast(model)
 
         return comm_time
-
-    def send_accuracy(self, test_acc):
-
-        send_buff = test_acc*np.ones(3)
-        if self.count2 >= 10000-self.degree:
-            self.count2 = 0
-
-        # Time
-        tic = time.time()
-        for node in self.neighbor_list:
-            self.requests2[self.count2] = self.comm.Isend(send_buff, dest=node, tag=self.rank+self.size)
-            self.count2 += 1
-        toc = time.time()
-
-        return toc - tic
