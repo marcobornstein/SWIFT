@@ -28,9 +28,6 @@ class GraphConstruct:
             if graph == 'fully-connected':
                 fc_graph = nx.complete_graph(self.size)
                 g = fc_graph.edges
-                # for i in range(self.size):
-                #    for j in range(i+1, self.size):
-                #        g.append((i, j))
 
             elif graph == 'ring':
                 for i in range(self.size):

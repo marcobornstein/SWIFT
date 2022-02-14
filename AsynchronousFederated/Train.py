@@ -26,7 +26,7 @@ def run(rank, size):
     # num_batches = ceil(len(train_loader.dataset) / float(args.bs))
 
     # load base network topology
-    GP = GraphConstruct('clique-ring', rank, size, num_c=3)
+    GP = GraphConstruct(args.graph, rank, size, num_c=args.num_clusters)
     sgd_steps = 3
     communicator = AsyncDecentralized(rank, size, GP, sgd_steps, args.max_sgd)
 
@@ -190,8 +190,12 @@ if __name__ == "__main__":
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
     parser.add_argument('--epoch', '-e', default=1, type=int, help='total epoch')
     parser.add_argument('--bs', default=4, type=int, help='batch size on each worker')
+
     parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
     parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
+    parser.add_argument('--num_clusters', default=1, type=int, help='number of clusters in graph')
+    parser.add_argument('--graph', type=str, help='graph topology')
+
     parser.add_argument('--warmup', action='store_true', help='use lr warmup or not')
     parser.add_argument('--nesterov', action='store_true', help='use nesterov momentum or not')
     parser.add_argument('--dataset', default='cifar10', type=str, help='the dataset')
@@ -199,7 +203,7 @@ if __name__ == "__main__":
     parser.add_argument('--downloadCifar', default=0, type=int, help='change to 1 if needing to download Cifar')
     parser.add_argument('--p', '-p', action='store_true', help='partition the dataset or not')
     parser.add_argument('--savePath', type=str, help='save path')
-    parser.add_argument('--outputFolder', type=str, help = 'save folder')
+    parser.add_argument('--outputFolder', type=str, help='save folder')
     parser.add_argument('--randomSeed', type=int, help='random seed')
 
     args = parser.parse_args()
