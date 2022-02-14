@@ -51,7 +51,6 @@ class GraphConstruct:
                 MPI.COMM_WORLD.Bcast(data, root=0)
                 if self.rank != 0:
                     for i in range(num_edges):
-                        print(data[i][0])
                         g.append((data[i][0], data[i][1]))
 
             return g
