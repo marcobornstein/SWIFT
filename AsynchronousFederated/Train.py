@@ -102,7 +102,6 @@ def run(rank, size):
 
         # evaluate test accuracy at the end of each epoch
         test_acc = util.test(model, test_loader)[0].item()
-        print(test_acc)
 
         comm_time2 = 0
         if args.personalize:

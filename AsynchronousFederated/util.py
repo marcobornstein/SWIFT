@@ -437,5 +437,4 @@ def test(model, test_loader):
         outputs = model(inputs)
         acc1 = comp_accuracy(outputs, targets)
         top1.update(acc1[0], inputs.size(0))
-    print(acc1[0])
     return top1.avg
