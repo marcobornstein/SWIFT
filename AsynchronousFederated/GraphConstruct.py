@@ -5,7 +5,7 @@ import networkx as nx
 
 class GraphConstruct:
 
-    def __init__(self, graph, rank, size, p=0.75):
+    def __init__(self, graph, rank, size, p=0.75, num_c=None):
 
         # Initialize MPI variables
         self.rank = rank  # index of worker
@@ -13,28 +13,50 @@ class GraphConstruct:
         self.comm = MPI.COMM_WORLD
 
         # Create graph from string input or return custom inputted graph
-        self.graph = self.selectGraph(graph, p)
+        self.graph = self.selectGraph(graph, p, num_c)
 
         # Determine each node's neighbors and the weights for each node in the Graph
         self.neighbor_list = self.getNeighbors(rank)
         self.neighbor_weights = self.getWeights()
 
-    def selectGraph(self, graph, p):
+    def selectGraph(self, graph, p, num_c):
 
         if isinstance(graph, list):
             return graph
         else:
             g = []
             if graph == 'fully-connected':
-                for i in range(self.size):
-                    for j in range(i+1, self.size):
-                        g.append((i, j))
+                fc_graph = nx.complete_graph(self.size)
+                g = fc_graph.edges
+                # for i in range(self.size):
+                #    for j in range(i+1, self.size):
+                #        g.append((i, j))
+
             elif graph == 'ring':
                 for i in range(self.size):
                     if i != self.size - 1:
                         g.append((i, i+1))
                     else:
                         g.append((i, 0))
+            elif graph == 'clique-ring':
+                per_c = int(self.size/num_c)
+                rem = self.size % num_c
+                print(per_c)
+                print(rem)
+                for i in range(num_c):
+                    if i != num_c-1:
+                        fc_graph = nx.complete_graph(per_c)
+                        fc_graph = nx.convert_node_labels_to_integers(fc_graph, i*per_c)
+                        g += fc_graph.edges
+                        g.append((per_c-1, per_c))
+                    else:
+                        fc_graph = nx.complete_graph(per_c + rem)
+                        fc_graph = nx.convert_node_labels_to_integers(fc_graph, i*per_c)
+                        g += fc_graph.edges
+                        if num_c > 2:
+                            g.append((self.size-1, 0))
+                print(g)
+
             elif graph == 'erdos-renyi':
                 if self.rank == 0:
                     while True:

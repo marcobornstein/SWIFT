@@ -26,7 +26,7 @@ def run(rank, size):
     # num_batches = ceil(len(train_loader.dataset) / float(args.bs))
 
     # load base network topology
-    GP = GraphConstruct('erdos-renyi', rank, size)
+    GP = GraphConstruct('clique-ring', rank, size, num_c=2)
     sgd_steps = 3
     communicator = AsyncDecentralized(rank, size, GP, sgd_steps, args.max_sgd)
 
