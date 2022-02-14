@@ -49,7 +49,7 @@ class GraphConstruct:
                         fc_graph = nx.complete_graph(per_c)
                         fc_graph = nx.convert_node_labels_to_integers(fc_graph, i*per_c)
                         g += fc_graph.edges
-                        g.append((per_c-1, per_c))
+                        g.append((i*per_c + per_c-1, i*per_c + per_c))
                     else:
                         fc_graph = nx.complete_graph(per_c + rem)
                         fc_graph = nx.convert_node_labels_to_integers(fc_graph, i*per_c)
