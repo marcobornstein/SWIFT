@@ -8,7 +8,7 @@
 #SBATCH --qos=scavenger    # set QOS, this will determine what resources can be requested
 #SBATCH --partition=scavenger
 #SBATCH --gres=gpu:2
-#SBATCH --ntasks=10
+#SBATCH --ntasks=8
 #SBATCH --mem 64gb         # memory required by job; if unit is not specified MB will be assumed
 #SBATCH --nice=0
 #SBATCH --mail-type=END   # Valid type values are NONE, BEGIN, END, FAIL, REQUEUE
@@ -16,4 +16,4 @@
 module load openmpi
 module load cuda/11.2.2
 
-mpirun -np 9 python Train.py  --graph clique-ring --num_clusters 3 --personalize 1 --max_sgd 10 --resSize 50 --bs 64 --epoch 15 --name square-pers --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 4 python Train.py  --graph fully-connected --num_clusters 1 --personalize 1 --max_sgd 10 --resSize 50 --bs 64 --epoch 15 --name square-pers --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output

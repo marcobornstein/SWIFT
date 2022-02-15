@@ -39,8 +39,6 @@ class GraphConstruct:
             elif graph == 'clique-ring':
                 per_c = int(self.size/num_c)
                 rem = self.size % num_c
-                print(per_c)
-                print(rem)
                 for i in range(num_c):
                     if i != num_c-1:
                         fc_graph = nx.complete_graph(per_c)
@@ -53,7 +51,6 @@ class GraphConstruct:
                         g += fc_graph.edges
                         if num_c > 2:
                             g.append((self.size-1, 0))
-                print(g)
 
             elif graph == 'erdos-renyi':
                 if self.rank == 0:
