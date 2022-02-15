@@ -48,6 +48,9 @@ class DataPartitioner(object):
         rng = Random()
         rng.seed(seed)
 
+        b = data.targets
+        print(len(b))
+
         # Determine labels & create a dictionary storing all data point indices with their corresponding label
         labelList = data.train_labels
         labelIdxDict = dict()
