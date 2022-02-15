@@ -48,11 +48,13 @@ class DataPartitioner(object):
         rng = Random()
         rng.seed(seed)
 
-        b = data.targets
-        print(len(b))
+        # labelList = list()
+        # for i in range(len(data)):
+        #    labelList.append(labels[i])
 
         # Determine labels & create a dictionary storing all data point indices with their corresponding label
-        labelList = data.train_labels
+        # labelList = data.train_labels
+        labelList = data.targets
         labelIdxDict = dict()
         for idx, label in enumerate(labelList):
             labelIdxDict.setdefault(label, [])
