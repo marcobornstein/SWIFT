@@ -16,4 +16,4 @@
 module load openmpi
 module load cuda/11.2.2
 
-mpirun -np 8 python Train.py  --graph clique-ring --num_clusters 2 --personalize 1 --max_sgd 10 --resSize 50 --bs 64 --epoch 15 --name square-pers --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 9 python Train.py  --graph clique-ring --num_clusters 3 --personalize 1 --max_sgd 10 --resSize 50 --bs 64 --epoch 15 --name square-pers --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
