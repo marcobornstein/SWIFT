@@ -124,7 +124,7 @@ class DataPartitioner(object):
         worker_partition = partitions[rank]
         lengths = [int(len(worker_partition) * (1 - val_split)), int(len(worker_partition) * val_split)]
         train_set, val_set = torch.utils.data.random_split(worker_partition, lengths)
-        print('hi')
+
         return Partition(self.data, train_set), Partition(self.data, val_set)
 
 
@@ -155,7 +155,7 @@ def partition_dataset(rank, size, args):
 
         partition_sizes = [1.0 / size for _ in range(size)]
 
-        train_set, val_set = DataPartitioner(trainset, partition_sizes, rank, val_split=0.25, isNonIID=True)
+        (train_set, val_set) = DataPartitioner(trainset, partition_sizes, rank, val_split=0.25, isNonIID=True)
 
         train_loader = torch.utils.data.DataLoader(train_set,
                                                    batch_size=args.bs,
