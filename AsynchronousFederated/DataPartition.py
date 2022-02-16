@@ -26,9 +26,10 @@ class DataPartitioner(object):
     def __init__(self, data, sizes, rank, seed=1234, isNonIID=True, val_split=0.25):
         self.data = data
         self.partitions = []
+        self.val = []
 
         if isNonIID:
-            self.partitions = self.getNonIIDdata(data, sizes, rank, val_split=val_split, seed=seed)
+            self.partitions, self.val = self.getNonIIDdata(data, sizes, rank, val_split=val_split, seed=seed)
         else:
             rng = Random()
             rng.seed(seed)
@@ -42,10 +43,8 @@ class DataPartitioner(object):
     #def worker_data(self, partition):
     #    return Partition(self.data, self.partitions[partition])
 
-    def train_val_split(self, worker_partition, val_split):
-        lengths = [int(len(worker_partition) * (1-val_split)), int(len(worker_partition) * val_split)]
-        train_set, val_set = torch.utils.data.random_split(worker_partition, lengths)
-        return Partition(self.data, train_set), Partition(self.data, val_set)
+    def train_val_split(self):
+        return Partition(self.data, self.partitions), Partition(self.data, self.val)
 
     def getNonIIDdata(self, data, sizes, rank, val_split=0.25, seed=1234):
 
@@ -125,7 +124,7 @@ class DataPartitioner(object):
         lengths = [int(len(worker_partition) * (1 - val_split)), int(len(worker_partition) * val_split)]
         train_set, val_set = torch.utils.data.random_split(worker_partition, lengths)
 
-        return Partition(self.data, val_set) #Partition(self.data, train_set), Partition(self.data, val_set)
+        return train_set, val_set
 
 
 def partition_dataset(rank, size, args):
@@ -155,8 +154,8 @@ def partition_dataset(rank, size, args):
 
         partition_sizes = [1.0 / size for _ in range(size)]
 
-        #train_set, val_set = DataPartitioner(trainset, partition_sizes, rank, val_split=0.25, isNonIID=True)
-        val_set = DataPartitioner(trainset, partition_sizes, rank, val_split=0.25, isNonIID=True)
+        partition = DataPartitioner(trainset, partition_sizes, rank, val_split=0.25, isNonIID=True)
+
 
         train_loader = torch.utils.data.DataLoader(train_set,
                                                    batch_size=args.bs,
