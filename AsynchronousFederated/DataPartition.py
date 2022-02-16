@@ -155,6 +155,7 @@ def partition_dataset(rank, size, args):
         partition_sizes = [1.0 / size for _ in range(size)]
 
         partition = DataPartitioner(trainset, partition_sizes, rank, val_split=0.25, isNonIID=True)
+        train_set, val_set = partition.train_val_split()
 
 
         train_loader = torch.utils.data.DataLoader(train_set,
