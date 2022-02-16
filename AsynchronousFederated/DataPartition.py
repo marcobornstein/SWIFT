@@ -23,12 +23,12 @@ class Partition(object):
 
 class DataPartitioner(object):
     """ Partitions a dataset into different chunks. """
-    def __init__(self, data, sizes, seed=1234, isNonIID=True):
+    def __init__(self, data, sizes, rank, seed=1234, isNonIID=True, val_split=0.25):
         self.data = data
         self.partitions = []
 
         if isNonIID:
-            self.partitions = self.getNonIIDdata(data, sizes, seed)
+            self.partitions = self.getNonIIDdata(data, sizes, rank, val_split=val_split, seed=seed)
         else:
             rng = Random()
             rng.seed(seed)
@@ -155,7 +155,7 @@ def partition_dataset(rank, size, args):
 
         partition_sizes = [1.0 / size for _ in range(size)]
 
-        train_set, val_set = DataPartitioner(trainset, partition_sizes, isNonIID=True)
+        train_set, val_set = DataPartitioner(trainset, partition_sizes, rank, val_split=0.25, isNonIID=True)
 
         train_loader = torch.utils.data.DataLoader(train_set,
                                                    batch_size=args.bs,
