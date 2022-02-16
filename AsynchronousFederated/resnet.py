@@ -114,9 +114,3 @@ class ResNet(nn.Module):
         out = self.linear(out)
 
         return out
-
-if __name__ == '__main__':
-    #Marco edit
-    net=ResNet(50, 10)
-    y = net(Variable(torch.randn(1,3,32,32)))
-    print(y.size())

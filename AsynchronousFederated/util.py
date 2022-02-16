@@ -156,8 +156,8 @@ def partition_dataset(rank, size, args):
                                             transform=transform_test)
         test_loader = torch.utils.data.DataLoader(testset, 
                                                 batch_size=64, 
-                                                shuffle=False, 
-                                                num_workers=size)
+                                                shuffle=False)#,
+                                                #num_workers=size)
         MPI.COMM_WORLD.Barrier()
             
     if args.dataset == 'cifar100':

@@ -6,6 +6,7 @@ import util
 from GraphConstruct import GraphConstruct
 from AsyncCommunicator import AsyncDecentralized
 from mpi4py import MPI
+from DataPartition import partition_dataset
 
 import torch
 import torch.utils.data.distributed
@@ -22,7 +23,8 @@ def run(rank, size):
     np.random.seed(args.randomSeed)
 
     # load data
-    train_loader, test_loader = util.partition_dataset(rank, size, args)    
+    # train_loader, test_loader = util.partition_dataset(rank, size, args)
+    train_loader, test_loader = partition_dataset(rank, size, args)
     # num_batches = ceil(len(train_loader.dataset) / float(args.bs))
 
     # load base network topology
