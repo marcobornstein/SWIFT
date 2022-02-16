@@ -76,7 +76,7 @@ class DataPartitioner(object):
         # Determine the number of labels per worker (num partitions)
         majorLabelNumPerPartition = ceil(labelNum/len(partitions))
 
-        basicLabelRatio = 0.8
+        basicLabelRatio = 0.85
         interval = 1
         labelPointer = 0
 
