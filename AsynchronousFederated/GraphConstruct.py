@@ -89,7 +89,7 @@ class GraphConstruct:
             
         else:
             num_neighbors = len(self.neighbor_list)
-            weights = (1/num_neighbors) * np.ones(num_neighbors)
+            weights = (1/(num_neighbors+1)) * np.ones(num_neighbors)
             
         return weights
 
