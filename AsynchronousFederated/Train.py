@@ -28,7 +28,7 @@ def run(rank, size):
 
     # load base network topology
     GP = GraphConstruct(args.graph, rank, size, num_c=args.num_clusters)
-    sgd_steps = 3
+    sgd_steps = args.sgd_steps
     communicator = AsyncDecentralized(rank, size, GP, sgd_steps, args.max_sgd)
 
     # select neural network model
@@ -195,6 +195,7 @@ if __name__ == "__main__":
     parser.add_argument('--epoch', '-e', default=1, type=int, help='total epoch')
     parser.add_argument('--bs', default=4, type=int, help='batch size on each worker')
 
+    parser.add_argument('--sgd_steps', default=3, type=int, help='baseline sgd steps per worker')
     parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
     parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
     parser.add_argument('--num_clusters', default=1, type=int, help='number of clusters in graph')
