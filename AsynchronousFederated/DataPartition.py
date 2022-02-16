@@ -124,7 +124,7 @@ class DataPartitioner(object):
         worker_partition = partitions[rank]
         lengths = [int(len(worker_partition) * (1 - val_split)), int(len(worker_partition) * val_split)]
         train_set, val_set = torch.utils.data.random_split(worker_partition, lengths)
-
+        print('hi')
         return Partition(self.data, train_set), Partition(self.data, val_set)
 
 
