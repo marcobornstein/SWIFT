@@ -104,7 +104,7 @@ class AsyncDecentralized:
                 self.sgd_updates -= 1
 
         # Test updating averaging weights based off the test accuracy (model that generalizes well has a higher weight)
-        if not any(self.valAcc == -1.0):
+        if not any(self.testAcc == -1.0):
             tacc_sum = np.sum(self.testAcc) + test_acc
             for i in range(self.neighbor_list):
                 self.neighbor_weights[i] = self.testAcc[i] / tacc_sum
