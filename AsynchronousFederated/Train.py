@@ -119,7 +119,7 @@ def run(rank, size):
         val_acc = util.test(model, val_loader)[0].item()
 
         comm_time2 = 0
-        if args.personalize:
+        if args.personalize and args.comm_style == 'async':
             comm_time2 += communicator.personalize(test_acc, val_acc)
 
         total_comm_time = comm_time + comm_time2
