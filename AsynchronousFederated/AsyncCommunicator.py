@@ -25,7 +25,6 @@ class AsyncDecentralized:
         self.count = 0
         self.count2 = 0
 
-
         self.testAcc = -1.0 * np.ones(self.degree)
         self.valAcc = -1.0 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
