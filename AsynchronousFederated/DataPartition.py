@@ -23,27 +23,30 @@ class Partition(object):
 
 class DataPartitioner(object):
     """ Partitions a dataset into different chunks. """
-    def __init__(self, data, sizes=[0.7, 0.2, 0.1], seed=1234, isNonIID=False):
+    def __init__(self, data, sizes, rank, seed=1234, isNonIID=True, val_split=0.25):
         self.data = data
         self.partitions = []
-        rng = Random()
-        rng.seed(seed)
-        data_len = len(data)
-        indexes = [x for x in range(0, data_len)]
-        rng.shuffle(indexes)
+        self.val = []
 
         if isNonIID:
-            self.partitions = self.getNonIIDdata(data, sizes, seed)
+            self.partitions, self.val = self.getNonIIDdata(data, sizes, rank, val_split=val_split, seed=seed)
         else:
+            rng = Random()
+            rng.seed(seed)
+            data_len = len(data)
+            indexes = [x for x in range(0, data_len)]
             for frac in sizes:
                 part_len = int(frac * data_len)
                 self.partitions.append(indexes[0:part_len])
                 indexes = indexes[part_len:]
 
-    def use(self, partition):
-        return Partition(self.data, self.partitions[partition])
+    #def worker_data(self, partition):
+    #    return Partition(self.data, self.partitions[partition])
 
-    def getNonIIDdata(self, data, sizes, seed):
+    def train_val_split(self):
+        return Partition(self.data, self.partitions), Partition(self.data, self.val)
+
+    def getNonIIDdata(self, data, sizes, rank, val_split=0.25, seed=1234):
 
         rng = Random()
         rng.seed(seed)
@@ -73,7 +76,7 @@ class DataPartitioner(object):
         # Determine the number of labels per worker (num partitions)
         majorLabelNumPerPartition = ceil(labelNum/len(partitions))
 
-        basicLabelRatio = 0.4
+        basicLabelRatio = 0.8
         interval = 1
         labelPointer = 0
 
@@ -114,7 +117,14 @@ class DataPartitioner(object):
             # randomly shuffle the partition
             rng.shuffle(partitions[partPointer])
             remainLabels = remainLabels[idxIncrement:]
-        return partitions
+
+        # ANOTHER EDIT IS NEEDED SO ONE DOESNT NEED TO BUILD THE ENTIRE DICTIONARY, JUST ENOUGH FOR THE ONE WORKER
+        # Before returning, Split into two partitions: 1 for training (75%) and one for validation (25%)
+        worker_partition = partitions[rank]
+        lengths = [int(len(worker_partition) * (1 - val_split)), int(len(worker_partition) * val_split)]
+        train_set, val_set = torch.utils.data.random_split(worker_partition, lengths)
+
+        return train_set, val_set
 
 
 def partition_dataset(rank, size, args):
@@ -144,13 +154,20 @@ def partition_dataset(rank, size, args):
 
         partition_sizes = [1.0 / size for _ in range(size)]
 
-        partition = DataPartitioner(trainset, partition_sizes, isNonIID=True)
-        partition = partition.use(rank)
+        partition = DataPartitioner(trainset, partition_sizes, rank, val_split=0.25, isNonIID=True)
+        train_set, val_set = partition.train_val_split()
 
-        train_loader = torch.utils.data.DataLoader(partition,
+
+        train_loader = torch.utils.data.DataLoader(train_set,
                                                    batch_size=args.bs,
                                                    shuffle=True,
                                                    pin_memory=True)
+
+        val_loader = torch.utils.data.DataLoader(val_set,
+                                                   batch_size=args.bs,
+                                                   shuffle=True,
+                                                   pin_memory=True)
+
         MPI.COMM_WORLD.Barrier()
 
         if rank == 0:
@@ -171,4 +188,4 @@ def partition_dataset(rank, size, args):
                                                   shuffle=False)
         MPI.COMM_WORLD.Barrier()
 
-    return train_loader, test_loader
+    return train_loader, test_loader, val_loader

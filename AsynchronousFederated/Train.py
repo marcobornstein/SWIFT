@@ -24,12 +24,11 @@ def run(rank, size):
 
     # load data
     # train_loader, test_loader = util.partition_dataset(rank, size, args)
-    train_loader, test_loader = partition_dataset(rank, size, args)
-    # num_batches = ceil(len(train_loader.dataset) / float(args.bs))
+    train_loader, test_loader, val_loader = partition_dataset(rank, size, args)
 
     # load base network topology
     GP = GraphConstruct(args.graph, rank, size, num_c=args.num_clusters)
-    sgd_steps = 3
+    sgd_steps = args.sgd_steps
     communicator = AsyncDecentralized(rank, size, GP, sgd_steps, args.max_sgd)
 
     # select neural network model
@@ -105,23 +104,26 @@ def run(rank, size):
         # evaluate test accuracy at the end of each epoch
         test_acc = util.test(model, test_loader)[0].item()
 
+        # evaluate validation accuracy at the end of each epoch
+        val_acc = util.test(model, val_loader)[0].item()
+
         comm_time2 = 0
         if args.personalize:
-            comm_time2 += communicator.personalize(test_acc)
+            comm_time2 += communicator.personalize(val_acc)
 
         total_comm_time = comm_time + comm_time2
 
         # total time spent in algorithm
         epoch_time = comp_time + total_comm_time
 
-        print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f epoch time: %.3f"
-              % (rank, epoch, losses.avg, top1.avg, test_acc, epoch_time))
+        print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f, val_acc: %.3f, epoch time: %.3f"
+              % (rank, epoch, losses.avg, top1.avg, test_acc, val_acc, epoch_time))
 
         # if rank == 0:
         #    print("comp_time: %.3f, comm_time: %.3f, comp_time_budget: %.3f, comm_time_budget: %.3f"
         #          % (comp_time, comm_time, comp_time/epoch_time, comm_time/epoch_time))
 
-        recorder.add_new(comp_time, total_comm_time, epoch_time, time.time()-init_time, top1.avg, losses.avg, test_acc)
+        recorder.add_new(comp_time, total_comm_time, epoch_time, time.time()-init_time, top1.avg, losses.avg, test_acc, val_acc)
 
         # reset recorders
         comp_time, comm_time = 0, 0
@@ -193,6 +195,7 @@ if __name__ == "__main__":
     parser.add_argument('--epoch', '-e', default=1, type=int, help='total epoch')
     parser.add_argument('--bs', default=4, type=int, help='batch size on each worker')
 
+    parser.add_argument('--sgd_steps', default=3, type=int, help='baseline sgd steps per worker')
     parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
     parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
     parser.add_argument('--num_clusters', default=1, type=int, help='number of clusters in graph')
