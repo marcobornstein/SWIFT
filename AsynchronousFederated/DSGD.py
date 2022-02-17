@@ -33,9 +33,9 @@ class decenCommunicator:
         self.recv_buffer.add_(self.send_buffer, alpha=selfweight)
 
         send_buff = self.send_buffer.detach().numpy()
+        self.recv_tmp = np.empty_like(send_buff)
         # decentralized averaging
         for idx, node in enumerate(self.neighbor_list):
-            self.recv_tmp = np.empty_like(send_buff)
             self.comm.Sendrecv(sendbuf=send_buff, source=node, recvbuf=self.recv_tmp, dest=node)
             # Aggregate neighbors' models: alpha * sum_j x_j
             self.recv_buffer.add_(torch.from_numpy(self.recv_tmp), alpha=self.neighbor_weights[idx])
