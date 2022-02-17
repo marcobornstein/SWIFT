@@ -32,8 +32,15 @@ def run(rank, size):
 
     if args.comm_style == 'async':
         communicator = AsyncDecentralized(rank, size, GP, args.sgd_steps, args.max_sgd)
+    elif args.comm_style == 'ld-sgd':
+        communicator = decenCommunicator(rank, size, GP, args.i1, args.i2)
+    elif args.comm_style == 'pd-sgd':
+        communicator = decenCommunicator(rank, size, GP, args.i1, 1)
+    elif args.comm_style == 'd-sgd':
+        communicator = decenCommunicator(rank, size, GP, 0, 1)
     else:
-        communicator = decenCommunicator(rank, size, GP)
+        # Anything else just default to our algorithm
+        communicator = AsyncDecentralized(rank, size, GP, args.sgd_steps, args.max_sgd)
 
     # select neural network model
     num_class = 10
@@ -200,6 +207,8 @@ if __name__ == "__main__":
     parser.add_argument('--epoch', '-e', default=1, type=int, help='total epoch')
     parser.add_argument('--bs', default=4, type=int, help='batch size on each worker')
 
+    parser.add_argument('--i1', default=1, type=int, help='i1 comm set, number of local updates no averaging')
+    parser.add_argument('--i2', default=2, type=int, help='i2 comm set, number of d-sgd updates')
     parser.add_argument('--sgd_steps', default=3, type=int, help='baseline sgd steps per worker')
     parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
     parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')

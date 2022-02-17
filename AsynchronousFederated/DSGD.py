@@ -6,9 +6,14 @@ from comm_helpers import flatten_tensors, unflatten_tensors
 
 
 class decenCommunicator:
-    """ decentralized averaging according to a topology sequence """
+    """
+    decentralized averaging according to a topology sequence
+    For DSGD: Set i1 = 0 and i2 > 0 (any number it doesn't matter)
+    For PD-SGD: Set i1 > 0 and i2 = 1
+    For LD-SGD: Set i1 > 0 and i2 > 1
+    """
 
-    def __init__(self, rank, size, topology):
+    def __init__(self, rank, size, topology, i1, i2):
         self.comm = MPI.COMM_WORLD
         self.rank = rank
         self.size = size
@@ -16,6 +21,10 @@ class decenCommunicator:
         self.neighbor_list = self.topology.neighbor_list
         self.neighbor_weights = topology.neighbor_weights
         self.degree = len(self.neighbor_list)
+        self.i1 = i1
+        self.i2 = i2
+        self.iter = 0
+        self.comm_iter = 0
 
     def prepare_comm_buffer(self):
         # faltten tensors
@@ -55,19 +64,33 @@ class decenCommunicator:
 
     def communicate(self, model):
 
-        # stack all model parameters into one tensor list
-        self.tensor_list = list()
-        for param in model.parameters():
-            self.tensor_list.append(param)
+        # Have to have this here because of the case that i1 = 0 (cant do 0 % 0)
+        self.iter += 1
+        comm_time = 0
 
-        # necessary preprocess
-        self.prepare_comm_buffer()
+        # I1: Number of Local Updates Communication Set
+        if self.iter % (self.i1+1) == 0:
 
-        # decentralized averaging according to activated topology
-        # record the communication time
-        comm_time = self.averaging()
+            self.comm_iter += 1
+            # stack all model parameters into one tensor list
+            self.tensor_list = list()
+            for param in model.parameters():
+                self.tensor_list.append(param)
 
-        # update local models
-        self.reset_model()
+            # necessary preprocess
+            self.prepare_comm_buffer()
+
+            # decentralized averaging according to activated topology
+            # record the communication time
+            comm_time += self.averaging()
+
+            # update local models
+            self.reset_model()
+
+            # I2: Number of DSGD Communication Set
+            if self.comm_iter % self.i2 == 0:
+                self.comm_iter = 0
+            else:
+                self.iter -= 1
 
         return comm_time
