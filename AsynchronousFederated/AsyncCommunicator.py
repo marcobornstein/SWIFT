@@ -95,18 +95,19 @@ class AsyncDecentralized:
         toc = time.time()
         recv_time = toc-tic
 
-        if not any(self.valAcc == -1.0):
-            if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:
-                self.sgd_updates += 1
-                print('Rank %d Had The Worst Validation Accuracy at %f' % (self.rank, val_acc))
-            elif val_acc > np.min(self.valAcc) and self.sgd_updates > self.init_sgd_updates:
-                self.sgd_updates -= 1
-
         # Test updating averaging weights based off the test accuracy (model that generalizes well has a higher weight)
         if not any(self.testAcc == -1.0):
             tacc_sum = np.sum(self.testAcc) + test_acc
             for i in range(self.degree):
                 self.neighbor_weights[i] = self.testAcc[i] / tacc_sum
+
+        if not any(self.valAcc == -1.0):
+            if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:
+                self.sgd_updates += 1
+                print('Rank %d Had The Worst Validation Accuracy at %f and Neighborhood Weight %f'
+                      % (self.rank, val_acc, 1-np.sum(self.neighbor_weights)))
+            elif val_acc > np.min(self.valAcc) and self.sgd_updates > self.init_sgd_updates:
+                self.sgd_updates -= 1
 
 
         return send_time+recv_time

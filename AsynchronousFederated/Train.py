@@ -223,7 +223,7 @@ if __name__ == "__main__":
     parser.add_argument('--p', '-p', action='store_true', help='partition the dataset or not')
     parser.add_argument('--savePath', type=str, help='save path')
     parser.add_argument('--outputFolder', type=str, help='save folder')
-    parser.add_argument('--randomSeed', type=int, help='random seed')
+    parser.add_argument('--randomSeed', default=9001, type=int, help='random seed')
 
     args = parser.parse_args()
 
