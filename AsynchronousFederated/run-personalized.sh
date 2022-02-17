@@ -16,4 +16,4 @@
 module load openmpi
 module load cuda/11.2.2
 
-mpirun -np 4 python Train.py  --graph fully-connected --sgd_steps 1 --num_clusters 1 --personalize 1 --max_sgd 10 --resSize 50 --bs 64 --epoch 150 --name test-pers-higher-ratio --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 4 python Train.py  --name test-avg-1sgd --graph fully-connected --sgd_steps 1 --num_clusters 1 --personalize 1 --max_sgd 10 --resSize 50 --bs 64 --epoch 150 --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
