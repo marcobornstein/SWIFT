@@ -17,4 +17,4 @@ module load openmpi
 module load cuda/11.2.2
 
 mpirun -np 4 python Train.py  --graph fully-connected --name dsgd-test --comm_style dsgd --personalize 0 --resSize 50 --bs 64 --epoch 30 --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 4 python Train.py  --graph fully-connected --name padfed-test --sgd_steps 1 --num_clusters 1 --personalize 1 --max_sgd 10 --resSize 50 --bs 64 --epoch 30  --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+# mpirun -np 4 python Train.py  --graph fully-connected --name padfed-test --sgd_steps 1 --num_clusters 1 --personalize 1 --max_sgd 10 --resSize 50 --bs 64 --epoch 30  --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output

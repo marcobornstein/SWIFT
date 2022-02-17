@@ -24,22 +24,23 @@ class decenCommunicator:
 
     def averaging(self):
 
-        self.comm.barrier()
+        self.comm.Barrier()
         tic = time.time()
-
-        # decentralized averaging
-        for idx, node in enumerate(self.neighbor_list):
-            self.recv_tmp = self.comm.sendrecv(self.send_buffer, source=node, dest=node)
-            # Aggregate neighbors' models: alpha * sum_j x_j
-            # self.recv_buffer.add_(self.neighbor_weight, self.recv_tmp)
-            self.recv_buffer.add_(self.recv_tmp, alpha=self.neighbor_weights[idx])
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.recv_buffer.add_(self.send_buffer, alpha=selfweight)
 
-        self.comm.barrier()
+        send_buff = self.send_buffer.detach().numpy()
+        # decentralized averaging
+        for idx, node in enumerate(self.neighbor_list):
+            self.recv_tmp = np.empty_like(self.recv_buffer)
+            self.comm.Sendrecv(sendbuf=send_buff, source=node, recvbuf=self.recv_tmp, dest=node)
+            # Aggregate neighbors' models: alpha * sum_j x_j
+            self.recv_buffer.add_(torch.from_numpy(self.recv_tmp), alpha=self.neighbor_weights[idx])
+
+        self.comm.Barrier()
         toc = time.time()
 
         return toc - tic
@@ -57,10 +58,9 @@ class decenCommunicator:
         # stack all model parameters into one tensor list
         self.tensor_list = list()
         for param in model.parameters():
-            # self.tensor_list.append(param.data)
             self.tensor_list.append(param)
 
-            # necessary preprocess
+        # necessary preprocess
         self.prepare_comm_buffer()
 
         # decentralized averaging according to activated topology
