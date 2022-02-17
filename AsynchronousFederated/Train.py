@@ -5,6 +5,7 @@ import resnet
 import util
 from GraphConstruct import GraphConstruct
 from AsyncCommunicator import AsyncDecentralized
+from DSGD import decenCommunicator
 from mpi4py import MPI
 from DataPartition import partition_dataset
 
@@ -28,8 +29,11 @@ def run(rank, size):
 
     # load base network topology
     GP = GraphConstruct(args.graph, rank, size, num_c=args.num_clusters)
-    sgd_steps = args.sgd_steps
-    communicator = AsyncDecentralized(rank, size, GP, sgd_steps, args.max_sgd)
+
+    if args.comm_style == 'async':
+        communicator = AsyncDecentralized(rank, size, GP, args.sgd_steps, args.max_sgd)
+    else:
+        communicator = decenCommunicator(rank, size, GP)
 
     # select neural network model
     num_class = 10
@@ -189,6 +193,7 @@ if __name__ == "__main__":
     parser.add_argument('--name', '-n', default="default", type=str, help='experiment name')
     parser.add_argument('--description', type=str, help='experiment description')
     parser.add_argument('--model', default="res", type=str, help='model name: res/VGG/wrn')
+    parser.add_argument('--comm_style', default='async', type=str, help='baseline communicator')
     parser.add_argument('--resSize', default=50, type=int, help='res net size')
     parser.add_argument('--lr', default=0.8, type=float, help='learning rate')
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
