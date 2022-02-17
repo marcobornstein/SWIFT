@@ -13,36 +13,29 @@ class decenCommunicator:
         self.rank = rank
         self.size = size
         self.topology = topology
-        self.neighbor_weight = topology.neighbor_weight
-        self.iter = 0
+        self.neighbor_list = self.topology.neighbor_list
+        self.neighbor_weights = topology.neighbor_weights
+        self.degree = len(self.neighbor_list)
 
     def prepare_comm_buffer(self):
         # faltten tensors
         self.send_buffer = flatten_tensors(self.tensor_list).cpu()
         self.recv_buffer = torch.zeros_like(self.send_buffer)
 
-    def averaging(self, active_flags):
+    def averaging(self):
 
         self.comm.barrier()
         tic = time.time()
 
         # decentralized averaging
-        degree = 0  # record the degree of each node
-        for graph_id, flag in enumerate(active_flags):
-            if flag == 0:
-                continue
-            else:
-                if self.topology.neighbors_info[graph_id][self.rank] != -1:
-                    degree += 1
-                    neighbor_rank = self.topology.neighbors_info[graph_id][self.rank]
-                    # Receive neighbor's model: x_j
-                    self.recv_tmp = self.comm.sendrecv(self.send_buffer, source=neighbor_rank, dest=neighbor_rank)
-                    # Aggregate neighbors' models: alpha * sum_j x_j
-                    # self.recv_buffer.add_(self.neighbor_weight, self.recv_tmp)
-                    self.recv_buffer.add_(self.recv_tmp, alpha=self.neighbor_weight)
+        for idx, node in enumerate(self.neighbor_list):
+            self.recv_tmp = self.comm.sendrecv(self.send_buffer, source=node, dest=node)
+            # Aggregate neighbors' models: alpha * sum_j x_j
+            # self.recv_buffer.add_(self.neighbor_weight, self.recv_tmp)
+            self.recv_buffer.add_(self.recv_tmp, alpha=self.neighbor_weights[idx])
 
         # compute self weight according to degree
-        selfweight = 1 - degree * self.neighbor_weight
+        selfweight = 1 - np.sum(self.neighbor_weights)
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.recv_buffer.add_(self.send_buffer, alpha=selfweight)
 
@@ -60,14 +53,6 @@ class decenCommunicator:
                 t.set_(f)
 
     def communicate(self, model):
-        # get activated topology at current iteration
-        active_flags = self.topology.active_flags[self.iter]
-        self.iter += 1
-
-        # if no subgraphs are activated,
-        # then directly start next iteration
-        if np.sum(active_flags) == 0:
-            return 0
 
         # stack all model parameters into one tensor list
         self.tensor_list = list()
@@ -80,7 +65,7 @@ class decenCommunicator:
 
         # decentralized averaging according to activated topology
         # record the communication time
-        comm_time = self.averaging(active_flags)
+        comm_time = self.averaging()
 
         # update local models
         self.reset_model()
