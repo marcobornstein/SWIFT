@@ -109,7 +109,7 @@ def run(rank, size):
 
         comm_time2 = 0
         if args.personalize:
-            comm_time2 += communicator.personalize(val_acc)
+            comm_time2 += communicator.personalize(test_acc, val_acc)
 
         total_comm_time = comm_time + comm_time2
 

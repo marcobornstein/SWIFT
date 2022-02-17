@@ -27,6 +27,7 @@ class AsyncDecentralized:
 
 
         self.testAcc = -1.0 * np.ones(self.degree)
+        self.valAcc = -1.0 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
         self.init_sgd_updates = sgd_updates
         self.sgd_max = sgd_max
@@ -49,9 +50,12 @@ class AsyncDecentralized:
             with torch.no_grad():
                 t.set_(f)
 
-    def personalize(self, test_acc):
+    def personalize(self, test_acc, val_acc):
 
-        send_buff = test_acc * np.ones(3)
+        send_buff = np.empty(2)
+        send_buff[0] = test_acc
+        send_buff[1] = val_acc
+
         if self.count2 >= 10000 - self.degree:
             self.count2 = 0
 
@@ -64,9 +68,10 @@ class AsyncDecentralized:
 
         send_time = toc-tic
 
-        worker_acc = -1
-        # Do something about this later...
-        worker_buff = np.empty(3)
+        worker_tacc = -1
+        worker_vacc = -1
+
+        worker_buff = np.empty(2)
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
@@ -80,21 +85,30 @@ class AsyncDecentralized:
                                 break
                             else:
                                 req2.Cancel()
-                                self.testAcc[idx] = worker_acc
+                                self.testAcc[idx] = worker_tacc
+                                self.valAcc[idx] = worker_vacc
                                 break
 
-                        worker_acc = worker_buff[0]
+                        worker_tacc = worker_buff[0]
+                        worker_vacc = worker_buff[1]
                         count += 1
 
         toc = time.time()
         recv_time = toc-tic
 
-        if not any(self.testAcc == -1.0):
-            if test_acc <= np.min(self.testAcc) and self.sgd_updates < self.sgd_max:
+        if not any(self.valAcc == -1.0):
+            if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:
                 self.sgd_updates += 1
-                print('Rank %d Had The Worst Accuracy at %f' % (self.rank, test_acc))
-            elif test_acc > np.min(self.testAcc) and self.sgd_updates > self.init_sgd_updates:
+                print('Rank %d Had The Worst Validation Accuracy at %f' % (self.rank, val_acc))
+            elif val_acc > np.min(self.valAcc) and self.sgd_updates > self.init_sgd_updates:
                 self.sgd_updates -= 1
+
+        # Test updating averaging weights based off the test accuracy (model that generalizes well has a higher weight)
+        if not any(self.valAcc == -1.0):
+            tacc_sum = np.sum(self.testAcc) + test_acc
+            for i in range(self.neighbor_list):
+                self.neighbor_weights[i] = self.testAcc[i] / tacc_sum
+
 
         return send_time+recv_time
 
