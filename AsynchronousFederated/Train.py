@@ -5,6 +5,7 @@ import resnet
 import util
 from GraphConstruct import GraphConstruct
 from AsyncCommunicator import AsyncDecentralized
+from DSGD import decenCommunicator
 from mpi4py import MPI
 from DataPartition import partition_dataset
 
@@ -28,8 +29,18 @@ def run(rank, size):
 
     # load base network topology
     GP = GraphConstruct(args.graph, rank, size, num_c=args.num_clusters)
-    sgd_steps = args.sgd_steps
-    communicator = AsyncDecentralized(rank, size, GP, sgd_steps, args.max_sgd)
+
+    if args.comm_style == 'async':
+        communicator = AsyncDecentralized(rank, size, GP, args.sgd_steps, args.max_sgd)
+    elif args.comm_style == 'ld-sgd':
+        communicator = decenCommunicator(rank, size, GP, args.i1, args.i2)
+    elif args.comm_style == 'pd-sgd':
+        communicator = decenCommunicator(rank, size, GP, args.i1, 1)
+    elif args.comm_style == 'd-sgd':
+        communicator = decenCommunicator(rank, size, GP, 0, 1)
+    else:
+        # Anything else just default to our algorithm
+        communicator = AsyncDecentralized(rank, size, GP, args.sgd_steps, args.max_sgd)
 
     # select neural network model
     num_class = 10
@@ -189,12 +200,15 @@ if __name__ == "__main__":
     parser.add_argument('--name', '-n', default="default", type=str, help='experiment name')
     parser.add_argument('--description', type=str, help='experiment description')
     parser.add_argument('--model', default="res", type=str, help='model name: res/VGG/wrn')
+    parser.add_argument('--comm_style', default='async', type=str, help='baseline communicator')
     parser.add_argument('--resSize', default=50, type=int, help='res net size')
     parser.add_argument('--lr', default=0.8, type=float, help='learning rate')
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
     parser.add_argument('--epoch', '-e', default=1, type=int, help='total epoch')
     parser.add_argument('--bs', default=4, type=int, help='batch size on each worker')
 
+    parser.add_argument('--i1', default=1, type=int, help='i1 comm set, number of local updates no averaging')
+    parser.add_argument('--i2', default=2, type=int, help='i2 comm set, number of d-sgd updates')
     parser.add_argument('--sgd_steps', default=3, type=int, help='baseline sgd steps per worker')
     parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
     parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
