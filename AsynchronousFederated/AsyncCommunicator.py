@@ -195,7 +195,7 @@ class AsyncDecentralized:
 
     def wait(self, model):
 
-        buf = np.empty(4)
+        buf = [np.empty(1) for _ in range(self.degree)]
         # Send out exit flag
         for idx, node in enumerate(self.neighbor_list):
             self.requests3[idx] = self.comm.Isend(np.ones(1), dest=node, tag=self.rank + 2*self.size)
