@@ -217,8 +217,5 @@ class AsyncDecentralized:
                     self.exit[idx] = buf[idx]
                     count += 1
 
-            time.sleep(0.5)
-            print('Rank %d' % self.rank)
-            print(self.exit)
-            print('=========================')
+            time.sleep(1)
 
