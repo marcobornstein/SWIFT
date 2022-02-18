@@ -209,14 +209,13 @@ class AsyncDecentralized:
             for idx, node in enumerate(self.neighbor_list):
                 count = 0
                 while True:
-                    if not self.requests4[idx].Test():
+                    if not self.requests4[idx].Test() or self.exit[idx] != -1.0:
                         if count == 0 and self.exit[idx] == -1.0:
                             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
                             self.count += 1
                         break
                     self.exit[idx] = buf[idx]
                     count += 1
-                    print('hi')
 
             time.sleep(0.5)
             print('Rank %d' % self.rank)
