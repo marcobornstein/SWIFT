@@ -22,11 +22,14 @@ class AsyncDecentralized:
         self.size = size
         self.requests = [MPI.REQUEST_NULL for _ in range(10000)]
         self.requests2 = [MPI.REQUEST_NULL for _ in range(10000)]
+        self.requests3 = [MPI.REQUEST_NULL for _ in range(self.degree)]
+        self.requests4 = [MPI.REQUEST_NULL for _ in range(self.degree)]
         self.count = 0
         self.count2 = 0
 
         self.testAcc = -1.0 * np.ones(self.degree)
         self.valAcc = -1.0 * np.ones(self.degree)
+        self.exit = -1.0 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
         self.init_sgd_updates = sgd_updates
         self.sgd_max = sgd_max
@@ -74,39 +77,43 @@ class AsyncDecentralized:
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
-                    count = 0
-                    while True:
-                        req2 = self.comm.Irecv(worker_buff, source=node, tag=node+self.size)
-                        if not req2.Test():
-                            if count == 0:
-                                # If no messages available, keep unchanged
-                                req2.Cancel()
-                                break
-                            else:
-                                req2.Cancel()
-                                self.testAcc[idx] = worker_tacc
-                                self.valAcc[idx] = worker_vacc
-                                break
+            count = 0
+            while True:
+                req2 = self.comm.Irecv(worker_buff, source=node, tag=node+self.size)
+                if not req2.Test():
+                    if count == 0:
+                        # If no messages available, keep unchanged
+                        req2.Cancel()
+                        break
+                    else:
+                        req2.Cancel()
+                        self.testAcc[idx] = worker_tacc
+                        self.valAcc[idx] = worker_vacc
+                        break
 
-                        worker_tacc = worker_buff[0]
-                        worker_vacc = worker_buff[1]
-                        count += 1
+                worker_tacc = worker_buff[0]
+                worker_vacc = worker_buff[1]
+                count += 1
 
         toc = time.time()
         recv_time = toc-tic
 
-        if not any(self.valAcc == -1.0):
-            if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:
-                self.sgd_updates += 1
-                print('Rank %d Had The Worst Validation Accuracy at %f' % (self.rank, val_acc))
-            elif val_acc > np.min(self.valAcc) and self.sgd_updates > self.init_sgd_updates:
-                self.sgd_updates -= 1
-
+        '''
         # Test updating averaging weights based off the test accuracy (model that generalizes well has a higher weight)
         if not any(self.testAcc == -1.0):
             tacc_sum = np.sum(self.testAcc) + test_acc
             for i in range(self.degree):
                 self.neighbor_weights[i] = self.testAcc[i] / tacc_sum
+        '''
+
+        if not any(self.valAcc == -1.0):
+            if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:
+                self.sgd_updates += 1
+                print('Rank %d Had The Worst Validation Accuracy at %f '% (self.rank, val_acc))
+                #print('Rank %d Had The Worst Validation Accuracy at %f and Neighborhood Weight %f'
+                      #% (self.rank, val_acc, 1-np.sum(self.neighbor_weights)))
+            elif val_acc > np.min(self.valAcc) and self.sgd_updates > self.init_sgd_updates:
+                self.sgd_updates -= 1
 
 
         return send_time+recv_time
@@ -122,23 +129,23 @@ class AsyncDecentralized:
 
         tic = time.time()
         for idx, node in enumerate(self.neighbor_list):
-                    count = 0
-                    while True:
-                        req = self.comm.Irecv(worker_model, source=node, tag=node)
-                        if not req.Test():
-                            if count == 0:
-                                # If no messages available, take one's own model as the model to average
-                                req.Cancel()
-                                self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
-                                break
-                            else:
-                                req.Cancel()
-                                self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
-                                # if any(np.isnan(prev_model)) or prev_model[-1] == 1:
-                                #    print('Buffer Issue With Value %f When Updating From Rank %d' % (prev_model[-1], self.rank))
-                                break
-                        prev_model = worker_model
-                        count += 1
+            count = 0
+            while True:
+                req = self.comm.Irecv(worker_model, source=node, tag=node)
+                if not req.Test():
+                    if count == 0:
+                        # If no messages available, take one's own model as the model to average
+                        req.Cancel()
+                        self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
+                        break
+                    else:
+                        req.Cancel()
+                        self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
+                        # if any(np.isnan(prev_model)) or prev_model[-1] == 1:
+                        #    print('Buffer Issue With Value %f When Updating From Rank %d' % (prev_model[-1], self.rank))
+                        break
+                prev_model = worker_model
+                count += 1
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
@@ -185,3 +192,30 @@ class AsyncDecentralized:
             comm_time += self.broadcast(model)
 
         return comm_time
+
+    def wait(self, model):
+
+        buf = [np.empty(1) for _ in range(self.degree)]
+        # Send out exit flag
+        for idx, node in enumerate(self.neighbor_list):
+            self.requests3[idx] = self.comm.Isend(np.ones(1), dest=node, tag=self.rank + 2*self.size)
+            self.requests4[idx] = self.comm.Irecv(buf[idx], source=node, tag=node + 2 * self.size)
+
+        # Preprocess
+        self.prepare_send_buffer(model)
+        send_buffer = self.send_buffer.detach().numpy()
+
+        while any(self.exit == -1.0):
+            for idx, node in enumerate(self.neighbor_list):
+                count = 0
+                while True:
+                    if not self.requests4[idx].Test() or self.exit[idx] != -1.0:
+                        if count == 0 and self.exit[idx] == -1.0:
+                            self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
+                            self.count += 1
+                        break
+                    self.exit[idx] = buf[idx]
+                    count += 1
+
+            time.sleep(1)
+

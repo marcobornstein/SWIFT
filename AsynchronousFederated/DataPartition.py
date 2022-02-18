@@ -189,3 +189,31 @@ def partition_dataset(rank, size, args):
         MPI.COMM_WORLD.Barrier()
 
     return train_loader, test_loader, val_loader
+
+
+def get_test_data(args):
+
+    if args.downloadCifar == 1:
+        url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
+        filename = "cifar-10-python.tar.gz"
+        tgz_md5 = "c58f30108f718f92721af3b95e74349a"
+        torchvision.datasets.utils.download_and_extract_archive(url, args.datasetRoot, filename=filename, md5=tgz_md5)
+        MPI.COMM_WORLD.Barrier()
+
+    if args.dataset == 'cifar10':
+
+        transform_test = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        ])
+
+        testset = torchvision.datasets.CIFAR10(root=args.datasetRoot,
+                                               train=False,
+                                               download=True,
+                                               transform=transform_test)
+
+        test_loader = torch.utils.data.DataLoader(testset,
+                                                  batch_size=64,
+                                                  shuffle=False)
+
+    return test_loader

@@ -7,7 +7,7 @@ from GraphConstruct import GraphConstruct
 from AsyncCommunicator import AsyncDecentralized
 from DSGD import decenCommunicator
 from mpi4py import MPI
-from DataPartition import partition_dataset
+from DataPartition import partition_dataset, get_test_data
 
 import torch
 import torch.utils.data.distributed
@@ -19,12 +19,19 @@ cudnn.benchmark = True
 
 def run(rank, size):
 
+    '''
+    worker_size = size-1
+    # remove
+    if rank == size-1:
+        test_loader = get_test_data(args)
+        print('Dummy Node')
+    '''
+
     # set random seed
     torch.manual_seed(args.randomSeed+rank)
     np.random.seed(args.randomSeed)
 
     # load data
-    # train_loader, test_loader = util.partition_dataset(rank, size, args)
     train_loader, test_loader, val_loader = partition_dataset(rank, size, args)
 
     # load base network topology
@@ -118,14 +125,14 @@ def run(rank, size):
         # evaluate validation accuracy at the end of each epoch
         val_acc = util.test(model, val_loader)[0].item()
 
-        comm_time2 = 0
-        if args.personalize:
-            comm_time2 += communicator.personalize(test_acc, val_acc)
+        # send model to the dummy node to compute the overall model accuracy
 
-        total_comm_time = comm_time + comm_time2
+        # run personalization if turned on
+        if args.personalize and args.comm_style == 'async':
+            comm_time += communicator.personalize(test_acc, val_acc)
 
         # total time spent in algorithm
-        epoch_time = comp_time + total_comm_time
+        epoch_time = comp_time + comm_time
 
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f, val_acc: %.3f, epoch time: %.3f"
               % (rank, epoch, losses.avg, top1.avg, test_acc, val_acc, epoch_time))
@@ -134,7 +141,7 @@ def run(rank, size):
         #    print("comp_time: %.3f, comm_time: %.3f, comp_time_budget: %.3f, comm_time_budget: %.3f"
         #          % (comp_time, comm_time, comp_time/epoch_time, comm_time/epoch_time))
 
-        recorder.add_new(comp_time, total_comm_time, epoch_time, time.time()-init_time, top1.avg, losses.avg, test_acc, val_acc)
+        recorder.add_new(comp_time, comm_time, epoch_time, time.time()-init_time, top1.avg, losses.avg, test_acc, val_acc)
 
         # reset recorders
         comp_time, comm_time = 0, 0
@@ -142,6 +149,10 @@ def run(rank, size):
         top1.reset()
 
     recorder.save_to_file()
+    # Broadcast/wait until all other neighbors are finished
+    communicator.wait(model)
+    print('Finished from Rank %d' % rank)
+
 
 
 def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=None, itr_per_epoch=None):
@@ -223,7 +234,7 @@ if __name__ == "__main__":
     parser.add_argument('--p', '-p', action='store_true', help='partition the dataset or not')
     parser.add_argument('--savePath', type=str, help='save path')
     parser.add_argument('--outputFolder', type=str, help='save folder')
-    parser.add_argument('--randomSeed', type=int, help='random seed')
+    parser.add_argument('--randomSeed', default=9001, type=int, help='random seed')
 
     args = parser.parse_args()
 
