@@ -151,6 +151,7 @@ def run(rank, size):
     recorder.save_to_file()
     # Broadcast/wait until all other neighbors are finished
     communicator.wait(model)
+    print('Finished from Rank %d' % rank)
 
 
 
