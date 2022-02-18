@@ -23,6 +23,7 @@ class AsyncDecentralized:
         self.requests = [MPI.REQUEST_NULL for _ in range(10000)]
         self.requests2 = [MPI.REQUEST_NULL for _ in range(10000)]
         self.requests3 = [MPI.REQUEST_NULL for _ in range(self.degree)]
+        self.requests4 = [MPI.REQUEST_NULL for _ in range(self.degree)]
         self.count = 0
         self.count2 = 0
 
@@ -194,26 +195,26 @@ class AsyncDecentralized:
 
     def wait(self, model):
 
+        buf = np.empty(4)
         # Send out exit flag
         for idx, node in enumerate(self.neighbor_list):
             self.requests3[idx] = self.comm.Isend(np.ones(1), dest=node, tag=self.rank + 2*self.size)
+            self.requests4[idx] = self.comm.Irecv(buf[idx], source=node, tag=node + 2 * self.size)
 
         # Preprocess
         self.prepare_send_buffer(model)
         send_buffer = self.send_buffer.detach().numpy()
 
-        buf = np.empty(1)
         while any(self.exit == -1.0):
             for idx, node in enumerate(self.neighbor_list):
                 count = 0
                 while True:
-                    req = self.comm.Irecv(buf, source=node, tag=node + 2*self.size)
-                    if not req.Test():
+                    if not self.requests4[idx].Test():
                         if count == 0 and self.exit[idx] == -1.0:
                             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
                             self.count += 1
                         break
-                    self.exit[idx] = buf[0]
+                    self.exit[idx] = buf[idx]
                     count += 1
 
             time.sleep(0.5)
