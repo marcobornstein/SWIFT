@@ -142,6 +142,9 @@ def run(rank, size):
         top1.reset()
 
     recorder.save_to_file()
+    # Broadcast/wait until all other neighbors are finished
+    communicator.wait(model)
+
 
 
 def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=None, itr_per_epoch=None):
