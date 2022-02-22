@@ -25,38 +25,34 @@ class DataPartitioner(object):
     """ Partitions a dataset into different chunks. """
     def __init__(self, data, sizes, rank, seed=1234, isNonIID=True, val_split=0.25):
         self.data = data
-        self.partitions = []
-        self.val = []
 
         if isNonIID:
-            self.partitions, self.val = self.getNonIIDdata(data, sizes, rank, val_split=val_split, seed=seed)
+            self.partitions, self.val = self.getNonIIDdata(rank, data, sizes, val_split=val_split, seed=seed)
         else:
+            partitions = list()
             rng = Random()
             rng.seed(seed)
             data_len = len(data)
             indexes = [x for x in range(0, data_len)]
+            # rng.shuffle(indexes)
             for frac in sizes:
                 part_len = int(frac * data_len)
-                self.partitions.append(indexes[0:part_len])
+                partitions.append(indexes[0:part_len])
                 indexes = indexes[part_len:]
+            worker_data_len = len(partitions[rank])
+            self.val = partitions[rank][0:int(val_split*worker_data_len)]
+            self.partitions = partitions[rank][int(val_split*worker_data_len):]
 
-    #def worker_data(self, partition):
-    #    return Partition(self.data, self.partitions[partition])
 
     def train_val_split(self):
         return Partition(self.data, self.partitions), Partition(self.data, self.val)
 
-    def getNonIIDdata(self, data, sizes, rank, val_split=0.25, seed=1234):
+    def getNonIIDdata(self, rank, data, sizes, val_split=0.25, seed=1234):
 
         rng = Random()
         rng.seed(seed)
 
-        # labelList = list()
-        # for i in range(len(data)):
-        #    labelList.append(labels[i])
-
         # Determine labels & create a dictionary storing all data point indices with their corresponding label
-        # labelList = data.train_labels
         labelList = data.targets
         labelIdxDict = dict()
         for idx, label in enumerate(labelList):
@@ -121,20 +117,22 @@ class DataPartitioner(object):
         # ANOTHER EDIT IS NEEDED SO ONE DOESNT NEED TO BUILD THE ENTIRE DICTIONARY, JUST ENOUGH FOR THE ONE WORKER
         # Before returning, Split into two partitions: 1 for training (75%) and one for validation (25%)
         worker_partition = partitions[rank]
-        lengths = [int(len(worker_partition) * (1 - val_split)), int(len(worker_partition) * val_split)]
+        worker_len = len(worker_partition)
+        rem = worker_len - (int(worker_len * (1 - val_split)) + int(worker_len * val_split))
+        lengths = [int(worker_len * (1 - val_split)) + rem, int(worker_len * val_split)]
         train_set, val_set = torch.utils.data.random_split(worker_partition, lengths)
 
         return train_set, val_set
 
 
-def partition_dataset(rank, size, args):
+def partition_dataset(rank, size, comm, args):
 
     if args.downloadCifar == 1:
         url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
         filename = "cifar-10-python.tar.gz"
         tgz_md5 = "c58f30108f718f92721af3b95e74349a"
         torchvision.datasets.utils.download_and_extract_archive(url, args.datasetRoot, filename=filename, md5=tgz_md5)
-        MPI.COMM_WORLD.Barrier()
+        comm.Barrier()
 
     if rank == 0:
         print('==> load train data')
@@ -168,7 +166,7 @@ def partition_dataset(rank, size, args):
                                                    shuffle=True,
                                                    pin_memory=True)
 
-        MPI.COMM_WORLD.Barrier()
+        comm.Barrier()
 
         if rank == 0:
             print('==> load test data')
@@ -186,7 +184,7 @@ def partition_dataset(rank, size, args):
         test_loader = torch.utils.data.DataLoader(testset,
                                                   batch_size=64,
                                                   shuffle=False)
-        MPI.COMM_WORLD.Barrier()
+        comm.Barrier()
 
     return train_loader, test_loader, val_loader
 

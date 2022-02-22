@@ -1,16 +1,15 @@
-from mpi4py import MPI
 import numpy as np
 import networkx as nx
 
 
 class GraphConstruct:
 
-    def __init__(self, graph, rank, size, p=0.75, num_c=None):
+    def __init__(self, rank, size, comm, graph, p=0.75, num_c=None):
 
         # Initialize MPI variables
         self.rank = rank  # index of worker
-        self.size = size  # totoal number of workers
-        self.comm = MPI.COMM_WORLD
+        self.size = size  # total number of workers
+        self.comm = comm
 
         # Create graph from string input or return custom inputted graph
         self.graph = self.selectGraph(graph, p, num_c)
@@ -64,13 +63,13 @@ class GraphConstruct:
                             break
                 else:
                     num_edges = np.zeros(1, dtype=np.int)
-                MPI.COMM_WORLD.Bcast(num_edges, root=0)
+                self.comm.Bcast(num_edges, root=0)
                 num_edges = num_edges[0]
                 if self.rank != 0:
                     data = np.empty((num_edges, 2), dtype=np.int)
                 else:
                     data = np.array(g, dtype=np.int)
-                MPI.COMM_WORLD.Bcast(data, root=0)
+                self.comm.Bcast(data, root=0)
                 if self.rank != 0:
                     for i in range(num_edges):
                         g.append((data[i][0], data[i][1]))

@@ -7,7 +7,7 @@ from comm_helpers import flatten_tensors, unflatten_tensors
 
 class AsyncDecentralized:
 
-    def __init__(self, rank, size, topology, sgd_updates, sgd_max):
+    def __init__(self, rank, size, comm, topology, sgd_updates, sgd_max):
         """ Initialize the Asynchronous Decentralized Communicator """
 
         # Graph initialization
@@ -17,7 +17,7 @@ class AsyncDecentralized:
         self.degree = len(self.neighbor_list)
 
         # Initialize MPI variables
-        self.comm = MPI.COMM_WORLD
+        self.comm = comm
         self.rank = rank
         self.size = size
         self.requests = [MPI.REQUEST_NULL for _ in range(10000)]
@@ -110,7 +110,7 @@ class AsyncDecentralized:
             if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:
                 self.sgd_updates += 1
                 print('Rank %d Had The Worst Validation Accuracy at %f '% (self.rank, val_acc))
-                #print('Rank %d Had The Worst Validation Accuracy at %f and Neighborhood Weight %f'
+                # print('Rank %d Had The Worst Validation Accuracy at %f and Neighborhood Weight %f'
                       #% (self.rank, val_acc, 1-np.sum(self.neighbor_weights)))
             elif val_acc > np.min(self.valAcc) and self.sgd_updates > self.init_sgd_updates:
                 self.sgd_updates -= 1
@@ -141,8 +141,6 @@ class AsyncDecentralized:
                     else:
                         req.Cancel()
                         self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
-                        # if any(np.isnan(prev_model)) or prev_model[-1] == 1:
-                        #    print('Buffer Issue With Value %f When Updating From Rank %d' % (prev_model[-1], self.rank))
                         break
                 prev_model = worker_model
                 count += 1
@@ -213,9 +211,9 @@ class AsyncDecentralized:
                         if count == 0 and self.exit[idx] == -1.0:
                             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
                             self.count += 1
+                            if self.count >= 10000 - self.degree:
+                                self.count = 0
                         break
                     self.exit[idx] = buf[idx]
                     count += 1
-
-            time.sleep(1)
-
+            time.sleep(0.5)

@@ -13,8 +13,8 @@ class decenCommunicator:
     For LD-SGD: Set i1 > 0 and i2 > 1
     """
 
-    def __init__(self, rank, size, topology, i1, i2):
-        self.comm = MPI.COMM_WORLD
+    def __init__(self, rank, size, comm, topology, i1, i2):
+        self.comm = comm
         self.rank = rank
         self.size = size
         self.topology = topology
