@@ -13,6 +13,7 @@ def model_avg(worker_size, model, test_data, args):
     for param in model.parameters():
         tensor_list.append(param)
     send_buffer = flatten_tensors(tensor_list).cpu()
+    model.eval()
 
     for epoch in range(args.epoch):
 
