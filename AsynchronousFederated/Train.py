@@ -241,7 +241,7 @@ if __name__ == "__main__":
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
     parser.add_argument('--epoch', '-e', default=10, type=int, help='total epoch')
     parser.add_argument('--bs', default=4, type=int, help='batch size on each worker')
-    parser.add_argument('--noniid', default=True, type=bool, help='use non iid data or not')
+    parser.add_argument('--noniid', default=1, type=int, help='use non iid data or not')
     parser.add_argument('--degree_noniid', default=0.7, type=float, help='how distributed are labels (0 is random)')
 
     parser.add_argument('--i1', default=1, type=int, help='i1 comm set, number of local updates no averaging')
