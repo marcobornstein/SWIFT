@@ -21,13 +21,15 @@ class Partition(object):
         data_idx = self.index[index]
         return self.data[data_idx]
 
+
 class DataPartitioner(object):
     """ Partitions a dataset into different chunks. """
-    def __init__(self, data, sizes, rank, seed=1234, isNonIID=True, val_split=0.25):
+    def __init__(self, data, sizes, rank, seed=1234, degree_noniid=0.7, isNonIID=True, val_split=0.25):
         self.data = data
 
         if isNonIID:
-            self.partitions, self.val = self.getNonIIDdata(rank, data, sizes, val_split=val_split, seed=seed)
+            self.partitions, self.val = self.getNonIIDdata(rank, data, sizes, degree_noniid,
+                                                           val_split=val_split, seed=seed)
         else:
             partitions = list()
             rng = Random()
@@ -43,11 +45,10 @@ class DataPartitioner(object):
             self.val = partitions[rank][0:int(val_split*worker_data_len)]
             self.partitions = partitions[rank][int(val_split*worker_data_len):]
 
-
     def train_val_split(self):
         return Partition(self.data, self.partitions), Partition(self.data, self.val)
 
-    def getNonIIDdata(self, rank, data, sizes, val_split=0.25, seed=1234):
+    def getNonIIDdata(self, rank, data, sizes, degree_noniid, val_split=0.25, seed=1234):
 
         rng = Random()
         rng.seed(seed)
@@ -72,7 +73,7 @@ class DataPartitioner(object):
         # Determine the number of labels per worker (num partitions)
         majorLabelNumPerPartition = ceil(labelNum/len(partitions))
 
-        basicLabelRatio = 0.7
+        basicLabelRatio = degree_noniid
         interval = 1
         labelPointer = 0
 
@@ -152,7 +153,8 @@ def partition_dataset(rank, size, comm, args):
 
         partition_sizes = [1.0 / size for _ in range(size)]
 
-        partition = DataPartitioner(trainset, partition_sizes, rank, val_split=0.25, isNonIID=True)
+        partition = DataPartitioner(trainset, partition_sizes, rank, args.degree_noniid,
+                                    val_split=0.25, isNonIID=args.noniid)
         train_set, val_set = partition.train_val_split()
 
 
