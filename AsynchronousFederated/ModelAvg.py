@@ -28,11 +28,13 @@ def model_avg(worker_size, model, test_data, args):
 
         reset_model(avg_model, tensor_list)
 
-
+        # add in a forward pass to stabilize running mean/std
         model.train()
         for batch_idx, (data, target) in enumerate(test_data):
+            if batch_idx == 3:
+                break
             data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
-            output = model(data)
+            model(data)
 
         model.eval()
         # Compute accuracy for consensus model
