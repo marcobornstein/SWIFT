@@ -1,7 +1,8 @@
 
 
 # Codebase Ideas & To Do
-1) The test accuracy comparison can be improved potentially, since it may not be truly helping so much. The reason for this belief, is that while the worst worker will do more sgd updates, in the same time it does those, other workers may do equally many sgd updates. The only difference is that the other workers communicate with each other sooner. This does make sense, but need to think about more as well as other alternatives...
-2) Play around with the max sgd hyperparameter
-3) MOVE THE LEARNING RATE ADJUSTMENT OUTSIDE THE TRAINING LOOP
-4) Maybe send the consensus model only after the 5th epoch?
+1) Fix the data partitioning for non-iid (only create data for each worker, not all)
+2) Wrap the communication in Train.py into a new function (clean the code)
+3) Create a new Util.py with the average meter and the accuracy computations
+4) Examine if the learning rate function outside of the training loop improves performance
+5) Fix the model.eval() issue in ModelAvg.py (send the consensus model only after the 5th epoch?)
