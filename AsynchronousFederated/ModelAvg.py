@@ -15,7 +15,7 @@ def model_avg(worker_size, model, test_data, args):
     send_buffer = flatten_tensors(tensor_list).cpu()
 
     for epoch in range(args.epoch):
-
+        model.train()
         # Clear the buffers
         avg_model = torch.zeros_like(send_buffer)
 
@@ -29,9 +29,8 @@ def model_avg(worker_size, model, test_data, args):
 
         reset_model(avg_model, tensor_list)
 
-        if epoch > 2:
-            model.eval()
 
+        model.eval()
         # model.train()
         # Start training each epoch
         accuracy = AverageMeter()
