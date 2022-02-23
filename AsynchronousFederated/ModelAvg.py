@@ -29,7 +29,7 @@ def model_avg(worker_size, model, test_data, args):
 
         reset_model(avg_model, tensor_list)
 
-        if epoch > 4:
+        if epoch > 2:
             model.eval()
 
         # model.train()
