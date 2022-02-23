@@ -28,11 +28,6 @@ def model_avg(worker_size, model, test_data, args):
 
         reset_model(avg_model, tensor_list)
 
-        model.train()
-        for batch_idx, (data, target) in enumerate(test_data):
-            data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
-            output = model(data)
-
 
         model.eval()
         # model.train()

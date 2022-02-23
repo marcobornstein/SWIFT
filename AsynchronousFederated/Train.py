@@ -132,6 +132,7 @@ def run(rank, size):
             # update learning rate here
             update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20, itr_per_epoch=len(train_loader))
 
+            model.eval()
             # send model to the dummy node to compute the overall model accuracy
             tensor_list = list()
             for param in model.parameters():
