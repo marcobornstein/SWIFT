@@ -35,8 +35,6 @@ def model_avg(worker_size, model, test_data, args):
         # add in a forward pass to stabilize running mean/std
         model.train()
         for batch_idx, (data, target) in enumerate(test_data):
-            if batch_idx == 3:
-                break
             data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
             model(data)
 
