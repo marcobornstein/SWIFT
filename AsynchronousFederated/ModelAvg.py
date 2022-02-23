@@ -18,14 +18,14 @@ def model_avg(worker_size, model, test_data, args):
         model.train()
         # Clear the buffers
         avg_model = torch.zeros_like(send_buffer)
+        worker_models = [np.empty_like(avg_model) for _ in range(worker_size)]
 
         # Get weighting (build a function) -- For now, make it uniform
         weighting = (1/worker_size) * np.ones(worker_size)
 
         for rank in range(worker_size):
-            worker_model = np.empty_like(avg_model)
-            MPI.COMM_WORLD.Recv(worker_model, source=rank, tag=rank+10*worker_size)
-            avg_model.add_(torch.from_numpy(worker_model), alpha=weighting[rank])
+            MPI.COMM_WORLD.Recv(worker_models[rank], source=rank, tag=rank+10*worker_size)
+            avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])
 
         reset_model(avg_model, tensor_list)
 
