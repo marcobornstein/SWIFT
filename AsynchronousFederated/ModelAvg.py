@@ -22,6 +22,10 @@ def model_avg(worker_size, model, test_data, args):
         # Get weighting (build a function) -- For now, make it uniform
         weighting = (1/worker_size) * np.ones(worker_size)
 
+        # TEST
+        weighting = np.ones(worker_size)
+        weighting[1] = 0
+
         for rank in range(worker_size):
             MPI.COMM_WORLD.Recv(worker_models[rank], source=rank, tag=rank+10*worker_size)
             avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])

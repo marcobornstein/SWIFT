@@ -16,4 +16,4 @@
 module load openmpi
 module load cuda/11.1.1
 
-mpirun -np 5 python Train.py --name weight-test-acc --graph fully-connected --sgd_steps 1 --personalize 1 --max_sgd 5 --resSize 50 --bs 64 --epoch 5 --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 3 python Train.py --name weight-test-acc --graph fully-connected --sgd_steps 1 --personalize 1 --max_sgd 5 --resSize 50 --bs 64 --epoch 5 --description asyncDecentralized --randomSeed 9001 --datasetRoot ./data --outputFolder Output
