@@ -32,18 +32,13 @@ def model_avg(worker_size, model, test_data, args):
 
         reset_model(avg_model, tensor_list)
 
-        accuracy = AverageMeter()
-
         # add in a forward pass to stabilize running mean/std
         model.train()
         for batch_idx, (data, target) in enumerate(test_data):
-            data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
-            output = model(data)
-            acc1 = util.comp_accuracy(output, target)
-            accuracy.update(acc1[0].item(), data.size(0))
+            # data = data.cuda(non_blocking=True)
+            model(data)
 
-        print(accuracy.avg)
-        accuracy.reset()
+        accuracy = AverageMeter()
         model.eval()
         # Compute accuracy for consensus model
         for batch_idx, (data, target) in enumerate(test_data):
