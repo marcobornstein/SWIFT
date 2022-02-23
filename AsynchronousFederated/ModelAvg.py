@@ -15,7 +15,6 @@ def model_avg(worker_size, model, test_data, args):
     send_buffer = flatten_tensors(tensor_list).cpu()
 
     for epoch in range(args.epoch):
-        model.train()
         # Clear the buffers
         avg_model = torch.zeros_like(send_buffer)
         worker_models = [np.empty_like(avg_model) for _ in range(worker_size)]
@@ -28,6 +27,11 @@ def model_avg(worker_size, model, test_data, args):
             avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])
 
         reset_model(avg_model, tensor_list)
+
+        model.train()
+        for batch_idx, (data, target) in enumerate(test_data):
+            data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
+            output = model(data)
 
 
         model.eval()
