@@ -9,6 +9,7 @@ from comm_helpers import flatten_tensors, unflatten_tensors
 def model_avg(worker_size, model, test_data, args):
 
     consensus_accuracy = list()
+    model_diff = list()
     tensor_list = list()
     for param in model.parameters():
         tensor_list.append(param)
@@ -20,6 +21,7 @@ def model_avg(worker_size, model, test_data, args):
         # Clear the buffers
         avg_model = torch.zeros_like(send_buffer)
         worker_models = [np.empty_like(avg_model) for _ in range(worker_size)]
+        np_avg_model = np.empty_like(avg_model)
 
         # Get weighting (build a function) -- For now, make it uniform
         weighting = (1/worker_size) * np.ones(worker_size)
@@ -27,6 +29,7 @@ def model_avg(worker_size, model, test_data, args):
         for rank in range(worker_size):
             MPI.COMM_WORLD.Recv(worker_models[rank], source=rank, tag=rank+10*worker_size)
             avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])
+            np_avg_model += worker_models[rank] * weighting[rank]
 
         reset_model(avg_model, tensor_list)
 
@@ -49,6 +52,10 @@ def model_avg(worker_size, model, test_data, args):
         print('Consensus Accuracy for Epoch %d is %.3f' % (epoch, test_acc))
         accuracy.reset()
 
+        for rank in range(worker_size):
+            model_diff.append(np.linalg.norm(np_avg_model - worker_models[rank]))
+
+
     subfolder = args.outputFolder + '/run-' + args.name + '-' + str(args.epoch) + 'epochs'
 
     isExist = os.path.exists(subfolder)
@@ -56,6 +63,7 @@ def model_avg(worker_size, model, test_data, args):
         os.makedirs(subfolder)
 
     np.savetxt(subfolder + '/consensus-average-' + args.comm_style + '-.log', consensus_accuracy, delimiter=',')
+    np.savetxt(subfolder + '/model-diff-' + args.comm_style + '-.log', model_diff, delimiter=',')
 
     with open(subfolder + '/ExpDescription', 'w') as f:
         f.write(str(args) + '\n')
