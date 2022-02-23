@@ -14,6 +14,8 @@ def model_avg(worker_size, model, test_data, args):
         tensor_list.append(param)
     send_buffer = flatten_tensors(tensor_list).cpu()
 
+    accuracy = AverageMeter()
+
     for epoch in range(args.epoch):
         # Clear the buffers
         avg_model = torch.zeros_like(send_buffer)
@@ -35,10 +37,9 @@ def model_avg(worker_size, model, test_data, args):
         # add in a forward pass to stabilize running mean/std
         model.train()
         for batch_idx, (data, target) in enumerate(test_data):
-            # data = data.cuda(non_blocking=True)
+            data = data.cuda(non_blocking=True)
             model(data)
 
-        accuracy = AverageMeter()
         model.eval()
         # Compute accuracy for consensus model
         for batch_idx, (data, target) in enumerate(test_data):
@@ -48,9 +49,9 @@ def model_avg(worker_size, model, test_data, args):
             accuracy.update(acc1[0].item(), data.size(0))
 
         test_acc = accuracy.avg
-
         consensus_accuracy.append(test_acc)
         print('Consensus Accuracy for Epoch %d is %.3f' % (epoch, test_acc))
+        accuracy.reset()
 
     subfolder = args.outputFolder + '/run-' + args.name + '-' + str(args.epoch) + 'epochs'
 
