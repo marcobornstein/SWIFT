@@ -28,20 +28,24 @@ def model_avg(worker_size, model, test_data, args):
 
         for rank in range(worker_size):
             MPI.COMM_WORLD.Recv(worker_models[rank], source=rank, tag=rank+10*worker_size)
-            print(weighting[rank])
             avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])
 
         reset_model(avg_model, tensor_list)
+
+        accuracy = AverageMeter()
 
         # add in a forward pass to stabilize running mean/std
         model.train()
         for batch_idx, (data, target) in enumerate(test_data):
             data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
-            model(data)
+            output = model(data)
+            acc1 = util.comp_accuracy(output, target)
+            accuracy.update(acc1[0].item(), data.size(0))
 
+        print(accuracy.avg)
+        accuracy.reset()
         model.eval()
         # Compute accuracy for consensus model
-        accuracy = AverageMeter()
         for batch_idx, (data, target) in enumerate(test_data):
             data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
             output = model(data)
