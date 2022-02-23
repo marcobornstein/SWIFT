@@ -21,7 +21,7 @@ def model_avg(worker_size, model, test_data, args):
         # Clear the buffers
         avg_model = torch.zeros_like(send_buffer)
         worker_models = [np.empty_like(avg_model) for _ in range(worker_size)]
-        np_avg_model = np.empty_like(avg_model)
+        np_avg_model = np.zeros_like(avg_model)
 
         # Get weighting (build a function) -- For now, make it uniform
         weighting = (1/worker_size) * np.ones(worker_size)
@@ -62,8 +62,8 @@ def model_avg(worker_size, model, test_data, args):
     if not isExist:
         os.makedirs(subfolder)
 
-    np.savetxt(subfolder + '/consensus-average-' + args.comm_style + '-.log', consensus_accuracy, delimiter=',')
-    np.savetxt(subfolder + '/model-diff-' + args.comm_style + '-.log', model_diff, delimiter=',')
+    np.savetxt(subfolder + '/consensus-average-' + args.comm_style + '.log', consensus_accuracy, delimiter=',')
+    np.savetxt(subfolder + '/model-diff-' + args.comm_style + '.log', model_diff, delimiter=',')
 
     with open(subfolder + '/ExpDescription', 'w') as f:
         f.write(str(args) + '\n')
