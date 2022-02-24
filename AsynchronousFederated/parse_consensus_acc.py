@@ -31,7 +31,7 @@ def unpack_data2(directory_path, epoch, num_workers, datatype):
     for root, dirs, files in os.walk(directory):
         j = 0
         for file in files:
-            if file.endswith(datatype+".log"):
+            if file.endswith(datatype):
                 f = open(directory_path+'/'+file, 'r')
                 i = 0
                 for line in f:
