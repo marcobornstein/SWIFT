@@ -13,7 +13,6 @@ def unpack_data(directory_path, epoch, num_workers, datatype):
         j = 0
         for file in files:
             if file.startswith(datatype):
-                print(file[8])
                 f = open(directory_path+'/'+file, 'r')
                 i = 0
                 for line in f:
@@ -33,6 +32,7 @@ def unpack_data2(directory_path, epoch, num_workers, datatype):
         j = 0
         for file in files:
             if file.endswith(datatype):
+                print(file[8])
                 f = open(directory_path+'/'+file, 'r')
                 i = 0
                 for line in f:
