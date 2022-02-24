@@ -13,6 +13,7 @@ def unpack_data(directory_path, epoch, num_workers, datatype):
         j = 0
         for file in files:
             if file.startswith(datatype):
+                print(file[8])
                 f = open(directory_path+'/'+file, 'r')
                 i = 0
                 for line in f:
@@ -61,6 +62,14 @@ if __name__ == "__main__":
     cum_time_data = np.cumsum(time_data, axis=0)
     # print(cum_time_data[-1, :])
     avg_time_data = np.average(time_data, axis=0)
-    print(avg_time_data[-1, :])
+    min_time_data = np.min(time_data, axis=0)
+    max_time_data = np.max(time_data, axis=0)
+
+    print('Average Epoch Time For Each Worker:')
+    print(avg_time_data)
+    print('Minimum Epoch Time For Each Worker:')
+    print(min_time_data)
+    print('Maximum Epoch Time For Each Worker:')
+    print(max_time_data)
 
 
