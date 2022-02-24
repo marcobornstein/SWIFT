@@ -85,13 +85,14 @@ def run(rank, size):
         recorder = util.Recorder(args, rank)
         losses = util.AverageMeter()
         top1 = util.AverageMeter()
-        init_time = time.time()
         requests = [MPI.REQUEST_NULL for _ in range(100)]
         count = 0
 
         WORKER_COMM.Barrier()
         # start training
         for epoch in range(args.epoch):
+            init_time = time.time()
+            record_time = 0
             model.train()
 
             # Start training each epoch
@@ -109,12 +110,11 @@ def run(rank, size):
                 acc1 = util.comp_accuracy(output, target)
                 losses.update(loss.item(), data.size(0))
                 top1.update(acc1[0].item(), data.size(0))
-                record_end = time.time()
+                record_end = time.time() - record_start
+                record_time += record_end
 
                 # backward pass
                 loss.backward()
-                # update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,
-                #                      itr=batch_idx, itr_per_epoch=len(train_loader))
 
                 # gradient step
                 optimizer.step()
@@ -122,16 +122,17 @@ def run(rank, size):
                 end_time = time.time()
 
                 # compute computational time
-                d_comp_time = (end_time - start_time - (record_end - record_start))
-                comp_time += d_comp_time
+                comp_time += (end_time - start_time)
 
                 # communication happens here
                 d_comm_time = communicator.communicate(model)
                 comm_time += d_comm_time
 
             # update learning rate here
-            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20, itr_per_epoch=len(train_loader))
+            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,
+                                 itr_per_epoch=len(train_loader))
 
+            send_start = time.time()
             # send model to the dummy node to compute the overall model accuracy
             tensor_list = list()
             for param in model.parameters():
@@ -150,21 +151,21 @@ def run(rank, size):
             # evaluate validation accuracy at the end of each epoch
             val_acc = util.test(model, val_loader)[0].item()
 
+            # total time spent in algorithm
+            comp_time -= record_time
+            epoch_time = comp_time + comm_time
+
+            print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f, val_acc: %.3f, comp time: %.3f, "
+                  "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, test_acc, val_acc, comp_time, epoch_time))
+
+            send_time = time.time() - send_start
+
             # run personalization if turned on
             if args.personalize and args.comm_style == 'async':
                 comm_time += communicator.personalize(test_acc, val_acc)
 
-            # total time spent in algorithm
-            epoch_time = comp_time + comm_time
-
-            print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f, val_acc: %.3f, comp time: %.3f, epoch time: %.3f"
-                  % (rank, epoch, losses.avg, top1.avg, test_acc, val_acc, comp_time, epoch_time))
-
-            # if rank == 0:
-            #    print("comp_time: %.3f, comm_time: %.3f, comp_time_budget: %.3f, comm_time_budget: %.3f"
-            #          % (comp_time, comm_time, comp_time/epoch_time, comm_time/epoch_time))
-
-            recorder.add_new(comp_time, comm_time, epoch_time, time.time()-init_time, top1.avg, losses.avg, test_acc, val_acc)
+            recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time) - send_time - record_time,
+                             top1.avg, losses.avg, test_acc, val_acc)
 
             # reset recorders
             comp_time, comm_time = 0, 0
@@ -176,7 +177,6 @@ def run(rank, size):
         if args.comm_style == 'async':
             communicator.wait(model)
             print('Finished from Rank %d' % rank)
-
 
 
 def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=None, itr_per_epoch=None):
