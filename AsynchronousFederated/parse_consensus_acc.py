@@ -35,6 +35,7 @@ if __name__ == "__main__":
     num_workers = int(args[3])
 
     acc_data = unpack_data(path, epoch, 1, 'consensus-average')
-    print(acc_data[0::10])
+    print(acc_data[0])
+    print(acc_data[9::10])
 
 
