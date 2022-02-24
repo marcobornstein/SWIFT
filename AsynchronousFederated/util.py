@@ -416,14 +416,14 @@ class Recorder(object):
         if not isExist:
             os.makedirs(subfolder)
 
-        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-epoch-time.log',  self.record_timing, delimiter=',')
-        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-total-time.log', self.record_total_timing, delimiter=',')
-        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-comptime.log',  self.record_comp_timing, delimiter=',')
-        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-commtime.log',  self.record_comm_timing, delimiter=',')
-        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-losses.log',  self.record_losses, delimiter=',')
-        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-tacc.log',  self.record_trainacc, delimiter=',')
-        np.savetxt(subfolder+'/dsgd-r'+str(self.rank)+'-acc.log',  self.record_accuracy, delimiter=',')
-        np.savetxt(subfolder + '/dsgd-r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
+        np.savetxt(subfolder+'/r'+str(self.rank)+'-epoch-time.log',  self.record_timing, delimiter=',')
+        np.savetxt(subfolder+'/r'+str(self.rank)+'-total-time.log', self.record_total_timing, delimiter=',')
+        np.savetxt(subfolder+'/r'+str(self.rank)+'-comptime.log',  self.record_comp_timing, delimiter=',')
+        np.savetxt(subfolder+'/r'+str(self.rank)+'-commtime.log',  self.record_comm_timing, delimiter=',')
+        np.savetxt(subfolder+'/r'+str(self.rank)+'-losses.log',  self.record_losses, delimiter=',')
+        np.savetxt(subfolder+'/r'+str(self.rank)+'-tacc.log',  self.record_trainacc, delimiter=',')
+        np.savetxt(subfolder+'/r'+str(self.rank)+'-acc.log',  self.record_accuracy, delimiter=',')
+        np.savetxt(subfolder + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
 
         with open(subfolder+'/ExpDescription', 'w') as f:
             f.write(str(self.args) + '\n')
