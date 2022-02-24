@@ -59,6 +59,8 @@ if __name__ == "__main__":
 
     time_data = unpack_data2(path, epoch, num_workers, 'epoch-time.log')
     cum_time_data = np.cumsum(time_data, axis=0)
-    print(cum_time_data[-1, :])
+    # print(cum_time_data[-1, :])
+    avg_time_data = np.average(time_data, axis=0)
+    print(avg_time_data[-1, :])
 
 
