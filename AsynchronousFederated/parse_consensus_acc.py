@@ -29,16 +29,14 @@ def unpack_data2(directory_path, epoch, num_workers, datatype):
     data = np.zeros((epoch, num_workers))
 
     for root, dirs, files in os.walk(directory):
-        j = 0
         for file in files:
             if file.endswith(datatype):
-                print(file[8])
+                j = int(file[6])
                 f = open(directory_path+'/'+file, 'r')
                 i = 0
                 for line in f:
                     data[i, j] = line
                     i += 1
-                j += 1
 
     return data
 
