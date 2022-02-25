@@ -56,6 +56,8 @@ class DataPartitioner(object):
 
         # Determine labels & create a dictionary storing all data point indices with their corresponding label
         labelList = data.targets
+        num_data = len(labelList)
+        print(num_data)
         labelIdxDict = dict()
         for idx, label in enumerate(labelList):
             labelIdxDict.setdefault(label, [])
@@ -76,7 +78,7 @@ class DataPartitioner(object):
         for worker_idx in range(num_workers):
 
             # Determine partition size and amount of non-iid data needed to fill
-            partition_size = partition_sizes[worker_idx]
+            partition_size = partition_sizes[worker_idx] * num_data
             desired_non_iid_data_len = int(degree_noniid * partition_size)
 
             # Determine the single label designated to the worker
@@ -125,7 +127,7 @@ class DataPartitioner(object):
         # iterate over the workers to add in random labels to their partition
         for worker_idx in range(num_workers):
             # Find designated partition size
-            partition_size = partition_sizes[worker_idx]
+            partition_size = partition_sizes[worker_idx] * num_data
             # find the gap needed to be filled to meet the expected partition length (needed - what is there already)
             missing_data_len = partition_size - len(partitions[worker_idx])
             print(missing_data_len)
