@@ -16,8 +16,8 @@
 module load openmpi
 module load cuda/11.1.1
 
-mpirun -np 5 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test1 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 5 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test2 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 5 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test3 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 5 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test4 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 5 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test5 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 6 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test1 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 6 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test2 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 6 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test3 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 6 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test4 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 6 python Train.py  --graph fully-connected --name pdsgd-0.5-noniid-fc-4-test5 --comm_style pd-sgd --i1 1 --degree_noniid 0.5 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description DSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
