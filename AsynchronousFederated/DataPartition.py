@@ -57,7 +57,6 @@ class DataPartitioner(object):
         # Determine labels & create a dictionary storing all data point indices with their corresponding label
         labelList = data.targets
         num_data = len(labelList)
-        print(num_data)
         labelIdxDict = dict()
         for idx, label in enumerate(labelList):
             labelIdxDict.setdefault(label, [])
@@ -129,8 +128,7 @@ class DataPartitioner(object):
             # Find designated partition size
             partition_size = partition_sizes[worker_idx] * num_data
             # find the gap needed to be filled to meet the expected partition length (needed - what is there already)
-            missing_data_len = partition_size - len(partitions[worker_idx])
-            print(missing_data_len)
+            missing_data_len = int(partition_size - len(partitions[worker_idx]))
             # fill the partition to the desired length
             partitions[worker_idx].extend(remainLabels[:missing_data_len])
             # randomly shuffle the partition
