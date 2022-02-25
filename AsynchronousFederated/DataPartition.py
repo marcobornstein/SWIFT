@@ -128,6 +128,7 @@ class DataPartitioner(object):
             partition_size = partition_sizes[worker_idx]
             # find the gap needed to be filled to meet the expected partition length (needed - what is there already)
             missing_data_len = partition_size - len(partitions[worker_idx])
+            print(missing_data_len)
             # fill the partition to the desired length
             partitions[worker_idx].extend(remainLabels[:missing_data_len])
             # randomly shuffle the partition
