@@ -144,13 +144,18 @@ def run(rank, size):
             requests[count] = MPI.COMM_WORLD.Isend(send_buffer.detach().numpy(), dest=size - 1,
                                                    tag=rank + 10 * worker_size)
             count += 1
-            send_time = time.time() - send_start
 
             # evaluate test accuracy at the end of each epoch
             test_acc = util.test(model, test_loader)[0].item()
 
+            send_time = time.time() - send_start
+
             # evaluate validation accuracy at the end of each epoch
             val_acc = util.test(model, val_loader)[0].item()
+
+            # run personalization if turned on
+            if args.personalize and args.comm_style == 'async':
+                comm_time += communicator.personalize(test_acc, val_acc)
 
             # total time spent in algorithm
             comp_time -= record_time
@@ -158,10 +163,6 @@ def run(rank, size):
 
             print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_acc: %.3f, val_acc: %.3f, comp time: %.3f, "
                   "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, test_acc, val_acc, comp_time, epoch_time))
-
-            # run personalization if turned on
-            if args.personalize and args.comm_style == 'async':
-                comm_time += communicator.personalize(test_acc, val_acc)
 
             recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time) - send_time,
                              top1.avg, losses.avg, test_acc, val_acc)

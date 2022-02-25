@@ -48,10 +48,11 @@ class DataPartitioner(object):
     def train_val_split(self):
         return Partition(self.data, self.partitions), Partition(self.data, self.val)
 
-    def getNonIIDdata(self, rank, data, sizes, degree_noniid, val_split=0.25, seed=1234):
+    def getNonIIDdata(self, rank, data, partition_sizes, degree_noniid, val_split=0.25, seed=1234):
 
         rng = Random()
         rng.seed(seed)
+        num_workers = len(partition_sizes)
 
         # Determine labels & create a dictionary storing all data point indices with their corresponding label
         labelList = data.targets
@@ -61,61 +62,78 @@ class DataPartitioner(object):
             labelIdxDict[label].append(idx)
 
         # Determine number of labels and create a list of these labels
-        labelNum = len(labelIdxDict)
+        num_labels = len(labelIdxDict)
         labelNameList = [key for key in labelIdxDict]
 
         # Create list of indices which point to most recent corresponding label in the data
-        labelIdxPointer = [0] * labelNum
+        labelIdxPointer = [0] * num_labels
 
-        # Create partition of the data for each worker
-        partitions = [list() for _ in range(len(sizes))]
-        eachPartitionLen = int(len(labelList)/len(sizes))
-        # Determine the number of labels per worker (num partitions)
-        majorLabelNumPerPartition = ceil(labelNum/len(partitions))
+        # Initialize data partition list for each worker
+        partitions = [list() for _ in range(num_workers)]
 
-        basicLabelRatio = degree_noniid
-        interval = 1
-        labelPointer = 0
+        # Determine the number of labels unique to each
+        labels_per_worker = ceil(num_labels / num_workers)
+        for worker_idx in range(num_workers):
 
-        # basic part
-        # iterate through each of the partitions
-        for partPointer in range(len(partitions)):
-            # create a list of labels that will be predominant for a worker
-            requiredLabelList = list()
-            for _ in range(majorLabelNumPerPartition):
-                # add the predominant labels to the list
-                requiredLabelList.append(labelPointer)
-                labelPointer += interval
-                if labelPointer > labelNum - 1:
-                    labelPointer = interval
-                    interval += 1
-            # add in these predominant labels to the partition of the worker
-            for labelIdx in requiredLabelList:
-                start = labelIdxPointer[labelIdx]
-                idxIncrement = int(basicLabelRatio*len(labelIdxDict[labelNameList[labelIdx]]))
-                partitions[partPointer].extend(labelIdxDict[labelNameList[labelIdx]][start:start+idxIncrement])
-                labelIdxPointer[labelIdx] += idxIncrement
+            # Determine partition size and amount of non-iid data needed to fill
+            partition_size = partition_sizes[worker_idx]
+            desired_non_iid_data_len = int(degree_noniid * partition_size)
 
-        # random part
-        # construct a list of the remianing data points that haven't been added to a partition
+            # Determine the single label designated to the worker
+            start_idx = worker_idx * labels_per_worker
+            label_list = [(start_idx + i) % num_labels for i in range(labels_per_worker)]
+
+            per_label_size = [int(desired_non_iid_data_len / labels_per_worker) for _ in range(labels_per_worker-1)]
+            per_label_size.append(desired_non_iid_data_len - sum(per_label_size))
+
+            for idx, label in enumerate(label_list):
+
+                # Set the amount of data still needed to fill
+                needed_data_len = per_label_size[idx]
+
+                # until designated partition is filled with alloted non-iid data:
+                while needed_data_len > 0:
+
+                    # Determine the dictionary key corresponding to the assigned label
+                    key = labelNameList[label]
+
+                    # Determine the current number of data remaining for the given label
+                    start = labelIdxPointer[label]
+                    remaining_data = len(labelIdxDict[key][start:])
+
+                    # If enough non-iid data is available to take, take it all
+                    if needed_data_len < remaining_data:
+                        partitions[worker_idx].extend(labelIdxDict[key][start:needed_data_len])
+                        labelIdxPointer[label] += needed_data_len
+                        needed_data_len = 0
+                    # Else, take the rest of the available data and move to the next label and continue this process
+                    else:
+                        partitions[worker_idx].extend(labelIdxDict[key][start:])
+                        labelIdxPointer[label] = len(labelIdxDict[key])
+                        needed_data_len -= remaining_data
+                        label += 1
+
+        # fill the rest of the partition with random iid data if there's room left
+        # construct a list of the remaining data points that haven't been added to a partition
         remainLabels = list()
-        for labelIdx in range(labelNum):
+        for labelIdx in range(num_labels):
             remainLabels.extend(labelIdxDict[labelNameList[labelIdx]][labelIdxPointer[labelIdx]:])
 
         # randomly shuffle the labels up so they are not in order by their label
         rng.shuffle(remainLabels)
 
         # iterate over the workers to add in random labels to their partition
-        for partPointer in range(len(partitions)):
+        for worker_idx in range(num_workers):
+            # Find designated partition size
+            partition_size = partition_sizes[worker_idx]
             # find the gap needed to be filled to meet the expected partition length (needed - what is there already)
-            idxIncrement = eachPartitionLen - len(partitions[partPointer])
+            missing_data_len = partition_size - len(partitions[worker_idx])
             # fill the partition to the desired length
-            partitions[partPointer].extend(remainLabels[:idxIncrement])
+            partitions[worker_idx].extend(remainLabels[:missing_data_len])
             # randomly shuffle the partition
-            rng.shuffle(partitions[partPointer])
-            remainLabels = remainLabels[idxIncrement:]
+            rng.shuffle(partitions[worker_idx])
+            remainLabels = remainLabels[missing_data_len:]
 
-        # ANOTHER EDIT IS NEEDED SO ONE DOESNT NEED TO BUILD THE ENTIRE DICTIONARY, JUST ENOUGH FOR THE ONE WORKER
         # Before returning, Split into two partitions: 1 for training (75%) and one for validation (25%)
         worker_partition = partitions[rank]
         worker_len = len(worker_partition)
@@ -178,14 +196,10 @@ def partition_dataset(rank, size, comm, args):
             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
         ])
 
-        testset = torchvision.datasets.CIFAR10(root=args.datasetRoot,
-                                               train=False,
-                                               download=True,
+        testset = torchvision.datasets.CIFAR10(root=args.datasetRoot, train=False, download=True,
                                                transform=transform_test)
 
-        test_loader = torch.utils.data.DataLoader(testset,
-                                                  batch_size=64,
-                                                  shuffle=False)
+        test_loader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
         comm.Barrier()
 
     return train_loader, test_loader, val_loader
@@ -212,8 +226,6 @@ def get_test_data(args):
                                                download=True,
                                                transform=transform_test)
 
-        test_loader = torch.utils.data.DataLoader(testset,
-                                                  batch_size=64,
-                                                  shuffle=False)
+        test_loader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
 
     return test_loader
