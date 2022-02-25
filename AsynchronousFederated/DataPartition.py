@@ -92,7 +92,7 @@ class DataPartitioner(object):
                 # Set the amount of data still needed to fill
                 needed_data_len = per_label_size[idx]
 
-                # until designated partition is filled with alloted non-iid data:
+                # until designated partition is filled with allotted non-iid data:
                 while needed_data_len > 0:
 
                     # Determine the dictionary key corresponding to the assigned label
