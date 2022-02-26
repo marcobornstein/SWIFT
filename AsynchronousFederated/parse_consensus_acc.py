@@ -76,8 +76,8 @@ if __name__ == "__main__":
 
     args = sys.argv
 
-    if len(args) != 4:
-        raise ValueError('There should be 3 arguments!')
+    if len(args) != 5:
+        raise ValueError('There should be 4 arguments!')
 
     path = args[1]
     epoch = int(args[2])
