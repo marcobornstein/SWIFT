@@ -51,8 +51,7 @@ def unpack_data3(directory_path, epoch, num_workers, datatype, communicator):
 
         for dir in dirs:
             if dir.startswith(communicator):
-                count = int(dir[-11])
-                print(count)
+                count = int(dir[-11]) - 1
                 new_directory_path = directory_path + '/' + dir
                 new_directory = os.path.join(new_directory_path)
                 temp_data = np.zeros((epoch, num_workers))
