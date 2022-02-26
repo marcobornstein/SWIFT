@@ -82,8 +82,9 @@ if __name__ == "__main__":
     path = args[1]
     epoch = int(args[2])
     num_workers = int(args[3])
+    comm = args[4]
 
-    time_data = unpack_data3(path, epoch, num_workers, 'total-time.log', 'run-pdsgd')
+    time_data = unpack_data3(path, epoch, num_workers, 'total-time.log', comm)
     print(time_data)
 
     # acc_data = unpack_data(path, epoch, 1, 'consensus-average')
