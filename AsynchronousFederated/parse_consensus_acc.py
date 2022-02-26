@@ -49,7 +49,6 @@ def unpack_data3(directory_path, epoch, num_workers, datatype, communicator):
     for root, dirs, files in os.walk(directory):
 
         for dir in dirs:
-            print(dir)
             if dir.startswith(communicator):
                 count = int(dir[-11]) - 1
                 new_directory_path = directory_path + '/' + dir
