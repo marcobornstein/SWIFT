@@ -76,6 +76,7 @@ def unpack_data3(directory_path, epoch, num_workers, datatype, communicator):
 if __name__ == "__main__":
 
     args = sys.argv
+    np.set_printoptions(linewidth=1000)
 
     if len(args) != 5:
         raise ValueError('There should be 4 arguments!')
