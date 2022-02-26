@@ -66,7 +66,6 @@ def unpack_data3(directory_path, epoch, num_workers, datatype, communicator):
                                 i += 1
                 # cum_temp_data = np.cumsum(temp_data)
                 # data[count, :] = cum_temp_data[-1, :]
-                print(np.sum(temp_data, axis=0))
                 data[count, :] = np.sum(temp_data, axis=0)
                 count += 1
         data[-1, :] = np.average(data[:-1, :], axis=0)
@@ -84,7 +83,7 @@ if __name__ == "__main__":
     epoch = int(args[2])
     num_workers = int(args[3])
 
-    time_data = unpack_data3(path, epoch, num_workers, 'total-time.log', 'run-dsgd')
+    time_data = unpack_data3(path, epoch, num_workers, 'total-time.log', 'run-pdsgd')
     print(time_data)
 
     # acc_data = unpack_data(path, epoch, 1, 'consensus-average')
