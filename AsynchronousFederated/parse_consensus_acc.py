@@ -44,7 +44,7 @@ def unpack_data2(directory_path, epoch, num_workers, datatype):
 def unpack_data3(directory_path, epoch, num_workers, datatype, communicator):
 
     directory = os.path.join(directory_path)
-    data = np.zeros((6, num_workers))
+    data = np.zeros((6, num_workers+1))
     count = 0
 
     for root, dirs, files in os.walk(directory):
@@ -66,7 +66,8 @@ def unpack_data3(directory_path, epoch, num_workers, datatype, communicator):
                                 i += 1
                 # cum_temp_data = np.cumsum(temp_data)
                 # data[count, :] = cum_temp_data[-1, :]
-                data[count, :] = np.sum(temp_data, axis=0)
+                data[count, :-1] = np.sum(temp_data, axis=0)
+                data[count, -1] = np.min(data[count, :-1])
                 count += 1
         data[-1, :] = np.average(data[:-1, :], axis=0)
     return data
