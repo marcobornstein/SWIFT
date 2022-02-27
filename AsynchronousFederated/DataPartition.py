@@ -44,7 +44,7 @@ class DataPartitioner(object):
             worker_data_len = len(partitions[rank])
             self.val = partitions[rank][0:int(val_split*worker_data_len)]
             self.partitions = partitions[rank][int(val_split*worker_data_len):]
-        print('Rank %d has partition size %d' % rank, len(self.partitions))
+        print('Rank %d has partition size %d' % (rank, len(self.partitions)))
 
     def train_val_split(self):
         return Partition(self.data, self.partitions), Partition(self.data, self.val)
