@@ -395,7 +395,9 @@ class Recorder(object):
         self.args = args
         self.rank = rank
         self.saveFolderName = args.outputFolder+'/run-'+self.args.name+'-'+str(self.args.epoch)+'epochs'
+        print(self.saveFolderName)
         if rank == 0 and not os.path.isdir(self.saveFolderName):
+            print('hi')
             os.mkdir(self.saveFolderName)
             
     def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, losses, test_acc, val_acc):
