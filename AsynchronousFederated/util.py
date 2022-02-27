@@ -394,7 +394,7 @@ class Recorder(object):
         self.total_record_timing = list()
         self.args = args
         self.rank = rank
-        self.saveFolderName = args.outputFolder
+        self.saveFolderName = args.outputFolder+'/run-'+self.args.name+'-'+str(self.args.epoch)+'epochs'
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
             
