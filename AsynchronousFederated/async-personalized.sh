@@ -9,8 +9,7 @@
 #SBATCH --partition=dpart
 #SBATCH --gres=gpu:2
 #SBATCH --ntasks=8
-#SBATCH --mem-per-cpu=8G
-#SBATCH --mem 64gb         # memory required by job; if unit is not specified MB will be assumed
+#SBATCH --mem 96gb         # memory required by job; if unit is not specified MB will be assumed
 #SBATCH --nice=0
 #SBATCH --mail-type=END   # Valid type values are NONE, BEGIN, END, FAIL, REQUEUE
 
