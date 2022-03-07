@@ -113,7 +113,6 @@ class AsyncDecentralized:
             elif val_acc > np.min(self.valAcc) and self.sgd_updates > self.init_sgd_updates:
                 self.sgd_updates -= 1
 
-
         return send_time+recv_time
 
     def averaging(self, model):
