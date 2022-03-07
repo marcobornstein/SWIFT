@@ -30,6 +30,8 @@ class DataPartitioner(object):
         if isNonIID:
             self.partitions, self.val = self.getNonIIDdata(rank, data, sizes, degree_noniid,
                                                            val_split=val_split, seed=seed)
+            print(len(self.partitions))
+            print(len(self.val))
         else:
             partitions = list()
             rng = Random()
