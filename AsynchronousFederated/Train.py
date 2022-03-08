@@ -124,14 +124,14 @@ def run(rank, size):
                 # compute computational time
                 comp_time += (end_time - start_time)
 
-                if epoch > 36:
+                if epoch > 38:
                     print('Rank %d Finished Batch' % rank)
 
                 # communication happens here
                 d_comm_time = communicator.communicate(model)
                 comm_time += d_comm_time
 
-                if epoch > 36:
+                if epoch > 38:
                     print('Rank %d Sent Message' % rank)
 
             # update learning rate here
@@ -151,6 +151,8 @@ def run(rank, size):
                                                    tag=rank + 10 * worker_size)
             count += 1
 
+            if epoch > 38:
+                print('Rank %d Sent Model to Consensus' % rank)
             # evaluate test accuracy at the end of each epoch
             test_acc = util.test(model, test_loader)[0].item()
 
@@ -158,6 +160,9 @@ def run(rank, size):
 
             # evaluate validation accuracy at the end of each epoch
             val_acc = util.test(model, val_loader)[0].item()
+
+            if epoch > 38:
+                print('Rank %d Finished Test and Val Acc.' % rank)
 
             # run personalization if turned on
             if args.personalize and args.comm_style == 'async':
