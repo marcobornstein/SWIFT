@@ -29,11 +29,15 @@ class GraphConstruct:
                 g = fc_graph.edges
 
             elif graph == 'ring':
+                ring_graph = nx.cycle_graph(self.size)
+                g = ring_graph.edges
+                '''
                 for i in range(self.size):
                     if i != self.size - 1:
                         g.append((i, i+1))
                     else:
                         g.append((i, 0))
+                '''
 
             elif graph == 'clique-ring':
                 per_c = int(self.size/num_c)
