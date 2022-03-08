@@ -73,7 +73,7 @@ class GraphConstruct:
                 if self.rank != 0:
                     for i in range(num_edges):
                         g.append((data[i][0], data[i][1]))
-
+            print(g)
             return g
 
     def getWeights(self, weight_type=None):
