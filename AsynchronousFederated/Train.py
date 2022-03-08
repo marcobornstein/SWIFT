@@ -124,9 +124,15 @@ def run(rank, size):
                 # compute computational time
                 comp_time += (end_time - start_time)
 
+                if epoch > 36:
+                    print('Rank %d Finished Batch' % rank)
+
                 # communication happens here
                 d_comm_time = communicator.communicate(model)
                 comm_time += d_comm_time
+
+                if epoch > 36:
+                    print('Rank %d Sent Message' % rank)
 
             # update learning rate here
             update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,
