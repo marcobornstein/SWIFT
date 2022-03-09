@@ -40,6 +40,7 @@ class GraphConstruct:
                 '''
 
             elif graph == 'clique-ring':
+                print('The Num Clusters is %d' % num_c)
                 per_c = int(self.size/num_c)
                 rem = self.size % num_c
                 for i in range(num_c):
