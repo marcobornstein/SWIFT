@@ -3,7 +3,6 @@ import time
 from mpi4py import MPI
 import torch
 from comm_helpers import flatten_tensors, unflatten_tensors
-import gc
 
 
 class AsyncDecentralized:
@@ -155,9 +154,6 @@ class AsyncDecentralized:
 
         # update local models
         self.reset_model()
-
-        del self.send_buffer, self.avg_model, worker_model, prev_model
-        gc.collect()
 
         return toc - tic
 

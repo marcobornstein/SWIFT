@@ -10,6 +10,7 @@ from ModelAvg import model_avg
 from mpi4py import MPI
 from DataPartition import partition_dataset, get_test_data
 from comm_helpers import flatten_tensors
+import gc
 
 import torch
 import torch.utils.data.distributed
@@ -127,6 +128,9 @@ def run(rank, size):
                 # communication happens here
                 d_comm_time = communicator.communicate(model)
                 comm_time += d_comm_time
+
+                del output, loss
+                gc.collect()
 
             # update learning rate here
             update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,
