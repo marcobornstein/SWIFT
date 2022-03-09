@@ -31,13 +31,6 @@ class GraphConstruct:
             elif graph == 'ring':
                 ring_graph = nx.cycle_graph(self.size)
                 g = ring_graph.edges
-                '''
-                for i in range(self.size):
-                    if i != self.size - 1:
-                        g.append((i, i+1))
-                    else:
-                        g.append((i, 0))
-                '''
 
             elif graph == 'clique-ring':
                 print('The Num Clusters is %d' % num_c)
