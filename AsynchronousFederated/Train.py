@@ -128,9 +128,6 @@ def run(rank, size):
                 d_comm_time = communicator.communicate(model)
                 comm_time += d_comm_time
 
-                if epoch > 38:
-                    print('Rank %d Finished Batch %d' % (rank, batch_idx))
-
             # update learning rate here
             update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,
                                  itr_per_epoch=len(train_loader))
