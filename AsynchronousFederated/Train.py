@@ -133,7 +133,7 @@ def run(rank, size):
                 comm_time += d_comm_time
 
                 mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-                fname = 'dsgd-r{}.log'.format(rank)
+                fname = 'test-r{}.log'.format(rank)
                 with open(fname, 'a') as f:
                     # Dump timestamp, PID and amount of RAM.
                     f.write('{} {} {}\n'.format(datetime.datetime.now(), os.getpid(), mem))
