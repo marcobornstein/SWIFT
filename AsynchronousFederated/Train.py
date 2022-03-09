@@ -10,7 +10,10 @@ from ModelAvg import model_avg
 from mpi4py import MPI
 from DataPartition import partition_dataset, get_test_data
 from comm_helpers import flatten_tensors
-import gc
+
+import resource
+import os
+import datetime
 
 import torch
 import torch.utils.data.distributed
@@ -129,8 +132,11 @@ def run(rank, size):
                 d_comm_time = communicator.communicate(model)
                 comm_time += d_comm_time
 
-                del output, loss
-                gc.collect()
+                mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+                fname = 'r{}.log'.format(rank)
+                with open(fname, 'a') as f:
+                    # Dump timestamp, PID and amount of RAM.
+                    f.write('{} {} {}\n'.format(datetime.datetime.now(), os.getpid(), mem))
 
             # update learning rate here
             update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,

@@ -46,8 +46,6 @@ class DataPartitioner(object):
             self.partitions = partitions[rank][int(val_split*worker_data_len):]
 
     def train_val_split(self):
-        print(len(self.partitions))
-        print(len(self.val))
         return Partition(self.data, self.partitions), Partition(self.data, self.val)
 
     def getNonIIDdata(self, rank, data, partition_sizes, degree_noniid, val_split=0.25, seed=1234):
