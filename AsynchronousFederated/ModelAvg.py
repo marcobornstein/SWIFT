@@ -55,8 +55,8 @@ def model_avg(worker_size, model, test_data, args):
         for rank in range(worker_size):
             model_diff.append(np.linalg.norm(np_avg_model - worker_models[rank]))
 
-
-    subfolder = args.outputFolder + '/run-' + args.name + '-' + str(args.epoch) + 'epochs'
+    subfolder = args.outputFolder + '/' + args.name + '-' + str(args.graph) + '-' \
+                + str(args.sgd_steps) + 'sgd-' + str(args.epoch) + 'epochs'
 
     isExist = os.path.exists(subfolder)
     if not isExist:
