@@ -151,13 +151,11 @@ def run(rank, size):
             if epoch > 38:
                 print('Rank %d Sent Model to Consensus' % rank)
             # evaluate test accuracy at the end of each epoch
-            # test_acc = util.test(model, test_loader)[0].item()
-            test_acc = 0
+            test_acc = util.test(model, test_loader)[0].item()
             send_time = time.time() - send_start
 
             # evaluate validation accuracy at the end of each epoch
-            # val_acc = util.test(model, val_loader)[0].item()
-            val_acc = 0
+            val_acc = util.test(model, val_loader)[0].item()
 
             if epoch > 38:
                 print('Rank %d Finished Test and Val Acc.' % rank)
