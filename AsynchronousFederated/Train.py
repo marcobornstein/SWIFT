@@ -148,17 +148,12 @@ def run(rank, size):
                                                    tag=rank + 10 * worker_size)
             count += 1
 
-            if epoch > 38:
-                print('Rank %d Sent Model to Consensus' % rank)
             # evaluate test accuracy at the end of each epoch
             test_acc = util.test(model, test_loader)[0].item()
             send_time = time.time() - send_start
 
             # evaluate validation accuracy at the end of each epoch
             val_acc = util.test(model, val_loader)[0].item()
-
-            if epoch > 38:
-                print('Rank %d Finished Test and Val Acc.' % rank)
 
             # run personalization if turned on
             if args.personalize and args.comm_style == 'async':
