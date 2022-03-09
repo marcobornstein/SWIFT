@@ -13,6 +13,8 @@ class AsyncDecentralized:
         # Graph initialization
         self.topology = topology
         self.neighbor_list = self.topology.neighbor_list
+        print(rank)
+        print(self.neighbor_list)
         self.neighbor_weights = topology.neighbor_weights
         self.degree = len(self.neighbor_list)
 
