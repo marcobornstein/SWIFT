@@ -36,7 +36,6 @@ def run(rank, size):
 
     # split up GPUs
     num_gpus = torch.cuda.device_count()
-    print(num_gpus)
     gpu_id = rank % num_gpus
 
     # initialize the GPU being used
