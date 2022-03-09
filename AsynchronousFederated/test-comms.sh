@@ -4,11 +4,10 @@
 
 #SBATCH --job-name=AsyncDecentralized     # sets the job name if not set from environment
 #SBATCH --time=00:55:00     # how long you think your job will take to complete; format=hh:mm:ss
-#SBATCH --gres=gpu:3
 #SBATCH --account=furongh    # set QOS, this will determine what resources can be requested
 #SBATCH --qos=high   # set QOS, this will determine what resources can be requested
 #SBATCH --partition=dpart
-#SBATCH --gres=gpu:3
+#SBATCH --gres=gpu:rtx2080ti:3
 #SBATCH --ntasks=12
 #SBATCH --mem 64gb         # memory required by job; if unit is not specified MB will be assumed
 #SBATCH --nice=0
