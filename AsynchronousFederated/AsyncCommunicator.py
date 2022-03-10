@@ -172,7 +172,8 @@ class AsyncDecentralized:
 
         if self.count >= 10*self.degree:
             # Clear MPI Requests
-            self.requests[self.count - 10*self.degree].Test()
+            if self.requests[self.count - 10*self.degree].Test():
+                print('Successful Message')
             if self.count >= 10000-self.degree:
                 self.count = 0
 
