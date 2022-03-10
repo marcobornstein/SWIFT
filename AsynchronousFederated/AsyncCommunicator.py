@@ -220,7 +220,8 @@ class AsyncDecentralized:
                             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
                             self.count += 1
                             if self.count >= 100 * self.degree:
-                                self.requests[self.count - 100 * self.degree].Wait()
+                                if self.requests[self.count - 100 * self.degree].Test():
+                                    self.requests[self.count - 100 * self.degree].Wait()
                         break
                     self.exit[idx] = buf[idx]
                     count += 1

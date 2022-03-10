@@ -11,9 +11,9 @@ from mpi4py import MPI
 from DataPartition import partition_dataset, get_test_data
 from comm_helpers import flatten_tensors
 
-import resource
-import os
-import datetime
+# import resource
+# import os
+# import datetime
 
 import torch
 import torch.utils.data.distributed
