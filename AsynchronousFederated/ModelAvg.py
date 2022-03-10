@@ -16,6 +16,7 @@ def model_avg(worker_size, model, test_data, args):
     send_buffer = flatten_tensors(tensor_list).cpu()
 
     accuracy = AverageMeter()
+    return
 
     for epoch in range(args.epoch):
         # Clear the buffers

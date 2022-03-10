@@ -151,8 +151,8 @@ def run(rank, size):
 
             if count == 100:
                 count = 0
-            requests[count] = MPI.COMM_WORLD.Isend(send_buffer.detach().numpy(), dest=size - 1,
-                                                   tag=rank + 10 * worker_size)
+            # requests[count] = MPI.COMM_WORLD.Isend(send_buffer.detach().numpy(), dest=size - 1,
+            #                                       tag=rank + 10 * worker_size)
             count += 1
 
             # evaluate test accuracy at the end of each epoch
