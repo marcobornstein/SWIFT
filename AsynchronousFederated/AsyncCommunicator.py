@@ -232,4 +232,4 @@ class AsyncDecentralized:
                         break
                     self.exit[idx] = buf[idx]
                     count += 1
-            time.sleep(1)
+            time.sleep(5)
