@@ -176,8 +176,8 @@ class AsyncDecentralized:
         for idx, node in enumerate(self.neighbor_list):
             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
             self.count += 1
-            if self.count >= 100*self.degree:
-                self.requests[self.count - 100 * self.degree].Wait()
+            if self.count >= 200*self.degree:
+                self.requests[self.count - 200 * self.degree].Wait()
 
         toc = time.time()
 
