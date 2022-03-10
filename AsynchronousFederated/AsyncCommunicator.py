@@ -4,10 +4,6 @@ from mpi4py import MPI
 import torch
 from comm_helpers import flatten_tensors, unflatten_tensors
 
-import resource
-import os
-import datetime
-
 class AsyncDecentralized:
 
     def __init__(self, rank, size, comm, topology, sgd_updates, sgd_max):
@@ -212,12 +208,6 @@ class AsyncDecentralized:
         send_buffer = self.send_buffer.detach().numpy()
 
         while any(self.exit == -1.0):
-            mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-            fname = 'r{}.log'.format(self.rank)
-            with open(fname, 'a') as f:
-                # Dump timestamp, PID and amount of RAM.
-                f.write('{} {} {}\n'.format(datetime.datetime.now(), os.getpid(), mem))
-
             if self.count >= 10000 - self.degree:
                 self.count = 0
             for idx, node in enumerate(self.neighbor_list):
