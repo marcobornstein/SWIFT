@@ -89,7 +89,8 @@ class AsyncDecentralized:
                         req2.Cancel()
                         break
                     else:
-                        req2.Free()
+                        # req2.Free()
+                        req2.Wait()
                         self.testAcc[idx] = worker_tacc
                         self.valAcc[idx] = worker_vacc
                         break
@@ -140,7 +141,8 @@ class AsyncDecentralized:
                         self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                         break
                     else:
-                        req.Free()
+                        # req.Free()
+                        req.Wait()
                         self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                         break
                 prev_model = worker_model
