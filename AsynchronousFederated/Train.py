@@ -90,7 +90,6 @@ def run(rank, size):
         losses = util.AverageMeter()
         top1 = util.AverageMeter()
         requests = [MPI.REQUEST_NULL for _ in range(args.epoch)]
-        count = 0
 
         WORKER_COMM.Barrier()
         # start training
@@ -149,12 +148,11 @@ def run(rank, size):
                 tensor_list.append(param)
             send_buffer = flatten_tensors(tensor_list).cpu()
 
-            requests[count] = MPI.COMM_WORLD.Isend(send_buffer.detach().numpy(), dest=size - 1,
+            requests[epoch] = MPI.COMM_WORLD.Isend(send_buffer.detach().numpy(), dest=size - 1,
                                                    tag=rank + 10 * worker_size)
-            count += 1
-            if count >= 5:
-                if requests[count - 5].Test():
-                    requests[count - 5].Wait()
+            # if count >= 5:
+            #    if requests[count - 5].Test():
+            #        requests[count - 5].Wait()
 
             # evaluate test accuracy at the end of each epoch
             test_acc = util.test(model, test_loader)[0].item()

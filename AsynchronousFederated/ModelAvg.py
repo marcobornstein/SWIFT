@@ -28,8 +28,6 @@ def model_avg(worker_size, model, test_data, args):
         for rank in range(worker_size):
             MPI.COMM_WORLD.Recv(worker_models[rank], source=rank, tag=rank+10*worker_size)
             avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])
-            if any(np.isnan(worker_models[rank])):
-                print('NaN')
             np_avg_model += worker_models[rank] * weighting[rank]
 
         reset_model(avg_model, tensor_list)
