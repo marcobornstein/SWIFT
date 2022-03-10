@@ -85,12 +85,11 @@ class AsyncDecentralized:
                 if not req2.Test():
                     if count == 0:
                         # If no messages available, keep unchanged
-                        req2.Free()
+                        # req2.Free()
                         req2.Cancel()
                         break
                     else:
                         req2.Free()
-                        req2.Cancel()
                         self.testAcc[idx] = worker_tacc
                         self.valAcc[idx] = worker_vacc
                         break
@@ -136,13 +135,12 @@ class AsyncDecentralized:
                 if not req.Test():
                     if count == 0:
                         # If no messages available, take one's own model as the model to average
-                        req.Free()
+                        # req.Free()
                         req.Cancel()
                         self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
                         break
                     else:
                         req.Free()
-                        req.Cancel()
                         self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                         break
                 prev_model = worker_model
