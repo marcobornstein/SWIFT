@@ -132,12 +132,6 @@ def run(rank, size):
                 d_comm_time = communicator.communicate(model)
                 comm_time += d_comm_time
 
-                mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-                fname = '2test-r{}.log'.format(rank)
-                with open(fname, 'a') as f:
-                    # Dump timestamp, PID and amount of RAM.
-                    f.write('{} {} {}\n'.format(datetime.datetime.now(), os.getpid(), mem))
-
             # update learning rate here
             update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,
                                  itr_per_epoch=len(train_loader))
