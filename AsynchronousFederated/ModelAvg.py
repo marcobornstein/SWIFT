@@ -2,7 +2,6 @@ import numpy as np
 import os
 from mpi4py import MPI
 import torch
-import util
 from comm_helpers import flatten_tensors, unflatten_tensors
 
 
@@ -29,6 +28,8 @@ def model_avg(worker_size, model, test_data, args):
         for rank in range(worker_size):
             MPI.COMM_WORLD.Recv(worker_models[rank], source=rank, tag=rank+10*worker_size)
             avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])
+            if any(np.isnan(worker_models[rank])):
+                print('NaN')
             np_avg_model += worker_models[rank] * weighting[rank]
 
         reset_model(avg_model, tensor_list)
@@ -44,7 +45,7 @@ def model_avg(worker_size, model, test_data, args):
         for batch_idx, (data, target) in enumerate(test_data):
             data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
             output = model(data)
-            acc1 = util.comp_accuracy(output, target)
+            acc1 = comp_accuracy(output, target)
             accuracy.update(acc1[0].item(), data.size(0))
 
         test_acc = accuracy.avg
