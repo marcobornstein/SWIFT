@@ -209,6 +209,8 @@ class AsyncDecentralized:
         send_buffer = self.send_buffer.detach().numpy()
 
         while any(self.exit == -1.0):
+            if self.count >= 10000 - self.degree:
+                self.count = 0
             for idx, node in enumerate(self.neighbor_list):
                 count = 0
                 while True:
@@ -216,8 +218,8 @@ class AsyncDecentralized:
                         if count == 0 and self.exit[idx] == -1.0:
                             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
                             self.count += 1
-                            if self.count >= 10000 - self.degree:
-                                self.count = 0
+                            if self.count >= 100 * self.degree:
+                                self.requests[self.count - 100 * self.degree].Wait()
                         break
                     self.exit[idx] = buf[idx]
                     count += 1
