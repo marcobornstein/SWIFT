@@ -178,7 +178,7 @@ def run(rank, size):
         recorder.save_to_file()
         # Broadcast/wait until all other neighbors are finished in async algorithm
         if args.comm_style == 'async':
-            communicator.wait(model)
+            # communicator.wait(model)
             print('Finished from Rank %d' % rank)
 
 
