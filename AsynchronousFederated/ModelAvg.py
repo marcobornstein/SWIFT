@@ -23,8 +23,6 @@ def model_avg(worker_size, model, test_data, args):
         worker_models = [np.empty_like(avg_model) for _ in range(worker_size)]
         np_avg_model = np.zeros_like(avg_model)
 
-        print('Consensus Starting Epoch')
-
         # Get weighting (build a function) -- For now, make it uniform
         weighting = (1/worker_size) * np.ones(worker_size)
 
@@ -33,7 +31,6 @@ def model_avg(worker_size, model, test_data, args):
             avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])
             np_avg_model += worker_models[rank] * weighting[rank]
 
-        print('Consensus Averaged')
         reset_model(avg_model, tensor_list)
 
         # add in a forward pass to stabilize running mean/std
