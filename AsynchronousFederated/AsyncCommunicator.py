@@ -176,6 +176,8 @@ class AsyncDecentralized:
         for idx, node in enumerate(self.neighbor_list):
             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
             self.count += 1
+            # Clear MPI Requests
+            self.requests[max(0, self.count-2*self.degree)].Test()
 
         toc = time.time()
 
