@@ -170,16 +170,14 @@ class AsyncDecentralized:
         # Time
         tic = time.time()
 
-        if self.count >= 10*self.degree:
-            # Clear MPI Requests
-            if self.requests[self.count - 10*self.degree].Test():
-                print('Successful Message')
-            if self.count >= 10000-self.degree:
-                self.count = 0
+        if self.count >= 10000-self.degree:
+            self.count = 0
 
         for idx, node in enumerate(self.neighbor_list):
             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
             self.count += 1
+            if self.count >= 2*self.degree:
+                self.requests[self.count - 2 * self.degree].Test()
 
         toc = time.time()
 
