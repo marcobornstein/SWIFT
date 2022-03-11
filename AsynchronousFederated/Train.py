@@ -11,10 +11,6 @@ from mpi4py import MPI
 from DataPartition import partition_dataset, get_test_data
 from comm_helpers import flatten_tensors
 
-# import resource
-# import os
-# import datetime
-
 import torch
 import torch.utils.data.distributed
 import torch.nn as nn
@@ -131,12 +127,6 @@ def run(rank, size):
                 d_comm_time = communicator.communicate(model)
                 comm_time += d_comm_time
 
-                # mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-                # fname = 'r{}.log'.format(rank)
-                # with open(fname, 'a') as f:
-                #     # Dump timestamp, PID and amount of RAM.
-                #     f.write('{} {} {}\n'.format(datetime.datetime.now(), os.getpid(), mem))
-
             # update learning rate here
             update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,
                                  itr_per_epoch=len(train_loader))
@@ -150,12 +140,15 @@ def run(rank, size):
 
             requests[epoch] = MPI.COMM_WORLD.Isend(send_buffer.detach().numpy(), dest=size - 1,
                                                    tag=rank + 10 * worker_size)
-            # if count >= 5:
-            #    if requests[count - 5].Test():
-            #        requests[count - 5].Wait()
+            # Clear the memory from Isend
+            if epoch >= 15:
+                if requests[epoch - 15].Test():
+                    requests[epoch - 15].Wait()
 
             # evaluate test accuracy at the end of each epoch
             test_acc = util.test(model, test_loader)[0].item()
+
+            # Remove time spent sending messages to the consensus node
             send_time = time.time() - send_start
 
             # evaluate validation accuracy at the end of each epoch
