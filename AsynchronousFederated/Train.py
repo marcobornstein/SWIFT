@@ -2,7 +2,6 @@ import numpy as np
 import time
 import argparse
 import resnet
-import util
 from GraphConstruct import GraphConstruct
 from AsyncCommunicator import AsyncDecentralized
 from DSGD import decenCommunicator
@@ -10,6 +9,7 @@ from ModelAvg import model_avg
 from mpi4py import MPI
 from DataPartition import partition_dataset, get_test_data
 from comm_helpers import flatten_tensors
+from Misc import AverageMeter, Recorder, test_accuracy, compute_accuracy
 
 import torch
 import torch.utils.data.distributed
@@ -82,9 +82,9 @@ def run(rank, size):
         # init recorder
         comp_time = 0
         comm_time = 0
-        recorder = util.Recorder(args, rank)
-        losses = util.AverageMeter()
-        top1 = util.AverageMeter()
+        recorder = Recorder(args, rank)
+        losses = AverageMeter()
+        top1 = AverageMeter()
         requests = [MPI.REQUEST_NULL for _ in range(args.epoch)]
 
         WORKER_COMM.Barrier()
@@ -106,7 +106,7 @@ def run(rank, size):
 
                 # record training loss and accuracy
                 record_start = time.time()
-                acc1 = util.comp_accuracy(output, target)
+                acc1 = compute_accuracy(output, target)
                 losses.update(loss.item(), data.size(0))
                 top1.update(acc1[0].item(), data.size(0))
                 record_end = time.time() - record_start
@@ -146,13 +146,13 @@ def run(rank, size):
                     requests[epoch - 15].Wait()
 
             # evaluate test accuracy at the end of each epoch
-            test_acc = util.test(model, test_loader)[0].item()
+            test_acc = test_accuracy(model, test_loader)[0].item()
 
             # Remove time spent sending messages to the consensus node
             send_time = time.time() - send_start
 
             # evaluate validation accuracy at the end of each epoch
-            val_acc = util.test(model, val_loader)[0].item()
+            val_acc = test_accuracy(model, val_loader)[0].item()
 
             # run personalization if turned on
             if args.personalize and args.comm_style == 'async':
@@ -173,7 +173,9 @@ def run(rank, size):
             losses.reset()
             top1.reset()
 
+        # Save data to output folder
         recorder.save_to_file()
+
         # Broadcast/wait until all other neighbors are finished in async algorithm
         if args.comm_style == 'async':
             communicator.wait(model)
