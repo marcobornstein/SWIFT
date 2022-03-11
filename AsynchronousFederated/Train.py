@@ -183,8 +183,10 @@ def run(rank, size):
         recorder.save_to_file()
         # Broadcast/wait until all other neighbors are finished in async algorithm
         if args.comm_style == 'async':
-            # communicator.wait(model)
+            communicator.wait(model)
             print('Finished from Rank %d' % rank)
+
+    MPI.COMM_WORLD.Barrier()
 
 
 def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=None, itr_per_epoch=None):
