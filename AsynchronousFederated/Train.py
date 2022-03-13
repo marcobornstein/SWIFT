@@ -146,13 +146,13 @@ def run(rank, size):
                     requests[epoch - 15].Wait()
 
             # evaluate test accuracy at the end of each epoch
-            test_acc = test_accuracy(model, test_loader)[0].item()
+            test_acc = test_accuracy(model, test_loader)
 
             # Remove time spent sending messages to the consensus node
             send_time = time.time() - send_start
 
             # evaluate validation accuracy at the end of each epoch
-            val_acc = test_accuracy(model, val_loader)[0].item()
+            val_acc = test_accuracy(model, val_loader)
 
             # run personalization if turned on
             if args.personalize and args.comm_style == 'async':
