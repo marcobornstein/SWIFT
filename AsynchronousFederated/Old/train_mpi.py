@@ -2,21 +2,18 @@ import numpy as np
 import time
 import argparse
 import resnet
-import util
+from Old import util
 import gc
 from GraphConstruct import GraphConstruct
 from Old.AsyncCommunicatorOld_2_11_2022 import AsyncDecentralized
 from mpi4py import MPI
 
 import torch
-import torch.distributed as dist
 import torch.utils.data.distributed
 import torch.nn as nn
 import torch.optim as optim
-from torch.multiprocessing import Process
-import torchvision
 import torch.backends.cudnn as cudnn
-import torchvision.models as models
+
 cudnn.benchmark = True
 
 
