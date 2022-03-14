@@ -128,7 +128,7 @@ def run(rank, size):
                 comm_time += d_comm_time
 
             # update learning rate here
-            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=200,
+            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=350,
                                  itr_per_epoch=len(train_loader))
 
             send_start = time.time()
@@ -201,7 +201,7 @@ def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=N
             incr = (lr - base_lr) * (count / (5 * itr_per_epoch))
             lr = base_lr + incr
     elif epoch >= decay_epoch:
-        lr *= np.power(drop, np.floor((1 + epoch) / epochs_drop))
+        lr *= np.power(drop, np.floor((1 + epoch - decay_epoch) / epochs_drop))
 
     if lr is not None:
         for param_group in optimizer.param_groups:
