@@ -26,7 +26,7 @@ class AsyncDecentralized:
         self.count = 0
         self.count2 = 0
 
-        self.testAcc = -1.0 * np.ones(self.degree)
+        self.epochs = -1.0 * np.ones(self.degree)
         self.valAcc = -1.0 * np.ones(self.degree)
         self.exit = -1.0 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
@@ -51,7 +51,7 @@ class AsyncDecentralized:
             with torch.no_grad():
                 t.set_(f)
 
-    def personalize(self, test_acc, val_acc):
+    def personalize(self, test_acc, val_acc, iidFlag):
 
         send_buff = np.empty(2)
         send_buff[0] = test_acc
@@ -72,7 +72,7 @@ class AsyncDecentralized:
 
         send_time = toc-tic
 
-        worker_tacc = -1
+        worker_epoch = -1
         worker_vacc = -1
 
         worker_buff = np.empty(2)
@@ -91,16 +91,19 @@ class AsyncDecentralized:
                     else:
                         req2.Cancel()
                         req2.Free()
-                        self.testAcc[idx] = worker_tacc
+                        self.epochs[idx] = worker_epoch
                         self.valAcc[idx] = worker_vacc
                         break
 
-                worker_tacc = worker_buff[0]
+                worker_epoch = worker_buff[0]
                 worker_vacc = worker_buff[1]
                 count += 1
 
         toc = time.time()
         recv_time = toc-tic
+
+        if not any(self.epochs == -1.0) and not iidFlag:
+            print(self.epochs / np.sum(self.epochs))
 
         if not any(self.valAcc == -1.0):
             if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:

@@ -156,7 +156,7 @@ def run(rank, size):
 
             # run personalization if turned on
             if args.personalize and args.comm_style == 'async':
-                comm_time += communicator.personalize(test_acc, val_acc)
+                comm_time += communicator.personalize(epoch+2, val_acc, args.noniid)
 
             # total time spent in algorithm
             comp_time -= record_time
