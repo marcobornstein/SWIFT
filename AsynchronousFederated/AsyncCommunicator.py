@@ -51,10 +51,10 @@ class AsyncDecentralized:
             with torch.no_grad():
                 t.set_(f)
 
-    def personalize(self, test_acc, val_acc, iidFlag):
+    def personalize(self, epoch, val_acc, iidFlag):
 
         send_buff = np.empty(2)
-        send_buff[0] = test_acc
+        send_buff[0] = epoch
         send_buff[1] = val_acc
 
         if self.count2 >= 10000 - self.degree:
@@ -103,7 +103,8 @@ class AsyncDecentralized:
         recv_time = toc-tic
 
         if not any(self.epochs == -1.0) and not iidFlag:
-            print(self.epochs / np.sum(self.epochs))
+            b = np.append(self.epochs, epoch)
+            print(b / np.sum(b))
 
         if not any(self.valAcc == -1.0):
             if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:
