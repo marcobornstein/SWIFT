@@ -87,6 +87,11 @@ def run(rank, size):
         top1 = AverageMeter()
         requests = [MPI.REQUEST_NULL for _ in range(args.epoch)]
 
+        if args.noniid:
+            d_epoch = 450
+        else:
+            d_epoch = 100
+
         WORKER_COMM.Barrier()
         # start training
         for epoch in range(args.epoch):
@@ -128,7 +133,7 @@ def run(rank, size):
                 comm_time += d_comm_time
 
             # update learning rate here
-            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=450,
+            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=d_epoch,
                                  itr_per_epoch=len(train_loader))
 
             send_start = time.time()

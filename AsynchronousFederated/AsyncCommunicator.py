@@ -104,7 +104,8 @@ class AsyncDecentralized:
 
         if not any(self.epochs == -1.0) and not iidFlag:
             b = np.append(self.epochs, epoch)
-            print(b / np.sum(b))
+            b = b / np.sum(b)
+            self.neighbor_weights = b[:-1]
 
         if not any(self.valAcc == -1.0):
             if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:
