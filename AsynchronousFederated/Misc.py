@@ -59,7 +59,7 @@ class Recorder(object):
                    delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-losses.log', self.record_losses, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc.log', self.record_trainacc, delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-acc.log', self.record_accuracy, delimiter=',')
+        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-acc.log', self.record_accuracy, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
 
         with open(self.saveFolderName + '/ExpDescription', 'w') as f:
