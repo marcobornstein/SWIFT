@@ -23,7 +23,6 @@ class AverageMeter(object):
 
 class Recorder(object):
     def __init__(self, args, rank):
-        self.record_accuracy = list()
         self.record_valacc = list()
         self.record_timing = list()
         self.record_total_timing = list()
@@ -46,7 +45,6 @@ class Recorder(object):
         self.record_comm_timing.append(comm_time)
         self.record_trainacc.append(top1)
         self.record_losses.append(losses)
-        self.record_accuracy.append(test_acc)
         self.record_valacc.append(val_acc)
 
     def save_to_file(self):
@@ -59,7 +57,6 @@ class Recorder(object):
                    delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-losses.log', self.record_losses, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc.log', self.record_trainacc, delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-acc.log', self.record_accuracy, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
 
         with open(self.saveFolderName + '/ExpDescription', 'w') as f:
