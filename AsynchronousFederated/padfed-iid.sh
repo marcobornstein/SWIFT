@@ -5,7 +5,7 @@
 #SBATCH --job-name=PadFed     # sets the job name if not set from environment
 #SBATCH --time=04:45:00     # how long you think your job will take to complete; format=hh:mm:ss
 #SBATCH --account=furongh    # set QOS, this will determine what resources can be requested
-#SBATCH --qos=medium    # set QOS, this will determine what resources can be requested
+#SBATCH --qos=high    # set QOS, this will determine what resources can be requested
 #SBATCH --partition=dpart
 #SBATCH --gres=gpu:3
 #SBATCH --ntasks=12
@@ -16,7 +16,7 @@
 module load openmpi
 module load cuda/11.1.1
 
-mpirun -np 11 python Train.py --name adfed-iid-test1-10W --graph clique-ring --num_clusters 3 --sgd_steps 1 --personalize 1 --max_sgd 5 --noniid 0 --resSize 50 --bs 64 --epoch 150 --description PadFed --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 11 python Train.py --name padfed-weight --graph clique-ring --num_clusters 3 --sgd_steps 1 --personalize 1 --max_sgd 5 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description PadFed --randomSeed 9001 --datasetRoot ./data --outputFolder Output
 # mpirun -np 6 python Train.py --name async-pers-iid-5sgdmax-1sgdstep-fc-5-test2 --graph fully-connected --sgd_steps 1 --personalize 1 --max_sgd 5 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description PadFed --randomSeed 9001 --datasetRoot ./data --outputFolder Output
 # mpirun -np 6 python Train.py --name async-pers-iid-5sgdmax-1sgdstep-fc-5-test3 --graph fully-connected --sgd_steps 1 --personalize 1 --max_sgd 5 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description PadFed --randomSeed 9001 --datasetRoot ./data --outputFolder Output
 # mpirun -np 6 python Train.py --name async-pers-iid-5sgdmax-1sgdstep-fc-5-test4 --graph fully-connected --sgd_steps 1 --personalize 1 --max_sgd 5 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description PadFed --randomSeed 9001 --datasetRoot ./data --outputFolder Output
