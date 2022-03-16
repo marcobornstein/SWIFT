@@ -23,7 +23,7 @@ class AverageMeter(object):
 
 class Recorder(object):
     def __init__(self, args, rank):
-        self.record_accuracy = list()
+        # self.record_accuracy = list()
         self.record_valacc = list()
         self.record_timing = list()
         self.record_total_timing = list()
@@ -39,14 +39,14 @@ class Recorder(object):
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
 
-    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, losses, test_acc, val_acc):
+    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, losses, val_acc):
         self.record_timing.append(epoch_time)
         self.record_total_timing.append(total_time)
         self.record_comp_timing.append(comp_time)
         self.record_comm_timing.append(comm_time)
         self.record_trainacc.append(top1)
         self.record_losses.append(losses)
-        self.record_accuracy.append(test_acc)
+        # self.record_accuracy.append(test_acc)
         self.record_valacc.append(val_acc)
 
     def save_to_file(self):
