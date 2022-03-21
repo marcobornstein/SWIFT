@@ -26,7 +26,7 @@ class AsyncDecentralized:
         self.count = 0
         self.count2 = 0
 
-        self.testAcc = -1.0 * np.ones(self.degree)
+        self.epochs = -1.0 * np.ones(self.degree)
         self.valAcc = -1.0 * np.ones(self.degree)
         self.exit = -1.0 * np.ones(self.degree)
         self.sgd_updates = sgd_updates
@@ -51,10 +51,10 @@ class AsyncDecentralized:
             with torch.no_grad():
                 t.set_(f)
 
-    def personalize(self, test_acc, val_acc):
+    def personalize(self, epoch, val_acc, iidFlag):
 
         send_buff = np.empty(2)
-        send_buff[0] = test_acc
+        send_buff[0] = epoch
         send_buff[1] = val_acc
 
         if self.count2 >= 10000 - self.degree:
@@ -65,14 +65,14 @@ class AsyncDecentralized:
         for node in self.neighbor_list:
             self.requests2[self.count2] = self.comm.Isend(send_buff, dest=node, tag=self.rank + self.size)
             self.count2 += 1
-            if self.count >= 50*self.degree:
-                if self.requests[self.count - 50 * self.degree].Test():
-                    self.requests[self.count - 50 * self.degree].Wait()
+            if self.count >= 3*self.degree:
+                if self.requests[self.count - 3 * self.degree].Test():
+                    self.requests[self.count - 3 * self.degree].Wait()
         toc = time.time()
 
         send_time = toc-tic
 
-        worker_tacc = -1
+        worker_epoch = -1
         worker_vacc = -1
 
         worker_buff = np.empty(2)
@@ -91,16 +91,21 @@ class AsyncDecentralized:
                     else:
                         req2.Cancel()
                         req2.Free()
-                        self.testAcc[idx] = worker_tacc
+                        self.epochs[idx] = worker_epoch
                         self.valAcc[idx] = worker_vacc
                         break
 
-                worker_tacc = worker_buff[0]
+                worker_epoch = worker_buff[0]
                 worker_vacc = worker_buff[1]
                 count += 1
 
         toc = time.time()
         recv_time = toc-tic
+
+        if not any(self.epochs == -1.0) and not iidFlag:
+            b = np.append(self.epochs, epoch)
+            b = b / np.sum(b)
+            self.neighbor_weights = b[:-1]
 
         if not any(self.valAcc == -1.0):
             if val_acc <= np.min(self.valAcc) and self.sgd_updates < self.sgd_max:
@@ -168,9 +173,9 @@ class AsyncDecentralized:
         for idx, node in enumerate(self.neighbor_list):
             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
             self.count += 1
-            if self.count >= 200*self.degree:
-                if self.requests[self.count - 200 * self.degree].Test():
-                    self.requests[self.count - 200 * self.degree].Wait()
+            if self.count >= 150*self.degree:
+                if self.requests[self.count - 150 * self.degree].Test():
+                    self.requests[self.count - 150 * self.degree].Wait()
 
         toc = time.time()
 
@@ -211,7 +216,7 @@ class AsyncDecentralized:
                         if count == 0 and self.exit[idx] == -1.0:
                             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
                             self.count += 1
-                            if self.count >= 100 * self.degree:
+                            if self.count >= 50 * self.degree:
                                 if self.requests[self.count - 50 * self.degree].Test():
                                     self.requests[self.count - 50 * self.degree].Wait()
                         break

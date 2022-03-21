@@ -87,6 +87,11 @@ def run(rank, size):
         top1 = AverageMeter()
         requests = [MPI.REQUEST_NULL for _ in range(args.epoch)]
 
+        if args.noniid:
+            d_epoch = 450
+        else:
+            d_epoch = 100
+
         WORKER_COMM.Barrier()
         # start training
         for epoch in range(args.epoch):
@@ -128,7 +133,7 @@ def run(rank, size):
                 comm_time += d_comm_time
 
             # update learning rate here
-            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=20,
+            update_learning_rate(optimizer, epoch, drop=0.75, epochs_drop=10.0, decay_epoch=d_epoch,
                                  itr_per_epoch=len(train_loader))
 
             send_start = time.time()
@@ -156,7 +161,7 @@ def run(rank, size):
 
             # run personalization if turned on
             if args.personalize and args.comm_style == 'async':
-                comm_time += communicator.personalize(epoch+2, val_acc)
+                comm_time += communicator.personalize(epoch+2, val_acc, args.noniid)
 
             # total time spent in algorithm
             comp_time -= record_time
@@ -201,7 +206,7 @@ def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=N
             incr = (lr - base_lr) * (count / (5 * itr_per_epoch))
             lr = base_lr + incr
     elif epoch >= decay_epoch:
-        lr *= np.power(drop, np.floor((1 + epoch) / epochs_drop))
+        lr *= np.power(drop, np.floor((1 + epoch - decay_epoch) / epochs_drop))
 
     if lr is not None:
         for param_group in optimizer.param_groups:
