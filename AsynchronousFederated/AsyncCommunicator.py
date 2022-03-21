@@ -124,10 +124,10 @@ class AsyncDecentralized:
 
         worker_model = np.empty_like(self.avg_model)
         prev_model = np.empty_like(self.avg_model)
+        recv_nodes = list()
 
         tic = time.time()
 
-        recv_nodes = list()
         for idx, node in enumerate(self.neighbor_list):
             if self.comm.Iprobe(source=node, tag=node):
                 recv_nodes.append((idx, node))
