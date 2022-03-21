@@ -132,7 +132,7 @@ class AsyncDecentralized:
             if self.comm.Iprobe(source=node, tag=node):
                 recv_nodes.append(idx)
 
-        print(recv_nodes)
+        print(self.neighbor_list[recv_nodes])
 
 
         #####
