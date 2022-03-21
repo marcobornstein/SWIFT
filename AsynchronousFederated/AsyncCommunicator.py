@@ -25,6 +25,7 @@ class AsyncDecentralized:
         self.requests4 = [MPI.REQUEST_NULL for _ in range(self.degree)]
         self.count = 0
         self.count2 = 0
+        self.missed_msg = 0
 
         self.epochs = -1.0 * np.ones(self.degree)
         self.valAcc = -1.0 * np.ones(self.degree)
@@ -144,30 +145,6 @@ class AsyncDecentralized:
                     break
                 prev_model = worker_model
 
-        '''
-        for idx, node in enumerate(self.neighbor_list):
-            count = 0
-            while True:
-                req = self.comm.Irecv(worker_model, source=node, tag=node)
-                if not req.Test():
-                    if count == 0:
-                        # If no messages available, take one's own model as the model to average
-                        req.Cancel()
-                        req.Free()
-                        self.avg_model.add_(self.send_buffer, alpha=self.neighbor_weights[idx])
-                        break
-                    else:
-                        req.Cancel()
-                        req.Free()
-                        self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
-                        break
-                prev_model = worker_model
-                count += 1
-        '''
-
-        # compute self weight according to degree
-        # selfweight = 1 - np.sum(self.neighbor_weights)
-
         # compute self weight according to degree
         selfweight = (1 - np.sum(self.neighbor_weights))/weight_boost
 
@@ -178,6 +155,9 @@ class AsyncDecentralized:
 
         # update local models
         self.reset_model()
+
+        # determine the number of messages missed from other workers
+        self.missed_msg += self.degree - len(recv_nodes)
 
         return toc - tic
 
@@ -246,3 +226,5 @@ class AsyncDecentralized:
                     self.exit[idx] = buf[idx]
                     count += 1
             time.sleep(0.5)
+
+        print('Rank %d Had %d Missed Messages' % (self.rank, self.missed_msg))
