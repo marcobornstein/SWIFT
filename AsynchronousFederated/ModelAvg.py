@@ -17,6 +17,7 @@ def model_avg(worker_size, model, args):
     send_buffer = flatten_tensors(tensor_list).cpu()
 
     test_data = consensus_test_data(args)
+    train_data = consensus_train_data(5000, args)
 
     for epoch in range(args.epoch):
 
@@ -37,8 +38,6 @@ def model_avg(worker_size, model, args):
         for f, t in zip(unflatten_tensors(avg_model.cuda(), tensor_list), tensor_list):
             with torch.no_grad():
                 t.set_(f)
-
-        train_data = consensus_train_data(5000, args)
 
         # add in a forward pass to stabilize running mean/std
         model.train()
