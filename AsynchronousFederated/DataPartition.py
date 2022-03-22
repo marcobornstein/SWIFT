@@ -250,8 +250,8 @@ def consensus_train_data(train_size, args):
     data_len = len(trainset)
     indexes = [x for x in range(0, data_len)]
     rng.shuffle(indexes)
-    partitions.append(indexes[0:train_size])
-    train_set = Partition(trainset, partitions)
+    partition = indexes[0:train_size]
+    train_set = Partition(trainset, partition)
     train_loader = torch.utils.data.DataLoader(train_set,
                                                batch_size=args.bs,
                                                shuffle=True,
