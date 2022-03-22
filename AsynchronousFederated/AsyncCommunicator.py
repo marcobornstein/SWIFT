@@ -67,38 +67,34 @@ class AsyncDecentralized:
             self.requests2[self.count2] = self.comm.Isend(send_buff, dest=node, tag=self.rank + self.size)
             self.count2 += 1
             if self.count >= 3*self.degree:
-                if self.requests[self.count - 3 * self.degree].Test():
-                    self.requests[self.count - 3 * self.degree].Wait()
+                if self.requests2[self.count - 3 * self.degree].Test():
+                    self.requests2[self.count - 3 * self.degree].Wait()
         toc = time.time()
 
         send_time = toc-tic
 
         worker_epoch = -1
         worker_vacc = -1
-
         worker_buff = np.empty(2)
+        recv_nodes = list()
 
         tic = time.time()
-        for idx, node in enumerate(self.neighbor_list):
-            count = 0
-            while True:
-                req2 = self.comm.Irecv(worker_buff, source=node, tag=node+self.size)
-                if not req2.Test():
-                    if count == 0:
-                        # If no messages available, keep unchanged
-                        req2.Cancel()
-                        req2.Free()
-                        break
-                    else:
-                        req2.Cancel()
-                        req2.Free()
-                        self.epochs[idx] = worker_epoch
-                        self.valAcc[idx] = worker_vacc
-                        break
 
+        for idx, node in enumerate(self.neighbor_list):
+            if self.comm.Iprobe(source=node, tag=node + self.size):
+                recv_nodes.append((idx, node))
+
+        for idx, node in recv_nodes:
+            while True:
+                req = self.comm.Irecv(worker_buff, source=node, tag=node + self.size)
+                if not req.Test():
+                    req.Cancel()
+                    req.Free()
+                    self.epochs[idx] = worker_epoch
+                    self.valAcc[idx] = worker_vacc
+                    break
                 worker_epoch = worker_buff[0]
                 worker_vacc = worker_buff[1]
-                count += 1
 
         toc = time.time()
         recv_time = toc-tic
@@ -122,7 +118,6 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-
         worker_model = np.empty_like(self.avg_model)
         prev_model = np.empty_like(self.avg_model)
         recv_nodes = list()
