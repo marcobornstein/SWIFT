@@ -70,7 +70,6 @@ class AsyncDecentralized:
                 if self.requests2[self.count - 3 * self.degree].Test():
                     self.requests2[self.count - 3 * self.degree].Wait()
         toc = time.time()
-
         send_time = toc-tic
 
         worker_epoch = -1
@@ -130,18 +129,23 @@ class AsyncDecentralized:
 
         weight_boost = (len(recv_nodes)+1) / (self.degree + 1)
 
+        weight_sum = 0
         for idx, node in recv_nodes:
+            weight = self.neighbor_weights[idx]
+            weight_sum += weight
             while True:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
                 if not req.Test():
                     req.Cancel()
                     req.Free()
-                    self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx]/weight_boost)
+                    # self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx]/weight_boost)
+                    self.avg_model.add_(torch.from_numpy(prev_model), alpha=weight)
                     break
                 prev_model = worker_model
 
         # compute self weight according to degree
-        selfweight = (1 - np.sum(self.neighbor_weights))/weight_boost
+        # selfweight = (1 - np.sum(self.neighbor_weights))/weight_boost
+        selfweight = 1 - weight_sum
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.avg_model.add_(self.send_buffer, alpha=selfweight)
