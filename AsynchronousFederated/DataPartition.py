@@ -206,7 +206,7 @@ def partition_dataset(rank, size, comm, args):
     return train_loader, test_loader, val_loader
 
 
-def get_test_data(args):
+def consensus_test_data(args):
 
     if args.downloadCifar == 1:
         url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
@@ -230,3 +230,31 @@ def get_test_data(args):
         test_loader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
 
     return test_loader
+
+
+def consensus_train_data(train_size, args):
+    transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])
+
+    trainset = torchvision.datasets.CIFAR10(root=args.datasetRoot,
+                                            train=True,
+                                            download=True,
+                                            transform=transform_train)
+
+    partitions = list()
+    rng = Random()
+    rng.seed(1234)
+    data_len = len(trainset)
+    indexes = [x for x in range(0, data_len)]
+    rng.shuffle(indexes)
+    partitions.append(indexes[0:train_size])
+    train_set = Partition(trainset, partitions)
+    train_loader = torch.utils.data.DataLoader(train_set,
+                                               batch_size=args.bs,
+                                               shuffle=True,
+                                               pin_memory=True)
+
+    return train_loader
