@@ -4,9 +4,10 @@ from mpi4py import MPI
 import torch
 from comm_helpers import flatten_tensors, unflatten_tensors
 from Misc import test_accuracy
+from DataPartition import consensus_test_data, consensus_train_data
 
 
-def model_avg(worker_size, model, test_data, args):
+def model_avg(worker_size, model, args):
 
     consensus_accuracy = list()
     model_diff = list()
@@ -14,6 +15,9 @@ def model_avg(worker_size, model, test_data, args):
     for param in model.parameters():
         tensor_list.append(param)
     send_buffer = flatten_tensors(tensor_list).cpu()
+
+    test_data = consensus_test_data(args)
+    train_data = consensus_train_data(5000, args)
 
     for epoch in range(args.epoch):
 
@@ -37,7 +41,7 @@ def model_avg(worker_size, model, test_data, args):
 
         # add in a forward pass to stabilize running mean/std
         model.train()
-        for batch_idx, (data, target) in enumerate(test_data):
+        for batch_idx, (data, target) in enumerate(train_data):
             data = data.cuda(non_blocking=True)
             model(data)
 

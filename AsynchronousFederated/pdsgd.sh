@@ -16,8 +16,8 @@
 module load openmpi
 module load cuda/11.1.1
 
-mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test1-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test2-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test3-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test4-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test5-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 200 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test1-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 300 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test2-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 300 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test3-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 300 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test4-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 300 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 11 python Train.py  --graph clique-ring --num_clusters 3 --name pdsgd-noniid-test5-10W --comm_style pd-sgd --i1 1 --degree_noniid 1 --noniid 1 --resSize 50 --bs 64 --epoch 300 --description PDSGD --randomSeed 9001 --datasetRoot ./data --outputFolder Output
