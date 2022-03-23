@@ -6,7 +6,7 @@ from comm_helpers import flatten_tensors, unflatten_tensors
 
 class AsyncDecentralized:
 
-    def __init__(self, rank, size, comm, topology, sgd_updates, sgd_max):
+    def __init__(self, rank, size, comm, topology, sgd_updates, sgd_max, weight_boost):
         """ Initialize the Asynchronous Decentralized Communicator """
 
         # Graph initialization
@@ -36,6 +36,8 @@ class AsyncDecentralized:
         self.init_sgd_updates = sgd_updates
         self.sgd_max = sgd_max
         self.iter = 0
+        self.weight_boost = weight_boost
+        self.wb = 1
 
     def prepare_send_buffer(self, model):
 
@@ -124,32 +126,29 @@ class AsyncDecentralized:
         worker_model = np.empty_like(self.avg_model)
         prev_model = np.empty_like(self.avg_model)
         recv_nodes = list()
+        selfweight = 1
 
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
             if self.comm.Iprobe(source=node, tag=node):
                 recv_nodes.append((idx, node))
+                selfweight -= self.neighbor_weights[idx]
 
-        # weight_boost = (len(recv_nodes)+1) / (self.degree + 1)
+        # compute self weight according to degree
+        if self.weight_boost:
+            self.wb = (len(recv_nodes)+1) / (self.degree + 1)
+            selfweight = (1 - np.sum(self.neighbor_weights)) / self.wb
 
-        weight_sum = 0
         for idx, node in recv_nodes:
-            weight = self.neighbor_weights[idx]
-            weight_sum += weight
             while True:
                 req = self.comm.Irecv(worker_model, source=node, tag=node)
                 if not req.Test():
                     req.Cancel()
                     req.Free()
-                    # self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx]/weight_boost)
-                    self.avg_model.add_(torch.from_numpy(prev_model), alpha=weight)
+                    self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx]/self.wb)
                     break
                 prev_model = worker_model
-
-        # compute self weight according to degree
-        # selfweight = (1 - np.sum(self.neighbor_weights))/weight_boost
-        selfweight = 1 - weight_sum
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.avg_model.add_(self.send_buffer, alpha=selfweight)

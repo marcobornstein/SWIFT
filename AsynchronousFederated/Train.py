@@ -68,7 +68,7 @@ def run(rank, size):
         GP = GraphConstruct(rank, worker_size, WORKER_COMM, args.graph, num_c=args.num_clusters)
 
         if args.comm_style == 'async':
-            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP, args.sgd_steps, args.max_sgd)
+            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP, args.sgd_steps, args.max_sgd, args.wb)
         elif args.comm_style == 'ld-sgd':
             communicator = decenCommunicator(rank, worker_size, WORKER_COMM, GP, args.i1, args.i2)
         elif args.comm_style == 'pd-sgd':
@@ -77,7 +77,7 @@ def run(rank, size):
             communicator = decenCommunicator(rank, worker_size, WORKER_COMM, GP, 0, 1)
         else:
             # Anything else just default to our algorithm
-            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP, args.sgd_steps, args.max_sgd)
+            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP, args.sgd_steps, args.max_sgd, args.wb)
 
         # init recorder
         comp_time = 0
@@ -252,6 +252,7 @@ if __name__ == "__main__":
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
     parser.add_argument('--epoch', '-e', default=10, type=int, help='total epoch')
     parser.add_argument('--bs', default=64, type=int, help='batch size on each worker')
+    parser.add_argument('--wb', default=0, type=int, help='proportionally increase neighbor weights or self replace')
     parser.add_argument('--noniid', default=1, type=int, help='use non iid data or not')
     parser.add_argument('--degree_noniid', default=0.7, type=float, help='how distributed are labels (0 is random)')
 
