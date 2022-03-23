@@ -55,6 +55,7 @@ def run(rank, size):
 
     # Designate the consensus node (the final node) and worker nodes
     if rank == size-1:
+
         # Run consensus node task
         model_avg(worker_size, model, args)
 
@@ -85,6 +86,7 @@ def run(rank, size):
         losses = AverageMeter()
         top1 = AverageMeter()
         requests = [MPI.REQUEST_NULL for _ in range(args.epoch)]
+        count = 0
 
         if args.noniid:
             d_epoch = 200
@@ -145,9 +147,9 @@ def run(rank, size):
             requests[epoch] = MPI.COMM_WORLD.Isend(send_buffer.detach().numpy(), dest=size - 1,
                                                    tag=rank + 10 * worker_size)
             # Clear the memory from Isend
-            if epoch >= 15:
-                if requests[epoch - 15].Test():
-                    requests[epoch - 15].Wait()
+            if requests[count].Test():
+                requests[count].Wait()
+                count += 1
 
             # evaluate test accuracy at the end of each epoch
             # test_acc = test_accuracy(model, test_loader)

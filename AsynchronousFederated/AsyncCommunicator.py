@@ -26,6 +26,8 @@ class AsyncDecentralized:
         self.count = 0
         self.count2 = 0
         self.missed_msg = 0
+        self.reqCount = 0
+        self.reqCount2 = 0
 
         self.epochs = -1.0 * np.ones(self.degree)
         self.valAcc = -1.0 * np.ones(self.degree)
@@ -60,15 +62,17 @@ class AsyncDecentralized:
 
         if self.count2 >= 10000 - self.degree:
             self.count2 = 0
+        if self.reqCount2 >= 10000 - self.degree:
+            self.reqCount2 = 0
 
         # Time the send
         tic = time.time()
         for node in self.neighbor_list:
             self.requests2[self.count2] = self.comm.Isend(send_buff, dest=node, tag=self.rank + self.size)
             self.count2 += 1
-            if self.count >= 3*self.degree:
-                if self.requests2[self.count - 3 * self.degree].Test():
-                    self.requests2[self.count - 3 * self.degree].Wait()
+            if self.requests2[self.reqCount2].Test():
+                self.requests2[self.reqCount2].Wait()
+                self.reqCount2 += 1
         toc = time.time()
         send_time = toc-tic
 
@@ -127,7 +131,7 @@ class AsyncDecentralized:
             if self.comm.Iprobe(source=node, tag=node):
                 recv_nodes.append((idx, node))
 
-        weight_boost = (len(recv_nodes)+1) / (self.degree + 1)
+        # weight_boost = (len(recv_nodes)+1) / (self.degree + 1)
 
         weight_sum = 0
         for idx, node in recv_nodes:
@@ -166,18 +170,20 @@ class AsyncDecentralized:
         self.prepare_send_buffer(model)
         send_buffer = self.send_buffer.detach().numpy()
 
-        # Time
-        tic = time.time()
-
         if self.count >= 10000-self.degree:
             self.count = 0
+        if self.reqCount >= 10000 - self.degree:
+            self.reqCount = 0
+
+        # Time
+        tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
             self.count += 1
-            if self.count >= 150*self.degree:
-                if self.requests[self.count - 150 * self.degree].Test():
-                    self.requests[self.count - 150 * self.degree].Wait()
+            if self.requests[self.reqCount].Test():
+                self.requests[self.reqCount].Wait()
+                self.reqCount += 1
 
         toc = time.time()
 
@@ -211,6 +217,8 @@ class AsyncDecentralized:
         while any(self.exit == -1.0):
             if self.count >= 10000 - self.degree:
                 self.count = 0
+            if self.reqCount >= 10000 - self.degree:
+                self.reqCount = 0
             for idx, node in enumerate(self.neighbor_list):
                 count = 0
                 while True:
@@ -218,9 +226,9 @@ class AsyncDecentralized:
                         if count == 0 and self.exit[idx] == -1.0:
                             self.requests[self.count] = self.comm.Isend(send_buffer, dest=node, tag=self.rank)
                             self.count += 1
-                            if self.count >= 50 * self.degree:
-                                if self.requests[self.count - 50 * self.degree].Test():
-                                    self.requests[self.count - 50 * self.degree].Wait()
+                            if self.requests[self.reqCount].Test():
+                                self.requests[self.reqCount].Wait()
+                                self.reqCount += 1
                         break
                     self.exit[idx] = buf[idx]
                     count += 1
