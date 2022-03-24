@@ -1,2 +1,0 @@
-Namespace(bs=64, comm_style='ld-sgd', dataset='cifar10', datasetRoot='./data', degree_noniid=1.0, description='LDSGD', downloadCifar=0, epoch=200, graph='clique-ring', i1=1, i2=2, lr=0.8, max_sgd=10, model='res', momentum=0.0, name='ldsgd-noniid-test4-10W', nesterov=False, noniid=1, num_clusters=3, outputFolder='Output', p=False, personalize=1, randomSeed=9001, resSize=50, savePath=None, sgd_steps=3, warmup=False)
-LDSGD
