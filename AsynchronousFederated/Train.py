@@ -121,17 +121,17 @@ def run(rank, size):
                 # backward pass
                 loss.backward()
 
+                # communication happens here
+                d_comm_time = communicator.communicate(model)
+                comm_time += d_comm_time
+
                 # gradient step
                 optimizer.step()
                 optimizer.zero_grad()
                 end_time = time.time()
 
                 # compute computational time
-                comp_time += (end_time - start_time)
-
-                # communication happens here
-                d_comm_time = communicator.communicate(model)
-                comm_time += d_comm_time
+                comp_time += (end_time - start_time - comm_time)
 
             # update learning rate here
             update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=20.0, decay_epoch=d_epoch,

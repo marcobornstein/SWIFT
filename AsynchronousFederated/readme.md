@@ -1,7 +1,8 @@
 
 
 # Codebase Ideas & To Do
-1) Fix the data partitioning for non-iid (only create data for each worker, not all)
-2) Wrap the communication in Train.py into a new function (clean the code)
-3) Create a new Util.py with the average meter and the accuracy computations
-4) Examine if the learning rate function outside of the training loop improves performance
+1) Check to see where any memory leaks may exist (so scaling up to more workers is feasible)
+2) Consider moving the broadcast to after the averaging
+
+The irecv was kept in order to ensure if more messages came in, then they could be received.
+If we start to use the asynchronous update method, then we move to Recv.
