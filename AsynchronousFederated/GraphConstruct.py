@@ -138,25 +138,32 @@ class GraphConstruct:
 
                     # decide on weights if neighbors have the same degree
                     if degree == sorted_nd[0]:
-
-                        if self.rank == 5:
-                            print('hi')
                         same_degree_neighbors = sorted_nn[sorted_nd == degree]
                         comp_weights = np.zeros(len(same_degree_neighbors))
                         for i, node in enumerate(same_degree_neighbors):
                             requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + 2 * self.size)
-                        if self.rank == 5:
-                            print('hi')
+
+
+                            # PROBLEM IS HERE WITH RECV
+
+
+
                         for j, node in enumerate(same_degree_neighbors):
+                            if self.rank == 5:
+                                print(j)
+                                print(node)
+                                print('====')
+
                             self.comm.Recv(recv_buff, source=node, tag=node + 2 * self.size)
                             comp_weights[j] = recv_buff[0]
+                            if self.rank == 5:
+                                print('hi')
                         # if you share same degree as neighboring node, choose the weighting that's smaller to share
                         # in order to assure that this process works every time
                         if uniform_weight > np.min(comp_weights):
                             uniform_weight = np.min(comp_weights)
 
-                        if self.rank == 5:
-                            print('hi')
+
 
                         # clear memory
                         #for j in range(len(same_degree_neighbors)):
