@@ -5,7 +5,7 @@
 #SBATCH --job-name=AsyncDecentralized     # sets the job name if not set from environment
 #SBATCH --time=00:35:00     # how long you think your job will take to complete; format=hh:mm:ss
 #SBATCH --account=furongh    # set QOS, this will determine what resources can be requested
-#SBATCH --qos=medium  # set QOS, this will determine what resources can be requested
+#SBATCH --qos=high  # set QOS, this will determine what resources can be requested
 #SBATCH --partition=dpart
 #SBATCH --gres=gpu:rtx2080ti:3
 #SBATCH --ntasks=12
