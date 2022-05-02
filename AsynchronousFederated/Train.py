@@ -123,7 +123,6 @@ def run(rank, size):
 
                 # communication happens here
                 d_comm_time = communicator.communicate(model)
-                comm_time += d_comm_time
 
                 # gradient step
                 optimizer.step()
@@ -131,7 +130,9 @@ def run(rank, size):
                 end_time = time.time()
 
                 # compute computational time
-                comp_time += (end_time - start_time - comm_time)
+                comp_time += (end_time - start_time - d_comm_time)
+                # compute communication time
+                comm_time += d_comm_time
 
             # update learning rate here
             update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=20.0, decay_epoch=d_epoch,
