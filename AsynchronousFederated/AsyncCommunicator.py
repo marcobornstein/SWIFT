@@ -129,15 +129,16 @@ class AsyncDecentralized:
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-        prev_model = np.empty_like(self.avg_model)
+        # prev_model = np.empty_like(self.avg_model)
         recv_nodes = list()
 
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
+            # check to see if a message has arrived from a neighbor
             if self.comm.Iprobe(source=node, tag=node):
                 recv_nodes.append((idx, node))
-            # If no message, use stored model from worker
+            # if no message has arrived, use stored model from worker
             else:
                 self.avg_model.add_(torch.from_numpy(self.worker_models[idx]), alpha=self.neighbor_weights[idx])
 
@@ -147,12 +148,14 @@ class AsyncDecentralized:
                 if not req.Test():
                     req.Cancel()
                     req.Free()
-                    self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
+                    self.avg_model.add_(torch.from_numpy(self.worker_models[idx]), alpha=self.neighbor_weights[idx])
+                    # self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                     break
-                prev_model = self.worker_models[idx]
+                # prev_model = self.worker_models[idx]
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
+
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.avg_model.add_(self.send_buffer, alpha=selfweight)
 
@@ -280,4 +283,5 @@ class AsyncDecentralized:
                     count += 1
             time.sleep(0.5)
 
-        print('Rank %d Had %d Missed Messages' % (self.rank, self.missed_msg))
+        if self.memory:
+            print('Rank %d Had %d Missed Messages' % (self.rank, self.missed_msg))
