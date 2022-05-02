@@ -83,14 +83,17 @@ class GraphConstruct:
 
             degree = len(self.neighbor_list)
             # send degree info to all neighbors
-            send_buff = np.array([degree])
+            send_buff = np.zeros(2)
+            send_buff[0] = degree
             for node in self.neighbor_list:
                 self.comm.Isend(send_buff, dest=node, tag=self.rank + self.size)
 
             # receive neighboring degrees (blocking)
             neighbor_degrees = np.empty(degree)
+            recv_buff = np.empty(2)
             for idx, node in enumerate(self.neighbor_list):
-                self.comm.Recv(neighbor_degrees[idx], source=node, tag=node + self.size)
+                self.comm.Recv(recv_buff, source=node, tag=node + self.size)
+                neighbor_degrees[idx] = recv_buff[0]
 
             sort_idx = np.argsort(-neighbor_degrees)
             sorted_nd = neighbor_degrees[sort_idx]
@@ -99,15 +102,19 @@ class GraphConstruct:
             # receive and then send weights to neighbors
             if degree >= np.max(neighbor_degrees):
                 weights = (1 / (degree + 1)) * np.ones(degree)
+                send_buff = np.zeros(2)
+                send_buff[0] = 1/(degree + 1)
                 # start setting weights and sending them
                 for node in sorted_nn[sorted_nd != degree]:
-                    self.comm.Send(np.array([1/(degree + 1)]), dest=node, tag=self.rank + 2*self.size)
+                    self.comm.Send(send_buff, dest=node, tag=self.rank + 2*self.size)
             else:
                 weights = np.zeros(degree)
+                recv_buff = np.empty(2)
                 # receive until you are the largest left and then send
                 while degree < sorted_nd[0] and sorted_nd.size > 0:
                     index = sort_idx[0]
-                    self.comm.Recv(weights[index], source=sorted_nn[0], tag=sorted_nn[0] + 2*self.size)
+                    self.comm.Recv(recv_buff, source=sorted_nn[0], tag=sorted_nn[0] + 2*self.size)
+                    weights[index] = recv_buff[0]
                     sort_idx = sort_idx[1:]
                     sorted_nn = sorted_nn[1:]
                     sorted_nd = sorted_nd[1:]
@@ -116,8 +123,10 @@ class GraphConstruct:
                     weight_sum = np.sum(weights)
                     uniform_weight = (1-weight_sum)/(sorted_nd.size + 1)
                     weights[weights == 0] = uniform_weight
+                    send_buff = np.zeros(2)
+                    send_buff[0] = uniform_weight
                     for node in sorted_nd:
-                        self.comm.Send(np.array([uniform_weight]), dest=node, tag=self.rank + 2 * self.size)
+                        self.comm.Send(send_buff, dest=node, tag=self.rank + 2 * self.size)
 
         elif weight_type == 'uniform-symmetric':
             num_neighbors = len(self.neighbor_list)
