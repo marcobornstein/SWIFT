@@ -243,7 +243,7 @@ def sync_allreduce(model, size, comm):
         param.data = param.data / float(size)
 
     # flatten tensors
-    initial_model = flatten_tensors(tensor_list).cpu()
+    initial_model = flatten_tensors(tensor_list).cpu().detach().numpy()
 
     return initial_model
 
