@@ -102,8 +102,8 @@ class GraphConstruct:
             sorted_nn = np.asarray(self.neighbor_list)[sort_idx]
 
             # clear memory
-            #for j in range(degree):
-            #    requests[j].Wait()
+            for j in range(degree):
+                requests[j].Wait()
 
             # receive and then send weights to neighbors
             # if you are the largest degree node in the graph, you get the ball rolling
@@ -112,8 +112,8 @@ class GraphConstruct:
                 send_buff = np.zeros(2)
                 send_buff[0] = 1/(degree + 1)
                 # start setting weights and sending them
-                for node in sorted_nn[sorted_nd != degree]:
-                    self.comm.Send(send_buff, dest=node, tag=self.rank + 2*self.size)
+                for i, node in enumerate(sorted_nn):
+                    requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + 2*self.size)
             else:
                 weights = np.zeros(degree)
                 recv_buff = np.empty(2)
