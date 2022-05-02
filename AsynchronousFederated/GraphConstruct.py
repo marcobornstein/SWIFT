@@ -1,5 +1,6 @@
 import numpy as np
 import networkx as nx
+from mpi4py import MPI
 
 
 class GraphConstruct:
@@ -82,11 +83,12 @@ class GraphConstruct:
         if weight_type == 'adfl':
 
             degree = len(self.neighbor_list)
+            requests = [MPI.REQUEST_NULL for _ in range(degree)]
             # send degree info to all neighbors
             send_buff = np.zeros(2)
             send_buff[0] = degree
-            for node in self.neighbor_list:
-                self.comm.Isend(send_buff, dest=node, tag=self.rank + self.size)
+            for i, node in enumerate(self.neighbor_list):
+                requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + self.size)
 
             # receive neighboring degrees (blocking)
             neighbor_degrees = np.empty(degree)
@@ -98,6 +100,9 @@ class GraphConstruct:
             sort_idx = np.argsort(-neighbor_degrees)
             sorted_nd = neighbor_degrees[sort_idx]
             sorted_nn = np.asarray(self.neighbor_list)[sort_idx]
+
+            for j in range(degree):
+                requests[j].Wait()
 
             # receive and then send weights to neighbors
             # if you are the largest degree node in the graph, you get the ball rolling
@@ -134,15 +139,18 @@ class GraphConstruct:
                     if degree == sorted_nd[0]:
                         same_degree_neighbors = sorted_nn[sorted_nd == degree]
                         comp_weights = np.zeros(len(same_degree_neighbors))
-                        for node in same_degree_neighbors:
-                            self.comm.Isend(send_buff, dest=node, tag=self.rank + 2 * self.size)
                         for i, node in enumerate(same_degree_neighbors):
-                            self.comm.Recv(recv_buff, dest=node, tag=self.rank + 2 * self.size)
-                            comp_weights[i] = recv_buff[0]
+                            requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + 2 * self.size)
+                        for j, node in enumerate(same_degree_neighbors):
+                            self.comm.Recv(recv_buff, source=node, tag=node + 2 * self.size)
+                            comp_weights[j] = recv_buff[0]
                         # if you share same degree as neighboring node, choose the weighting that's smaller to share
                         # in order to assure that this process works every time
                         if uniform_weight > np.min(comp_weights):
                             uniform_weight = np.min(comp_weights)
+                        # clear memory
+                        for j in range(len(same_degree_neighbors)):
+                            requests[j].Wait()
 
                     weights[weights == 0] = uniform_weight
                     send_buff = np.zeros(2)
