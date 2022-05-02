@@ -6,7 +6,7 @@ from comm_helpers import flatten_tensors, unflatten_tensors
 
 class AsyncDecentralized:
 
-    def __init__(self, rank, size, comm, topology, sgd_updates, sgd_max, weight_boost):
+    def __init__(self, rank, size, comm, topology, sgd_updates, sgd_max, weight_boost, memory, init_model):
         """ Initialize the Asynchronous Decentralized Communicator """
 
         # Graph initialization
@@ -38,6 +38,11 @@ class AsyncDecentralized:
         self.iter = 0
         self.weight_boost = weight_boost
         self.wb = 1
+
+        if memory:
+            self.worker_models = init_model
+        else:
+            self.worker_models = np.tile(init_model, (self.degree, 1))
 
     def prepare_send_buffer(self, model):
 
@@ -118,12 +123,50 @@ class AsyncDecentralized:
 
         return send_time+recv_time
 
-    def averaging(self, model):
+    def averaging_standard(self, model):
 
         # necessary preprocess
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
-        worker_model = np.empty_like(self.avg_model)
+        prev_model = np.empty_like(self.avg_model)
+        recv_nodes = list()
+
+        tic = time.time()
+
+        for idx, node in enumerate(self.neighbor_list):
+            if self.comm.Iprobe(source=node, tag=node):
+                recv_nodes.append((idx, node))
+            # If no message, use stored model from worker
+            else:
+                self.avg_model.add_(torch.from_numpy(self.worker_models[idx]), alpha=self.neighbor_weights[idx])
+
+        for idx, node in recv_nodes:
+            while True:
+                req = self.comm.Irecv(self.worker_models[idx], source=node, tag=node)
+                if not req.Test():
+                    req.Cancel()
+                    req.Free()
+                    self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
+                    break
+                prev_model = self.worker_models[idx]
+
+        # compute self weight according to degree
+        selfweight = 1 - np.sum(self.neighbor_weights)
+        # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
+        self.avg_model.add_(self.send_buffer, alpha=selfweight)
+
+        toc = time.time()
+
+        # update local models
+        self.reset_model()
+
+        return toc - tic
+
+    def averaging_efficient(self, model):
+
+        # necessary preprocess
+        self.prepare_send_buffer(model)
+        self.avg_model = torch.zeros_like(self.send_buffer)
         prev_model = np.empty_like(self.avg_model)
         recv_nodes = list()
         selfweight = 1
@@ -142,13 +185,13 @@ class AsyncDecentralized:
 
         for idx, node in recv_nodes:
             while True:
-                req = self.comm.Irecv(worker_model, source=node, tag=node)
+                req = self.comm.Irecv(self.worker_models, source=node, tag=node)
                 if not req.Test():
                     req.Cancel()
                     req.Free()
                     self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx]/self.wb)
                     break
-                prev_model = worker_model
+                prev_model = self.worker_models
 
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
         self.avg_model.add_(self.send_buffer, alpha=selfweight)

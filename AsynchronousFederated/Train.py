@@ -50,9 +50,6 @@ def run(rank, size):
                           weight_decay=5e-4,
                           nesterov=args.nesterov)
 
-    # guarantee all local models start from the same point
-    sync_allreduce(model, worker_size, MPI.COMM_WORLD)
-
     # Designate the consensus node (the final node) and worker nodes
     if rank == size-1:
 
@@ -61,6 +58,9 @@ def run(rank, size):
 
     else:
 
+        # guarantee all local models start from the same point
+        init_model = sync_allreduce(model, worker_size, WORKER_COMM)
+
         # load data
         train_loader, test_loader, val_loader = partition_dataset(rank, worker_size, WORKER_COMM, args)
 
@@ -68,7 +68,8 @@ def run(rank, size):
         GP = GraphConstruct(rank, worker_size, WORKER_COMM, args.graph, num_c=args.num_clusters)
 
         if args.comm_style == 'async':
-            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP, args.sgd_steps, args.max_sgd, args.wb)
+            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP,
+                                              args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
         elif args.comm_style == 'ld-sgd':
             communicator = decenCommunicator(rank, worker_size, WORKER_COMM, GP, args.i1, args.i2)
         elif args.comm_style == 'pd-sgd':
@@ -77,7 +78,8 @@ def run(rank, size):
             communicator = decenCommunicator(rank, worker_size, WORKER_COMM, GP, 0, 1)
         else:
             # Anything else just default to our algorithm
-            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP, args.sgd_steps, args.max_sgd, args.wb)
+            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP,
+                                              args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
 
         # init recorder
         comp_time = 0
@@ -225,19 +227,25 @@ def sync_allreduce(model, size, comm):
     torch.cuda.synchronize()
     comm.Barrier()
 
-    comm_start = time.time()
+    # comm_start = time.time()
     for param in model.parameters():
         comm.Allreduce(senddata[param], recvdata[param], op=MPI.SUM)
     torch.cuda.synchronize()
     comm.Barrier()
 
-    comm_end = time.time()
-    comm_t = (comm_end - comm_start)
+    # comm_end = time.time()
+    # comm_t = (comm_end - comm_start)
 
+    tensor_list = list()
     for param in model.parameters():
+        tensor_list.append(param)
         param.data = torch.Tensor(recvdata[param]).cuda()
         param.data = param.data / float(size)
-    return comm_t
+
+    # flatten tensors
+    initial_model = flatten_tensors(tensor_list).cpu()
+
+    return initial_model
 
 
 if __name__ == "__main__":
@@ -246,6 +254,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--name', '-n', default="default", type=str, help='experiment name')
     parser.add_argument('--description', type=str, help='experiment description')
+
     parser.add_argument('--model', default="res", type=str, help='model name: res/VGG/wrn')
     parser.add_argument('--comm_style', default='async', type=str, help='baseline communicator')
     parser.add_argument('--resSize', default=50, type=int, help='res net size')
@@ -253,15 +262,18 @@ if __name__ == "__main__":
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
     parser.add_argument('--epoch', '-e', default=10, type=int, help='total epoch')
     parser.add_argument('--bs', default=64, type=int, help='batch size on each worker')
-    parser.add_argument('--wb', default=0, type=int, help='proportionally increase neighbor weights or self replace')
     parser.add_argument('--noniid', default=1, type=int, help='use non iid data or not')
     parser.add_argument('--degree_noniid', default=0.7, type=float, help='how distributed are labels (0 is random)')
+
+    # Specific async arguments
+    parser.add_argument('--wb', default=0, type=int, help='proportionally increase neighbor weights or self replace')
+    parser.add_argument('--memory', default=0, type=int, help='store all neighbor local models')
+    parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
+    parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
 
     parser.add_argument('--i1', default=1, type=int, help='i1 comm set, number of local updates no averaging')
     parser.add_argument('--i2', default=2, type=int, help='i2 comm set, number of d-sgd updates')
     parser.add_argument('--sgd_steps', default=3, type=int, help='baseline sgd steps per worker')
-    parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
-    parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
     parser.add_argument('--num_clusters', default=1, type=int, help='number of clusters in graph')
     parser.add_argument('--graph', type=str, help='graph topology')
 
