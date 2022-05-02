@@ -97,7 +97,7 @@ class GraphConstruct:
 
             sort_idx = np.argsort(-neighbor_degrees)
             sorted_nd = neighbor_degrees[sort_idx]
-            sorted_nn = self.neighbor_list[sort_idx]
+            sorted_nn = np.asarray(self.neighbor_list)[sort_idx]
 
             # receive and then send weights to neighbors
             if degree >= np.max(neighbor_degrees):
