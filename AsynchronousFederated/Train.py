@@ -65,7 +65,7 @@ def run(rank, size):
         train_loader, test_loader, val_loader = partition_dataset(rank, worker_size, WORKER_COMM, args)
 
         # load base network topology
-        GP = GraphConstruct(rank, worker_size, WORKER_COMM, args.graph, num_c=args.num_clusters)
+        GP = GraphConstruct(rank, worker_size, WORKER_COMM, args.graph, args.weight_type, num_c=args.num_clusters)
 
         if args.comm_style == 'async':
             communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP,
@@ -264,6 +264,7 @@ if __name__ == "__main__":
     parser.add_argument('--bs', default=64, type=int, help='batch size on each worker')
     parser.add_argument('--noniid', default=1, type=int, help='use non iid data or not')
     parser.add_argument('--degree_noniid', default=0.7, type=float, help='how distributed are labels (0 is random)')
+    parser.add_argument('--weight_type', default='uniform', type=str, help='how do workers average with each other')
 
     # Specific async arguments
     parser.add_argument('--wb', default=0, type=int, help='proportionally increase neighbor weights or self replace')

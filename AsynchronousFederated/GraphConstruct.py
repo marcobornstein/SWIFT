@@ -4,7 +4,7 @@ import networkx as nx
 
 class GraphConstruct:
 
-    def __init__(self, rank, size, comm, graph, p=0.75, num_c=None):
+    def __init__(self, rank, size, comm, graph, weight_type, p=0.75, num_c=None):
 
         # Initialize MPI variables
         self.rank = rank  # index of worker
@@ -16,7 +16,12 @@ class GraphConstruct:
 
         # Determine each node's neighbors and the weights for each node in the Graph
         self.neighbor_list = self.getNeighbors(rank)
-        self.neighbor_weights = self.getWeights()
+        self.neighbor_weights = self.getWeights(weight_type)
+
+        print(self.rank)
+        print(self.neighbor_list)
+        print(self.neighbor_weights)
+        print('=======================')
 
     def selectGraph(self, graph, p, num_c):
 
@@ -74,18 +79,55 @@ class GraphConstruct:
 
     def getWeights(self, weight_type=None):
         
-        if weight_type == 'learnable':
-            # NEED TO IMPLEMENT HERE
-            weights = np.ones(self.size)
-            
-        elif weight_type == 'matcha':
-            # NEED TO IMPLEMENT HERE
-            weights = np.ones(self.size)
-            
+        if weight_type == 'adfl':
+
+            degree = len(self.neighbor_list)
+            # send degree info to all neighbors
+            send_buff = np.array([degree])
+            for node in self.neighbor_list:
+                self.comm.Isend(send_buff, dest=node, tag=self.rank + self.size)
+
+            # receive neighboring degrees (blocking)
+            neighbor_degrees = np.empty(degree)
+            for idx, node in enumerate(self.neighbor_list):
+                self.comm.Recv(neighbor_degrees[idx], source=node, tag=node + self.size)
+
+            sort_idx = np.argsort(-neighbor_degrees)
+            sorted_nd = neighbor_degrees[sort_idx]
+            sorted_nn = self.neighbor_list[sort_idx]
+
+            # receive and then send weights to neighbors
+            if degree >= np.max(neighbor_degrees):
+                weights = (1 / (degree + 1)) * np.ones(degree)
+                # start setting weights and sending them
+                for node in sorted_nn[sorted_nd != degree]:
+                    self.comm.Send(np.array([1/(degree + 1)]), dest=node, tag=self.rank + 2*self.size)
+            else:
+                weights = np.zeros(degree)
+                # receive until you are the largest left and then send
+                while degree < sorted_nd[0] and sorted_nd.size > 0:
+                    index = sort_idx[0]
+                    self.comm.Recv(weights[index], source=sorted_nn[0], tag=sorted_nn[0] + 2*self.size)
+                    sort_idx = sort_idx[1:]
+                    sorted_nn = sorted_nn[1:]
+                    sorted_nd = sorted_nd[1:]
+
+                if sorted_nd.size > 0:
+                    weight_sum = np.sum(weights)
+                    uniform_weight = (1-weight_sum)/(sorted_nd.size + 1)
+                    weights[weights == 0] = uniform_weight
+                    for node in sorted_nd:
+                        self.comm.Send(np.array([uniform_weight]), dest=node, tag=self.rank + 2 * self.size)
+
+        elif weight_type == 'uniform-symmetric':
+            num_neighbors = len(self.neighbor_list)
+            weights = (1 / self.size) * np.ones(num_neighbors)
+
+        # Neighborhood uniform weights by default
         else:
             num_neighbors = len(self.neighbor_list)
             weights = (1/(num_neighbors+1)) * np.ones(num_neighbors)
-            
+
         return weights
 
     def getNeighbors(self, rank):

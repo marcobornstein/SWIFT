@@ -44,6 +44,8 @@ class AsyncDecentralized:
             self.worker_models = init_model
         else:
             self.worker_models = np.tile(init_model, (self.degree, 1))
+            # compute self weight according to degree
+            self.sw = 1 - np.sum(self.neighbor_weights)
 
     def prepare_send_buffer(self, model):
 
@@ -154,12 +156,8 @@ class AsyncDecentralized:
                     break
                 prev_model = buffer
 
-
-        # compute self weight according to degree
-        selfweight = 1 - np.sum(self.neighbor_weights)
-
         # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
-        self.avg_model.add_(self.send_buffer, alpha=selfweight)
+        self.avg_model.add_(self.send_buffer, alpha=self.sw)
 
         toc = time.time()
 
