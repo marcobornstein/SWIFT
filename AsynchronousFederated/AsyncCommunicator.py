@@ -130,6 +130,7 @@ class AsyncDecentralized:
         self.prepare_send_buffer(model)
         self.avg_model = torch.zeros_like(self.send_buffer)
         prev_model = np.empty_like(self.avg_model)
+        buffer = np.empty_like(self.avg_model)
         recv_nodes = list()
 
         tic = time.time()
@@ -144,13 +145,15 @@ class AsyncDecentralized:
 
         for idx, node in recv_nodes:
             while True:
-                req = self.comm.Irecv(self.worker_models[idx], source=node, tag=node)
+                req = self.comm.Irecv(buffer, source=node, tag=node)
                 if not req.Test():
                     req.Cancel()
                     req.Free()
                     self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
+                    self.worker_models[idx] = prev_model
                     break
-                prev_model = self.worker_models[idx]
+                prev_model = buffer
+
 
         # compute self weight according to degree
         selfweight = 1 - np.sum(self.neighbor_weights)
