@@ -5,7 +5,7 @@ from mpi4py import MPI
 
 class GraphConstruct:
 
-    def __init__(self, rank, size, comm, graph, weight_type, p=0.75, num_c=None):
+    def __init__(self, rank, size, comm, graph, weight_type, p=0.5, num_c=None):
 
         # Initialize MPI variables
         self.rank = rank  # index of worker
