@@ -121,6 +121,9 @@ class GraphConstruct:
                 while degree < sorted_nd[0]:
                     index = sort_idx[0]
                     self.comm.Recv(recv_buff, source=sorted_nn[0], tag=sorted_nn[0] + 2*self.size)
+                    if self.rank == 5:
+                        print(sorted_nn[0])
+                        print('====')
                     weights[index] = recv_buff[0]
                     sort_idx = sort_idx[1:]
                     sorted_nn = sorted_nn[1:]
