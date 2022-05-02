@@ -128,6 +128,9 @@ class GraphConstruct:
                     if sorted_nd.size == 0:
                         break
 
+                if self.rank == 5:
+                    print('hi')
+
                 if sorted_nd.size > 0:
 
                     weight_sum = np.sum(weights)
@@ -135,6 +138,9 @@ class GraphConstruct:
                     send_buff = np.zeros(2)
                     send_buff[0] = uniform_weight
                     recv_buff = np.empty(2)
+
+                    if self.rank == 5:
+                        print('hi')
 
                     # decide on weights if neighbors have the same degree
                     if degree == sorted_nd[0]:
@@ -149,6 +155,9 @@ class GraphConstruct:
                         # in order to assure that this process works every time
                         if uniform_weight > np.min(comp_weights):
                             uniform_weight = np.min(comp_weights)
+
+                        if self.rank == 5:
+                            print('hi')
 
                         # clear memory
                         #for j in range(len(same_degree_neighbors)):
