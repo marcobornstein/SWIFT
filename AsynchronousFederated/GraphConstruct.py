@@ -163,8 +163,6 @@ class GraphConstruct:
                 if requests[j].Test():
                     requests[j].Wait()
 
-
-
         elif weight_type == 'uniform-symmetric':
             num_neighbors = len(self.neighbor_list)
             weights = (1 / self.size) * np.ones(num_neighbors)
