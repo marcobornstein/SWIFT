@@ -125,7 +125,7 @@ class GraphConstruct:
                     weights[weights == 0] = uniform_weight
                     send_buff = np.zeros(2)
                     send_buff[0] = uniform_weight
-                    for node in sorted_nd:
+                    for node in sorted_nn[sorted_nd != degree]:
                         self.comm.Send(send_buff, dest=node, tag=self.rank + 2 * self.size)
 
         elif weight_type == 'uniform-symmetric':
