@@ -38,8 +38,9 @@ class AsyncDecentralized:
         self.iter = 0
         self.weight_boost = weight_boost
         self.wb = 1
+        self.memory = memory
 
-        if memory:
+        if self.memory:
             self.worker_models = init_model
         else:
             self.worker_models = np.tile(init_model, (self.degree, 1))
@@ -238,7 +239,10 @@ class AsyncDecentralized:
 
         if self.iter % self.sgd_updates == 0:
             comm_time += self.broadcast(model)
-            comm_time += self.averaging(model)
+            if self.memory:
+                comm_time += self.averaging_efficient(model)
+            else:
+                comm_time += self.averaging_standard(model)
         else:
             comm_time += self.broadcast(model)
 
