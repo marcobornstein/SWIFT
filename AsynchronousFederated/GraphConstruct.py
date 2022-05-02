@@ -100,6 +100,7 @@ class GraphConstruct:
             sorted_nn = np.asarray(self.neighbor_list)[sort_idx]
 
             # receive and then send weights to neighbors
+            # if you are the largest degree node in the graph, you get the ball rolling
             if degree >= np.max(neighbor_degrees):
                 weights = (1 / (degree + 1)) * np.ones(degree)
                 send_buff = np.zeros(2)
@@ -111,22 +112,45 @@ class GraphConstruct:
                 weights = np.zeros(degree)
                 recv_buff = np.empty(2)
                 # receive until you are the largest left and then send
-                while degree < sorted_nd[0] and sorted_nd.size > 0:
+                while degree < sorted_nd[0]:
                     index = sort_idx[0]
                     self.comm.Recv(recv_buff, source=sorted_nn[0], tag=sorted_nn[0] + 2*self.size)
                     weights[index] = recv_buff[0]
                     sort_idx = sort_idx[1:]
                     sorted_nn = sorted_nn[1:]
                     sorted_nd = sorted_nd[1:]
+                    if sorted_nd.size == 0:
+                        break
 
                 if sorted_nd.size > 0:
+
                     weight_sum = np.sum(weights)
-                    uniform_weight = (1-weight_sum)/(sorted_nd.size + 1)
+                    uniform_weight = (1 - weight_sum) / (sorted_nd.size + 1)
+                    send_buff = np.zeros(2)
+                    send_buff[0] = uniform_weight
+                    recv_buff = np.empty(2)
+
+                    # decide on weights if neighbors have the same degree
+                    if degree == sorted_nd[0]:
+                        same_degree_neighbors = sorted_nn[sorted_nd == degree]
+                        comp_weights = np.zeros(len(same_degree_neighbors))
+                        for node in same_degree_neighbors:
+                            self.comm.Isend(send_buff, dest=node, tag=self.rank + 2 * self.size)
+                        for i, node in enumerate(same_degree_neighbors):
+                            self.comm.Recv(recv_buff, dest=node, tag=self.rank + 2 * self.size)
+                            comp_weights[i] = recv_buff[0]
+                        # if you share same degree as neighboring node, choose the weighting that's smaller to share
+                        # in order to assure that this process works every time
+                        if uniform_weight > np.min(comp_weights):
+                            uniform_weight = np.min(comp_weights)
+
                     weights[weights == 0] = uniform_weight
                     send_buff = np.zeros(2)
                     send_buff[0] = uniform_weight
                     for node in sorted_nn[sorted_nd != degree]:
                         self.comm.Send(send_buff, dest=node, tag=self.rank + 2 * self.size)
+
+
 
         elif weight_type == 'uniform-symmetric':
             num_neighbors = len(self.neighbor_list)
