@@ -88,13 +88,13 @@ class GraphConstruct:
             send_buff = np.zeros(2)
             send_buff[0] = degree
             for i, node in enumerate(self.neighbor_list):
-                requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + self.size)
+                requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + 100*self.size)
 
             # receive neighboring degrees (blocking)
             neighbor_degrees = np.empty(degree)
             recv_buff = np.empty(2)
             for idx, node in enumerate(self.neighbor_list):
-                self.comm.Recv(recv_buff, source=node, tag=node + self.size)
+                self.comm.Recv(recv_buff, source=node, tag=node + 100*self.size)
                 neighbor_degrees[idx] = recv_buff[0]
 
             sort_idx = np.argsort(-neighbor_degrees)
@@ -113,17 +113,14 @@ class GraphConstruct:
                 send_buff[0] = 1/(degree + 1)
                 # start setting weights and sending them
                 for i, node in enumerate(sorted_nn):
-                    requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + 2*self.size)
+                    requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + 200*self.size)
             else:
                 weights = np.zeros(degree)
                 recv_buff = np.empty(2)
                 # receive until you are the largest left and then send
                 while degree < sorted_nd[0]:
                     index = sort_idx[0]
-                    self.comm.Recv(recv_buff, source=sorted_nn[0], tag=sorted_nn[0] + 2*self.size)
-                    if self.rank == 5:
-                        print(sorted_nn[0])
-                        print('====')
+                    self.comm.Recv(recv_buff, source=sorted_nn[0], tag=sorted_nn[0] + 200*self.size)
                     weights[index] = recv_buff[0]
                     sort_idx = sort_idx[1:]
                     sorted_nn = sorted_nn[1:]
@@ -144,42 +141,24 @@ class GraphConstruct:
                         same_degree_neighbors = sorted_nn[sorted_nd == degree]
                         comp_weights = np.zeros(len(same_degree_neighbors))
                         for i, node in enumerate(same_degree_neighbors):
-                            requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + 2 * self.size)
-
-
-                            # PROBLEM IS HERE WITH RECV
-
-
-
+                            requests[i] = self.comm.Isend(send_buff, dest=node, tag=self.rank + 200 * self.size)
                         for j, node in enumerate(same_degree_neighbors):
-                            if self.rank == 5:
-                                print(j)
-                                print(node)
-                                print('====')
-
-                            self.comm.Recv(recv_buff, source=node, tag=node + 2 * self.size)
+                            self.comm.Recv(recv_buff, source=node, tag=node + 200 * self.size)
                             comp_weights[j] = recv_buff[0]
-                            if self.rank == 5:
-                                print('hi')
                         # if you share same degree as neighboring node, choose the weighting that's smaller to share
                         # in order to assure that this process works every time
                         if uniform_weight > np.min(comp_weights):
                             uniform_weight = np.min(comp_weights)
 
-
-
                         # clear memory
-                        #for j in range(len(same_degree_neighbors)):
+                        # for j in range(len(same_degree_neighbors)):
                         #    requests[j].Wait()
-
-                    if self.rank == 5:
-                        print('hiyyyyy')
 
                     weights[weights == 0] = uniform_weight
                     send_buff = np.zeros(2)
                     send_buff[0] = uniform_weight
                     for node in sorted_nn[sorted_nd != degree]:
-                        self.comm.Send(send_buff, dest=node, tag=self.rank + 2 * self.size)
+                        self.comm.Send(send_buff, dest=node, tag=self.rank + 200 * self.size)
 
         elif weight_type == 'uniform-symmetric':
             num_neighbors = len(self.neighbor_list)
