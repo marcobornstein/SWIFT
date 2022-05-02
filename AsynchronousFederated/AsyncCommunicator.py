@@ -148,7 +148,6 @@ class AsyncDecentralized:
                 if not req.Test():
                     req.Cancel()
                     req.Free()
-                    self.avg_model.add_(torch.from_numpy(self.worker_models[idx]), alpha=self.neighbor_weights[idx])
                     self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
                     break
                 prev_model = self.worker_models[idx]
