@@ -125,7 +125,9 @@ def run(rank, size):
                 loss.backward()
 
                 # communication happens here
+                comm_start = time.time()
                 d_comm_time = communicator.communicate(model)
+                comm_t = time.time() - comm_start
 
                 # gradient step
                 optimizer.step()
@@ -133,7 +135,7 @@ def run(rank, size):
                 end_time = time.time()
 
                 # compute computational time
-                comp_time += (end_time - start_time - d_comm_time)
+                comp_time += (end_time - start_time - comm_t)
                 # compute communication time
                 comm_time += d_comm_time
 
