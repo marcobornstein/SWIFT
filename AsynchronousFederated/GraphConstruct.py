@@ -19,11 +19,6 @@ class GraphConstruct:
         self.neighbor_list = self.getNeighbors(rank)
         self.neighbor_weights = self.getWeights(weight_type)
 
-        print(self.rank)
-        print(self.neighbor_list)
-        print(self.neighbor_weights)
-        print('=======================')
-
     def selectGraph(self, graph, p, num_c):
 
         if isinstance(graph, list):
