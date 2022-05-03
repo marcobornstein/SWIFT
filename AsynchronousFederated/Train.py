@@ -47,7 +47,7 @@ def run(rank, size):
     optimizer = optim.SGD(model.parameters(),
                           lr=args.lr,
                           momentum=args.momentum,
-                          weight_decay=5e-4,
+                          weight_decay=1e-4,
                           nesterov=args.nesterov)
 
     # Designate the consensus node (the final node) and worker nodes
@@ -140,8 +140,14 @@ def run(rank, size):
                 comm_time += d_comm_time
 
             # update learning rate here
-            update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=20.0, decay_epoch=d_epoch,
-                                 itr_per_epoch=len(train_loader))
+            if not args.customLR:
+                update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=20.0, decay_epoch=d_epoch,
+                                     itr_per_epoch=len(train_loader))
+            else:
+                if epoch==81 or epoch==122:
+                    args.lr *= 0.1
+                    for param_group in optimizer.param_groups:
+                        param_group["lr"] = args.lr
 
             send_start = time.time()
             # send model to the dummy node to compute the overall model accuracy
@@ -290,6 +296,7 @@ if __name__ == "__main__":
     parser.add_argument('--savePath', type=str, help='save path')
     parser.add_argument('--outputFolder', type=str, help='save folder')
     parser.add_argument('--randomSeed', default=9001, type=int, help='random seed')
+    parser.add_argument('--customLr', default=0, type=int, help='custom learning rate strategy, 1 if using multi-step')
 
     args = parser.parse_args()
 
