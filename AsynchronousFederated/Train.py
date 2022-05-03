@@ -65,7 +65,8 @@ def run(rank, size):
         train_loader, test_loader, val_loader = partition_dataset(rank, worker_size, WORKER_COMM, args)
 
         # load base network topology
-        GP = GraphConstruct(rank, worker_size, WORKER_COMM, args.graph, args.weight_type, num_c=args.num_clusters)
+        p = 3/worker_size
+        GP = GraphConstruct(rank, worker_size, WORKER_COMM, args.graph, args.weight_type, p=p, num_c=args.num_clusters)
 
         if args.comm_style == 'async':
             communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP,
