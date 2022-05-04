@@ -120,6 +120,7 @@ def run(rank, size):
 
             # compute computational time
             comp_time += (end_time - start_time - comm_t)
+
             # compute communication time
             comm_time += d_comm_time
 
@@ -163,8 +164,6 @@ def run(rank, size):
 
     em = sync_allreduce(model, size, MPI.COMM_WORLD)
     test_acc = test_accuracy(model, test_loader)
-    print(em[0:10])
-    print(em[-10:])
     print("rank %d: Test Accuracy %.3f" % (rank, test_acc))
 
 

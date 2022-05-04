@@ -86,7 +86,9 @@ def test_accuracy(model, test_loader):
     top1 = AverageMeter()
     for batch_idx, (inputs, targets) in enumerate(test_loader):
         inputs, targets = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True)
-        outputs = model(inputs)
+        # compute output
+        with torch.no_grad():
+            outputs = model(inputs)
         acc1 = compute_accuracy(outputs, targets)
         top1.update(acc1[0].item(), inputs.size(0))
     return top1.avg

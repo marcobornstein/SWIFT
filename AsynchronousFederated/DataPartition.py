@@ -176,7 +176,6 @@ def partition_dataset(rank, size, comm, args):
                                     val_split=0.25, isNonIID=args.noniid)
         train_set, val_set = partition.train_val_split()
 
-
         train_loader = torch.utils.data.DataLoader(train_set,
                                                    batch_size=args.bs,
                                                    shuffle=True,
