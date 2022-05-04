@@ -26,8 +26,9 @@ def model_avg(worker_size, model, args):
         # Get weighting, for now, make it uniform
         weighting = (1 / worker_size) * np.ones(worker_size)
         avg_model = torch.zeros_like(send_buffer)
-        np_avg_model = [np.zeros_like(avg_model) for _ in range(args.epoch)]
-        worker_models = [initial_model for _ in range(worker_size)]
+        np_avg_model = [np.zeros_like(avg_model) for _ in range(args.epoch+1)]
+        worker_models = np.tile(initial_model, (worker_size, 1))
+        np_avg_model[0] = worker_models * weighting
         e_count = 0
         rank = 0
         while e_count < (args.epoch*worker_size):
@@ -40,7 +41,7 @@ def model_avg(worker_size, model, args):
                     i += 1
                 rank = (rank + 1) % worker_size
             # Compute consensus average and store
-            np_avg_model[int(e_count/worker_size)] = worker_models[rank] * weighting[rank]
+            np_avg_model[int(e_count/worker_size)] = np.matmul(worker_models.T, weighting)
 
         for epoch in range(args.epoch):
 
