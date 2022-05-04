@@ -36,7 +36,7 @@ def model_avg(worker_size, model, args):
             while i < worker_size:
                 if MPI.COMM_WORLD.Iprobe(source=rank, tag=rank + 10 * worker_size):
                     MPI.COMM_WORLD.Recv(worker_models[rank], source=rank, tag=rank + 10 * worker_size)
-                    model_order.append(int(rank))
+                    model_order.append(rank)
                     e_count += 1
                     i += 1
                 rank = (rank + 1) % worker_size
