@@ -162,7 +162,9 @@ def run(rank, size):
 
     MPI.COMM_WORLD.Barrier()
 
-    em = sync_allreduce(model, size, MPI.COMM_WORLD)
+    sync_allreduce(model, size, MPI.COMM_WORLD)
+    test_acc = test_accuracy(model, test_loader)
+    print("rank %d: Test Accuracy %.3f" % (rank, test_acc))
     test_acc = test_accuracy(model, test_loader)
     print("rank %d: Test Accuracy %.3f" % (rank, test_acc))
 
