@@ -55,7 +55,7 @@ def model_avg(worker_size, model, args):
             # Compute accuracy for consensus model
             test_acc = test_accuracy(model, test_data)
             consensus_accuracy.append(test_acc)
-            print('Consensus Accuracy for Epoch %d is %.3f' % (e_count % worker_size, test_acc))
+            print('Consensus Accuracy for Epoch %d is %.3f' % (e_count/worker_size, test_acc))
 
             # compute difference from avg to each clients model
             for rank in range(worker_size):
