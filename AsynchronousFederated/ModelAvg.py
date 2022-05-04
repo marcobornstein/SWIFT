@@ -11,6 +11,7 @@ def model_avg(worker_size, model, args):
 
     consensus_accuracy = list()
     model_diff = list()
+    model_order = list()
     tensor_list = list()
     for param in model.parameters():
         tensor_list.append(param)
@@ -33,9 +34,10 @@ def model_avg(worker_size, model, args):
             while i < worker_size:
                 if MPI.COMM_WORLD.Iprobe(source=rank, tag=rank + 10 * worker_size):
                     MPI.COMM_WORLD.Recv(worker_models[rank], source=rank, tag=rank + 10 * worker_size)
-                    rank = (rank + 1) % worker_size
+                    model_order.append(rank)
                     e_count += 1
                     i += 1
+                rank = (rank + 1) % worker_size
 
             for rank in range(worker_size):
                 avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])
@@ -111,6 +113,7 @@ def model_avg(worker_size, model, args):
 
     np.savetxt(subfolder + '/consensus-average-' + args.comm_style + '.log', consensus_accuracy, delimiter=',')
     np.savetxt(subfolder + '/model-diff-' + args.comm_style + '.log', model_diff, delimiter=',')
+    np.savetxt(subfolder + '/model-order-' + args.comm_style + '.log', model_order, delimiter=',')
 
     with open(subfolder + '/ExpDescription', 'w') as f:
         f.write(str(args) + '\n')
