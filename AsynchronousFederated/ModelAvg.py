@@ -45,7 +45,7 @@ def model_avg(worker_size, model, args):
 
         for epoch in range(args.epoch):
 
-            avg_model = torch.from_numpy(np_avg_model[epoch])
+            avg_model.add_(torch.from_numpy(np_avg_model[epoch]))
 
             # Reset local models to be the averaged model
             for f, t in zip(unflatten_tensors(avg_model.cuda(), tensor_list), tensor_list):
@@ -62,6 +62,9 @@ def model_avg(worker_size, model, args):
             test_acc = test_accuracy(model, test_data)
             consensus_accuracy.append(test_acc)
             print('Consensus Accuracy for Epoch %d is %.3f' % (epoch, test_acc))
+
+            # clear buffer
+            avg_model = torch.zeros_like(send_buffer)
 
     # Else, perform the consensus after each epoch
     else:
