@@ -16,6 +16,7 @@ def model_avg(worker_size, model, args):
     for param in model.parameters():
         tensor_list.append(param)
     send_buffer = flatten_tensors(tensor_list).cpu()
+    initial_model = send_buffer.detach().numpy()
 
     test_data = consensus_test_data(args)
     train_data = consensus_train_data(5000, args)
@@ -26,7 +27,7 @@ def model_avg(worker_size, model, args):
         weighting = (1 / worker_size) * np.ones(worker_size)
         avg_model = torch.zeros_like(send_buffer)
         np_avg_model = np.zeros_like(avg_model)
-        worker_models = [np.empty_like(avg_model) for _ in range(worker_size)]
+        worker_models = [initial_model for _ in range(worker_size)]
         e_count = 0
         rank = 0
         while e_count < (args.epoch*worker_size):
