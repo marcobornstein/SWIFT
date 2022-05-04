@@ -28,7 +28,7 @@ def model_avg(worker_size, model, args):
         worker_models = [np.empty_like(avg_model) for _ in range(worker_size)]
         e_count = 0
         rank = 0
-        while e_count < args.epoch:
+        while e_count < (args.epoch*worker_size):
             i = 0
             while i < worker_size:
                 if MPI.COMM_WORLD.Iprobe(source=rank, tag=rank + 10 * worker_size):
