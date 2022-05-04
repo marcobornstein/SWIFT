@@ -28,7 +28,7 @@ def model_avg(worker_size, model, args):
         avg_model = torch.zeros_like(send_buffer)
         np_avg_model = [np.zeros_like(avg_model) for _ in range(args.epoch+1)]
         worker_models = np.tile(initial_model, (worker_size, 1))
-        np_avg_model[0] = worker_models * weighting
+        np_avg_model[0] = np.matmul(worker_models.T, weighting)
         e_count = 0
         rank = 0
         while e_count < (args.epoch*worker_size):
