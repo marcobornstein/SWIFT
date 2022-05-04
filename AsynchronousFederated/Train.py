@@ -268,6 +268,7 @@ if __name__ == "__main__":
     parser.add_argument('--noniid', default=1, type=int, help='use non iid data or not')
     parser.add_argument('--degree_noniid', default=0.7, type=float, help='how distributed are labels (0 is random)')
     parser.add_argument('--weight_type', default='uniform', type=str, help='how do workers average with each other')
+    parser.add_argument('--unordered_epochs', default=1, type=int, help='calculate consensus after the first n models')
 
     # Specific async arguments
     parser.add_argument('--wb', default=0, type=int, help='proportionally increase neighbor weights or self replace')
