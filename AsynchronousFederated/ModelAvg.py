@@ -26,7 +26,7 @@ def model_avg(worker_size, model, args):
         # Get weighting, for now, make it uniform
         weighting = (1 / worker_size) * np.ones(worker_size)
         avg_model = torch.zeros_like(send_buffer)
-        np_avg_model = np.zeros_like(avg_model)
+        np_avg_model = [np.zeros_like(avg_model) for _ in range(args.epoch)]
         worker_models = [initial_model for _ in range(worker_size)]
         e_count = 0
         rank = 0
@@ -35,14 +35,16 @@ def model_avg(worker_size, model, args):
             while i < worker_size:
                 if MPI.COMM_WORLD.Iprobe(source=rank, tag=rank + 10 * worker_size):
                     MPI.COMM_WORLD.Recv(worker_models[rank], source=rank, tag=rank + 10 * worker_size)
-                    model_order.append(rank)
+                    model_order.append(int(rank))
                     e_count += 1
                     i += 1
                 rank = (rank + 1) % worker_size
+            # Compute consensus average and store
+            np_avg_model[int(e_count/worker_size)] = worker_models[rank] * weighting[rank]
 
-            for rank in range(worker_size):
-                avg_model.add_(torch.from_numpy(worker_models[rank]), alpha=weighting[rank])
-                np_avg_model += worker_models[rank] * weighting[rank]
+        for epoch in range(args.epoch):
+
+            avg_model = torch.from_numpy(np_avg_model[epoch])
 
             # Reset local models to be the averaged model
             for f, t in zip(unflatten_tensors(avg_model.cuda(), tensor_list), tensor_list):
@@ -58,15 +60,7 @@ def model_avg(worker_size, model, args):
             # Compute accuracy for consensus model
             test_acc = test_accuracy(model, test_data)
             consensus_accuracy.append(test_acc)
-            print('Consensus Accuracy for Epoch %d is %.3f' % (e_count/worker_size, test_acc))
-
-            # compute difference from avg to each clients model
-            for rank in range(worker_size):
-                model_diff.append(np.linalg.norm(np_avg_model - worker_models[rank]))
-
-            # clear buffers
-            np_avg_model = np.zeros_like(avg_model)
-            avg_model = torch.zeros_like(send_buffer)
+            print('Consensus Accuracy for Epoch %d is %.3f' % (epoch, test_acc))
 
     # Else, perform the consensus after each epoch
     else:
