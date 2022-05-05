@@ -5,6 +5,7 @@ import resnet
 from GraphConstruct import GraphConstruct
 from AsyncCommunicator import AsyncDecentralized
 from DSGD import decenCommunicator
+from ModelAvg import model_avg
 from mpi4py import MPI
 from DataPartition import partition_dataset
 from comm_helpers import flatten_tensors
@@ -24,6 +25,11 @@ def run(rank, size):
     torch.manual_seed(args.randomSeed + rank)
     np.random.seed(args.randomSeed)
 
+    # Split up final node from all the others for communication purposes
+    worker_size = size - 1
+    color = int(np.floor(rank / worker_size))
+    WORKER_COMM = MPI.COMM_WORLD.Split(color=color, key=rank)
+
     # select neural network model
     num_class = 10
     model = resnet.ResNet(args.resSize, num_class)
@@ -41,137 +47,153 @@ def run(rank, size):
     optimizer = optim.SGD(model.parameters(),
                           lr=args.lr,
                           momentum=args.momentum,
-                          weight_decay=1e-4,
-                      nesterov=args.nesterov)
+                          weight_decay=5e-4,
+                          nesterov=args.nesterov)
 
-    # guarantee all local models start from the same point
-    init_model = sync_allreduce(model, size, MPI.COMM_WORLD)
+    # Designate the consensus node (the final node) and worker nodes
+    if rank == size-1:
 
-    # load data
-    train_loader, test_loader, val_loader = partition_dataset(rank, size, MPI.COMM_WORLD, args)
+        # Run consensus node task
+        model_avg(worker_size, model, args)
 
-    # load base network topology
-    p = 3/size
-    GP = GraphConstruct(rank, size, MPI.COMM_WORLD, args.graph, args.weight_type, p=p, num_c=args.num_clusters)
-
-    if args.comm_style == 'async':
-        communicator = AsyncDecentralized(rank, size, MPI.COMM_WORLD, GP,
-                                          args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
-    elif args.comm_style == 'ld-sgd':
-        communicator = decenCommunicator(rank, size, MPI.COMM_WORLD, GP, args.i1, args.i2)
-    elif args.comm_style == 'pd-sgd':
-        communicator = decenCommunicator(rank, size, MPI.COMM_WORLD, GP, args.i1, 1)
-    elif args.comm_style == 'd-sgd':
-        communicator = decenCommunicator(rank, size, MPI.COMM_WORLD, GP, 0, 1)
     else:
-        # Anything else just default to our algorithm
-        communicator = AsyncDecentralized(rank, size, MPI.COMM_WORLD, GP,
-                                          args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
 
-    # init recorder
-    comp_time = 0
-    comm_time = 0
-    recorder = Recorder(args, rank)
-    losses = AverageMeter()
-    top1 = AverageMeter()
+        # guarantee all local models start from the same point
+        init_model = sync_allreduce(model, worker_size, WORKER_COMM)
 
-    if args.noniid:
-        d_epoch = 200
-    else:
-        d_epoch = 100
+        # load data
+        train_loader, test_loader, val_loader = partition_dataset(rank, worker_size, WORKER_COMM, args)
 
-    MPI.COMM_WORLD.Barrier()
-    # start training
-    for epoch in range(args.epoch):
-        init_time = time.time()
-        record_time = 0
-        model.train()
+        # load base network topology
+        p = 3/worker_size
+        GP = GraphConstruct(rank, worker_size, WORKER_COMM, args.graph, args.weight_type, p=p, num_c=args.num_clusters)
 
-        # Start training each epoch
-        for batch_idx, (data, target) in enumerate(train_loader):
-            start_time = time.time()
-            # data loading
-            data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
-
-            # forward pass
-            output = model(data)
-            loss = criterion(output, target)
-
-            # record training loss and accuracy
-            record_start = time.time()
-            acc1 = compute_accuracy(output, target)
-            losses.update(loss.item(), data.size(0))
-            top1.update(acc1[0].item(), data.size(0))
-            record_end = time.time() - record_start
-            record_time += record_end
-
-            # backward pass
-            loss.backward()
-
-            # communication happens here
-            comm_start = time.time()
-            d_comm_time = communicator.communicate(model)
-            comm_t = time.time() - comm_start
-
-            # gradient step
-            optimizer.step()
-            optimizer.zero_grad()
-            end_time = time.time()
-
-            # compute computational time
-            comp_time += (end_time - start_time - comm_t)
-
-            # compute communication time
-            comm_time += d_comm_time
-
-        # update learning rate here
-        if not args.customLR:
-            update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=20.0, decay_epoch=d_epoch,
-                                    itr_per_epoch=len(train_loader))
+        if args.comm_style == 'async':
+            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP,
+                                              args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
+        elif args.comm_style == 'ld-sgd':
+            communicator = decenCommunicator(rank, worker_size, WORKER_COMM, GP, args.i1, args.i2)
+        elif args.comm_style == 'pd-sgd':
+            communicator = decenCommunicator(rank, worker_size, WORKER_COMM, GP, args.i1, 1)
+        elif args.comm_style == 'd-sgd':
+            communicator = decenCommunicator(rank, worker_size, WORKER_COMM, GP, 0, 1)
         else:
-            if epoch==81 or epoch==122:
-                args.lr *= 0.1
-                for param_group in optimizer.param_groups:
-                    param_group["lr"] = args.lr
+            # Anything else just default to our algorithm
+            communicator = AsyncDecentralized(rank, worker_size, WORKER_COMM, GP,
+                                              args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
 
+        # init recorder
+        comp_time = 0
+        comm_time = 0
+        recorder = Recorder(args, rank)
+        losses = AverageMeter()
+        top1 = AverageMeter()
+        requests = [MPI.REQUEST_NULL for _ in range(args.epoch)]
+        count = 0
 
-        # evaluate test accuracy at the end of each epoch
-        # test_acc = test_accuracy(model, test_loader)
+        if args.noniid:
+            d_epoch = 200
+        else:
+            d_epoch = 100
 
-        # evaluate validation accuracy at the end of each epoch
-        val_acc = test_accuracy(model, val_loader)
+        WORKER_COMM.Barrier()
+        # start training
+        for epoch in range(args.epoch):
+            init_time = time.time()
+            record_time = 0
+            model.train()
 
-        # run personalization if turned on
-        if args.personalize and args.comm_style == 'async':
-            comm_time += communicator.personalize(epoch+2, val_acc, args.noniid)
+            # Start training each epoch
+            for batch_idx, (data, target) in enumerate(train_loader):
+                start_time = time.time()
+                # data loading
+                data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
 
-        # total time spent in algorithm
-        comp_time -= record_time
-        epoch_time = comp_time + comm_time
+                # forward pass
+                output = model(data)
+                loss = criterion(output, target)
 
-        print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, val_acc: %.3f, comp time: %.3f, "
-              "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, val_acc, comp_time, epoch_time))
+                # record training loss and accuracy
+                record_start = time.time()
+                acc1 = compute_accuracy(output, target)
+                losses.update(loss.item(), data.size(0))
+                top1.update(acc1[0].item(), data.size(0))
+                record_end = time.time() - record_start
+                record_time += record_end
 
-        recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time), top1.avg, losses.avg, val_acc)
+                # backward pass
+                loss.backward()
 
-        # reset recorders
-        comp_time, comm_time = 0, 0
-        losses.reset()
-        top1.reset()
+                # communication happens here
+                comm_start = time.time()
+                d_comm_time = communicator.communicate(model)
+                comm_t = time.time() - comm_start
 
-    # Save data to output folder
-    recorder.save_to_file()
+                # gradient step
+                optimizer.step()
+                optimizer.zero_grad()
+                end_time = time.time()
 
-    # Broadcast/wait until all other neighbors are finished in async algorithm
-    if args.comm_style == 'async':
-        communicator.wait(model)
-        print('Finished from Rank %d' % rank)
+                # compute computational time
+                comp_time += (end_time - start_time - comm_t)
+                # compute communication time
+                comm_time += d_comm_time
+
+            # update learning rate here
+            update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=20.0, decay_epoch=d_epoch,
+                                 itr_per_epoch=len(train_loader))
+
+            send_start = time.time()
+            # send model to the dummy node to compute the overall model accuracy
+            tensor_list = list()
+            for param in model.parameters():
+                tensor_list.append(param)
+            send_buffer = flatten_tensors(tensor_list).cpu()
+
+            requests[epoch] = MPI.COMM_WORLD.Isend(send_buffer.detach().numpy(), dest=size - 1,
+                                                   tag=rank + 10 * worker_size)
+            # Clear the memory from Isend
+            if requests[count].Test():
+                requests[count].Wait()
+                count += 1
+
+            # evaluate test accuracy at the end of each epoch
+            # test_acc = test_accuracy(model, test_loader)
+
+            # Remove time spent sending messages to the consensus node
+            send_time = time.time() - send_start
+
+            # evaluate validation accuracy at the end of each epoch
+            val_acc = test_accuracy(model, val_loader)
+
+            # run personalization if turned on
+            if args.personalize and args.comm_style == 'async':
+                comm_time += communicator.personalize(epoch+2, val_acc, args.noniid)
+
+            # total time spent in algorithm
+            comp_time -= record_time
+            epoch_time = comp_time + comm_time
+
+            print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, val_acc: %.3f, comp time: %.3f, "
+                  "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, val_acc, comp_time, epoch_time))
+
+            recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time) - send_time,
+                             top1.avg, losses.avg, val_acc)
+
+            # reset recorders
+            comp_time, comm_time = 0, 0
+            losses.reset()
+            top1.reset()
+
+        # Save data to output folder
+        recorder.save_to_file()
+
+        # Broadcast/wait until all other neighbors are finished in async algorithm
+        if args.comm_style == 'async':
+            communicator.wait(model)
+            print('Finished from Rank %d' % rank)
 
     MPI.COMM_WORLD.Barrier()
-
-    sync_allreduce(model, size, MPI.COMM_WORLD)
-    test_acc = test_accuracy(model, test_loader)
-    print("rank %d: Test Accuracy %.3f" % (rank, test_acc))
 
 
 def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=None, itr_per_epoch=None):
@@ -208,10 +230,14 @@ def sync_allreduce(model, size, comm):
     torch.cuda.synchronize()
     comm.Barrier()
 
+    # comm_start = time.time()
     for param in model.parameters():
         comm.Allreduce(senddata[param], recvdata[param], op=MPI.SUM)
     torch.cuda.synchronize()
     comm.Barrier()
+
+    # comm_end = time.time()
+    # comm_t = (comm_end - comm_start)
 
     tensor_list = list()
     for param in model.parameters():
@@ -265,10 +291,8 @@ if __name__ == "__main__":
     parser.add_argument('--savePath', type=str, help='save path')
     parser.add_argument('--outputFolder', type=str, help='save folder')
     parser.add_argument('--randomSeed', default=9001, type=int, help='random seed')
-    parser.add_argument('--customLR', default=0, type=int, help='custom learning rate strategy, 1 if using multi-step')
 
     args = parser.parse_args()
-    print(args.datasetRoot)
 
     if not args.description:
         print('No experiment description, exit!')
