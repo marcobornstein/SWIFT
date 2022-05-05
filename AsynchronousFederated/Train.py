@@ -165,8 +165,6 @@ def run(rank, size):
     sync_allreduce(model, size, MPI.COMM_WORLD)
     test_acc = test_accuracy(model, test_loader)
     print("rank %d: Test Accuracy %.3f" % (rank, test_acc))
-    test_acc = test_accuracy(model, test_loader)
-    print("rank %d: Test Accuracy %.3f" % (rank, test_acc))
 
 
 def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=None, itr_per_epoch=None):
