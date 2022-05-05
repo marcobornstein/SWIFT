@@ -297,9 +297,10 @@ if __name__ == "__main__":
     parser.add_argument('--savePath', type=str, help='save path')
     parser.add_argument('--outputFolder', type=str, help='save folder')
     parser.add_argument('--randomSeed', default=9001, type=int, help='random seed')
-    parser.add_argument('--customLr', default=0, type=int, help='custom learning rate strategy, 1 if using multi-step')
+    parser.add_argument('--customLR', default=0, type=int, help='custom learning rate strategy, 1 if using multi-step')
 
     args = parser.parse_args()
+    print(args.datasetRoot)
 
     if not args.description:
         print('No experiment description, exit!')
