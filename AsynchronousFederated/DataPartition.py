@@ -172,7 +172,7 @@ def partition_dataset(rank, size, comm, args):
 
         partition_sizes = [1.0 / size for _ in range(size)]
 
-        partition = DataPartitioner(trainset, partition_sizes, rank, args.degree_noniid,
+        partition = DataPartitioner(trainset, partition_sizes, rank, degree_noniid=args.degree_noniid,
                                     val_split=0.25, isNonIID=args.noniid)
         train_set, val_set = partition.train_val_split()
 
