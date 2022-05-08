@@ -7,14 +7,6 @@ from random import Random
 import torchvision
 from torchvision import datasets, transforms
 
-def print_len(d):
-    if isinstance(d, dict):
-        for key in d:
-            print(f"{key}: {len(d[key])}", end=" ")
-    elif isinstance(d, list):
-        for i, el in enumerate(d):
-            print(f"{i}: {len(el)}", end=" ")
-    print("d")
 
 class Partition(object):
     """ Dataset-like object, but only access a subset of it. """
@@ -35,30 +27,25 @@ class DataPartitioner(object):
     """ Partitions a dataset into different chunks. """
     def __init__(self, data, sizes, rank, seed=1234, degree_noniid=0.7, isNonIID=True, val_split=0.25):
         self.data = data
-        print(degree_noniid, "Lol")
         if isNonIID:
-            self.partitions, self.val = self.getNonIIDdata(rank, data, sizes, degree_noniid,
-                                                           val_split=val_split, seed=seed)
+            self.partitions, self.val = self.getNonIIDdata(rank, data, sizes, degree_noniid, 
+                                                            val_split=val_split, seed=seed)
         else:
-            partitions = list()
-            rng = Random()
-            rng.seed(seed)
-            data_len = len(data)
-            indexes = [x for x in range(0, data_len)]
-            # rng.shuffle(indexes)
-            for frac in sizes:
-                part_len = int(frac * data_len)
-                partitions.append(indexes[0:part_len])
-                indexes = indexes[part_len:]
-            worker_data_len = len(partitions[rank])
-            self.val = partitions[rank][0:int(val_split*worker_data_len)]
-            self.partitions = partitions[rank][int(val_split*worker_data_len):]
+            self.partitions, self.val = self.getNonIIDdata(rank, data, sizes, 0,
+                                                            val_split=val_split, seed=seed)
+
 
     def train_val_split(self):
         return Partition(self.data, self.partitions), Partition(self.data, self.val)
 
     def getNonIIDdata(self, rank, data, partition_sizes, degree_noniid, val_split=0.25, seed=1234):
-        print(degree_noniid)
+        # Note: method may assign same data points to different workers if seed changes
+        # Is called once per each rank (albeit unnecessarily)
+
+        if degree_noniid < 0 or degree_noniid > 1:
+            print("Warning: clipping degree_noniid to [0, 1]")
+        degree_noniid = max(0, min(1, degree_noniid))
+
         rng = Random()
         rng.seed(seed)
         num_workers = len(partition_sizes)
@@ -73,91 +60,108 @@ class DataPartitioner(object):
 
         # Determine number of labels and create a list of these labels
         num_labels = len(labelIdxDict)
-        labelNameList = [key for key in labelIdxDict]
 
-        # Create list of indices which point to most recent corresponding label in the data
-        labelIdxPointer = [0] * num_labels
+        # The TOTAL number of datapoints in each worker
+        total_worker_sizes = []
+        # The below code partitions num_data into sections, such that all sections sum to num_data
+        # e.g.: [1/2, 1/2] partition and num_data=3 would make total_worker_sizes [2, 1]
+        total_data_worker = 0
+        for worker in range(num_workers):
+            total_worker_sizes.append(int(partition_sizes[worker] * num_data))
+            total_data_worker += total_worker_sizes[-1]
 
-        # Initialize data partition list for each worker
-        partitions = [list() for _ in range(num_workers)]
-        print_len(labelIdxDict)
+        # Increments by 1 to account for int truncation
+        rem = num_data - total_data_worker
+        while rem != 0:
+            assert rem > 0 and rem < num_workers
+            rem -= 1
+            total_worker_sizes[rem] += 1
 
-        # Determine the number of labels unique to each
-        labels_per_worker = ceil(num_labels / num_workers)
-        print(f"labels per work {labels_per_worker}")
-        for worker_idx in range(num_workers):
+        # Splits each worker's datapoints into noniid and iid data
+        # Represented by a tuple (allocated noniid, allocated iid)
+        worker_split = []
+        non_iid_sum = 0
+        for worker in range(num_workers):
+            non_iid_size = ceil(total_worker_sizes[worker] * degree_noniid)
+            non_iid_sum += non_iid_size
+            worker_split.append((non_iid_size, total_worker_sizes[worker] - non_iid_size))
+    
+        # Determines how many noniid samples from each label to use
+        # Should be # of samples in a label * degree_noniid, but need to account for remainder/int truncation
+        # Which is done below
+        total_label_niids = []
+        total_data_niid = 0
+        for label in labelIdxDict:
+            total_label_niids.append(int(len(labelIdxDict[label]) * degree_noniid))
+            total_data_niid += total_label_niids[-1]
+        
+        # Adds or subtracts one to make everything sum to the total number of allocated noniid data across all workers
+        rem = non_iid_sum - total_data_niid
+        while rem != 0:
+            assert abs(rem) < num_labels
+            if rem > 0:
+                rem -= 1
+                total_label_niids[rem] += 1
+            else:
+                total_label_niids[rem] -= 1
+                rem += 1
+        
+        # Selects which indices to use for iid data
+        iid_inds = []
+        for label in labelIdxDict:
+            rng.shuffle(labelIdxDict[label])
+            
+            iid_inds.extend(labelIdxDict[label][total_label_niids[label]:])
+            labelIdxDict[label] = labelIdxDict[label][:total_label_niids[label]]
 
-            # Determine partition size and amount of non-iid data needed to fill
-            partition_size = partition_sizes[worker_idx] * num_data
-            desired_non_iid_data_len = int(degree_noniid * partition_size)
+        # data_inds stores noniid data indices, will select from it later for current worker
+        data_inds = []
+        curr_bin = 0
 
-            # Determine the single label designated to the worker
-            start_idx = worker_idx * labels_per_worker
-            label_list = [(start_idx + i) % num_labels for i in range(labels_per_worker)]
+        # Determines which segment of iid data to select from
+        # Each worker/rank has a disjoint segment over the iid data
+        running_iid = 0
+        iid_start_ind = 0
+        iid_end_ind = 0
 
-            per_label_size = [int(desired_non_iid_data_len / labels_per_worker) for _ in range(labels_per_worker-1)]
-            per_label_size.append(desired_non_iid_data_len - sum(per_label_size))
+        for worker_idx in range(num_workers):            
+            if worker_idx == rank:
+                iid_start_ind = running_iid
+                iid_end_ind = running_iid + worker_split[worker][1]
 
-            for idx, label in enumerate(label_list):
+            running_iid += worker_split[worker][1]
 
-                # Set the amount of data still needed to fill
-                needed_data_len = per_label_size[idx]
+            # Fills up worker with to_fill noniid data
+            to_fill = worker_split[worker][0]
+            while to_fill > 0:
+                num_in_bin = len(labelIdxDict[curr_bin])
+                # How much to take from the bin/label
+                take_num = min(to_fill, num_in_bin)
+                to_fill -= take_num
 
-                # until designated partition is filled with allotted non-iid data:
-                while needed_data_len > 0:
+                # Transfers data over
+                take_ind = num_in_bin - take_num
+                data_inds.extend(labelIdxDict[curr_bin][take_ind:])
+                labelIdxDict[curr_bin] = labelIdxDict[curr_bin][:take_ind]
 
-                    # Determine the dictionary key corresponding to the assigned label
-                    key = labelNameList[label]
+                # Move to next label
+                curr_bin += 1
+                curr_bin %= num_labels
+            
+            # No need to keep on going, only return data for worker rank
+            if worker_idx == rank:
+                break
 
-                    # Determine the current number of data remaining for the given label
-                    start = labelIdxPointer[label]
-                    remaining_data = len(labelIdxDict[key][start:])
-
-                    # If enough non-iid data is available to take, take it all
-                    if needed_data_len < remaining_data:
-                        partitions[worker_idx].extend(labelIdxDict[key][start:needed_data_len])
-                        labelIdxPointer[label] += needed_data_len
-                        needed_data_len = 0
-                    # Else, take the rest of the available data and move to the next label and continue this process
-                    else:
-                        partitions[worker_idx].extend(labelIdxDict[key][start:])
-                        labelIdxPointer[label] = len(labelIdxDict[key])
-                        needed_data_len -= remaining_data
-                        label += 1
-                print(labelIdxPointer)
-                
-
-            print("wk idx:", worker_idx)
-            print_len(partitions)
-
-        # fill the rest of the partition with random iid data if there's room left
-        # construct a list of the remaining data points that haven't been added to a partition
-        remainLabels = list()
-        for labelIdx in range(num_labels):
-            remainLabels.extend(labelIdxDict[labelNameList[labelIdx]][labelIdxPointer[labelIdx]:])
-
-        # randomly shuffle the labels up so they are not in order by their label
-        rng.shuffle(remainLabels)
-
-        # iterate over the workers to add in random labels to their partition
-        for worker_idx in range(num_workers):
-            # Find designated partition size
-            partition_size = partition_sizes[worker_idx] * num_data
-            # find the gap needed to be filled to meet the expected partition length (needed - what is there already)
-            missing_data_len = int(partition_size - len(partitions[worker_idx]))
-            # fill the partition to the desired length
-            partitions[worker_idx].extend(remainLabels[:missing_data_len])
-            # randomly shuffle the partition
-            rng.shuffle(partitions[worker_idx])
-            remainLabels = remainLabels[missing_data_len:]
+        # Collects noniid data
+        worker_data = data_inds[(-worker_split[rank][0]):]
+        # Collects iid data
+        rng.shuffle(iid_inds)
+        worker_data.extend(iid_inds[iid_start_ind:iid_end_ind])           
 
         # Before returning, Split into two partitions: 1 for training (75%) and one for validation (25%)
-        worker_partition = partitions[rank]
-        worker_len = len(worker_partition)
-        rem = worker_len - (int(worker_len * (1 - val_split)) + int(worker_len * val_split))
-        lengths = [int(worker_len * (1 - val_split)) + rem, int(worker_len * val_split)]
-        train_set, val_set = torch.utils.data.random_split(worker_partition, lengths)
-
+        valid_len = int(total_worker_sizes[rank] * val_split)
+        lens = [total_worker_sizes[rank] - valid_len, valid_len]
+        train_set, val_set = torch.utils.data.random_split(worker_data, lens)
         return train_set, val_set
 
 
@@ -187,8 +191,7 @@ def partition_dataset(rank, size, comm, args):
                                                 transform=transform_train)
 
         partition_sizes = [1.0 / size for _ in range(size)]
-        print("lol", args.degree_noniid, partition_sizes)
-        partition = DataPartitioner(trainset, partition_sizes, rank, args.degree_noniid,
+        partition = DataPartitioner(trainset, partition_sizes, rank, degree_noniid=args.degree_noniid,
                                     val_split=0.25, isNonIID=args.noniid)
         train_set, val_set = partition.train_val_split()
 
@@ -203,9 +206,6 @@ def partition_dataset(rank, size, comm, args):
                                                    pin_memory=True)
 
         comm.Barrier()
-        print("done? deelte")
-        exit()
-
         if rank == 0:
             print('==> load test data')
 
