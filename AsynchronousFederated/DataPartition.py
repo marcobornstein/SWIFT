@@ -7,6 +7,15 @@ from random import Random
 import torchvision
 from torchvision import datasets, transforms
 
+def print_len(d):
+    if isinstance(d, dict):
+        for key in d:
+            print(f"{key}: {len(d[key])}", end=" ")
+    elif isinstance(d, list):
+        for i, el in enumerate(d):
+            print(f"{i}: {len(el)}", end=" ")
+    print("d")
+
 class Partition(object):
     """ Dataset-like object, but only access a subset of it. """
 
@@ -26,7 +35,7 @@ class DataPartitioner(object):
     """ Partitions a dataset into different chunks. """
     def __init__(self, data, sizes, rank, seed=1234, degree_noniid=0.7, isNonIID=True, val_split=0.25):
         self.data = data
-
+        print(degree_noniid, "Lol")
         if isNonIID:
             self.partitions, self.val = self.getNonIIDdata(rank, data, sizes, degree_noniid,
                                                            val_split=val_split, seed=seed)
@@ -49,7 +58,7 @@ class DataPartitioner(object):
         return Partition(self.data, self.partitions), Partition(self.data, self.val)
 
     def getNonIIDdata(self, rank, data, partition_sizes, degree_noniid, val_split=0.25, seed=1234):
-
+        print(degree_noniid)
         rng = Random()
         rng.seed(seed)
         num_workers = len(partition_sizes)
@@ -71,9 +80,11 @@ class DataPartitioner(object):
 
         # Initialize data partition list for each worker
         partitions = [list() for _ in range(num_workers)]
+        print_len(labelIdxDict)
 
         # Determine the number of labels unique to each
         labels_per_worker = ceil(num_labels / num_workers)
+        print(f"labels per work {labels_per_worker}")
         for worker_idx in range(num_workers):
 
             # Determine partition size and amount of non-iid data needed to fill
@@ -113,6 +124,11 @@ class DataPartitioner(object):
                         labelIdxPointer[label] = len(labelIdxDict[key])
                         needed_data_len -= remaining_data
                         label += 1
+                print(labelIdxPointer)
+                
+
+            print("wk idx:", worker_idx)
+            print_len(partitions)
 
         # fill the rest of the partition with random iid data if there's room left
         # construct a list of the remaining data points that haven't been added to a partition
@@ -171,7 +187,7 @@ def partition_dataset(rank, size, comm, args):
                                                 transform=transform_train)
 
         partition_sizes = [1.0 / size for _ in range(size)]
-
+        print("lol", args.degree_noniid, partition_sizes)
         partition = DataPartitioner(trainset, partition_sizes, rank, args.degree_noniid,
                                     val_split=0.25, isNonIID=args.noniid)
         train_set, val_set = partition.train_val_split()
@@ -187,6 +203,8 @@ def partition_dataset(rank, size, comm, args):
                                                    pin_memory=True)
 
         comm.Barrier()
+        print("done? deelte")
+        exit()
 
         if rank == 0:
             print('==> load test data')

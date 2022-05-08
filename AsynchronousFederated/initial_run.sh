@@ -13,7 +13,7 @@
 #SBATCH --nice=0
 #SBATCH --mail-type=END                   # Valid type values are NONE, BEGIN, END, FAIL, REQUEUE
 
-module load openmpi
-module load cuda/11.1.1
+# module load openmpi
+# module load cuda/11.1.1
 
 mpirun -np 2 python Train.py --description InitialAsyncDecentralized --randomSeed 9001 --datasetRoot ./data  --outputFolder Output --downloadCifar 1 --epoch 10 --name initial_run --resSize 50
