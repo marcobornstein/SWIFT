@@ -56,7 +56,7 @@ def run(rank, size):
 
     if args.comm_style == 'async':
         communicator = AsyncDecentralized(rank, size, MPI.COMM_WORLD, GP,
-                                          args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
+                                          args.sgd_steps, args.max_sgd, args.wb, args.memory_efficient, init_model)
     elif args.comm_style == 'ld-sgd':
         communicator = decenCommunicator(rank, size, MPI.COMM_WORLD, GP, args.i1, args.i2)
     elif args.comm_style == 'pd-sgd':
@@ -66,7 +66,7 @@ def run(rank, size):
     else:
         # Anything else just default to our algorithm
         communicator = AsyncDecentralized(rank, size, MPI.COMM_WORLD, GP,
-                                          args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
+                                          args.sgd_steps, args.max_sgd, args.wb, args.memory_efficient, init_model)
 
     # init recorder
     comp_time = 0
