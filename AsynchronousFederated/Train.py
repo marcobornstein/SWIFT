@@ -56,7 +56,7 @@ def run(rank, size):
 
     if args.comm_style == 'async':
         communicator = AsyncDecentralized(rank, size, MPI.COMM_WORLD, GP,
-                                          args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
+                                          args.sgd_steps, args.max_sgd, args.wb, args.memory_efficient, init_model)
     elif args.comm_style == 'ld-sgd':
         communicator = decenCommunicator(rank, size, MPI.COMM_WORLD, GP, args.i1, args.i2)
     elif args.comm_style == 'pd-sgd':
@@ -66,7 +66,7 @@ def run(rank, size):
     else:
         # Anything else just default to our algorithm
         communicator = AsyncDecentralized(rank, size, MPI.COMM_WORLD, GP,
-                                          args.sgd_steps, args.max_sgd, args.wb, args.memory, init_model)
+                                          args.sgd_steps, args.max_sgd, args.wb, args.memory_efficient, init_model)
 
     # init recorder
     comp_time = 0
@@ -163,7 +163,7 @@ def run(rank, size):
     recorder.save_to_file()
 
     # Broadcast/wait until all other neighbors are finished in async algorithm
-    if args.comm_style == 'async':
+    if args.comm_style == 'async' and args.memory_efficient:
         communicator.wait(model)
         print('Finished from Rank %d' % rank)
 
@@ -246,7 +246,7 @@ if __name__ == "__main__":
 
     # Specific async arguments
     parser.add_argument('--wb', default=0, type=int, help='proportionally increase neighbor weights or self replace')
-    parser.add_argument('--memory', default=0, type=int, help='store all neighbor local models')
+    parser.add_argument('--memory_efficient', default=0, type=int, help='DO store all neighbor local models')
     parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
     parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
 
