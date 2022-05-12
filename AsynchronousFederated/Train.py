@@ -235,7 +235,8 @@ if __name__ == "__main__":
     parser.add_argument('--model', default="res", type=str, help='model name: res/VGG/wrn')
     parser.add_argument('--comm_style', default='async', type=str, help='baseline communicator')
     parser.add_argument('--resSize', default=50, type=int, help='res net size')
-    parser.add_argument('--lr', default=0.8, type=float, help='learning rate')
+    parser.add_argument('--lr', default=0.1, type=float, help='learning rate to start from \
+                        (if not customLR then lr always 0.1)')
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
     parser.add_argument('--epoch', '-e', default=10, type=int, help='total epoch')
     parser.add_argument('--bs', default=64, type=int, help='batch size on each worker')
