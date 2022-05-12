@@ -1,7 +1,6 @@
 import numpy as np
 import time
 import torch
-from mpi4py import MPI
 from comm_helpers import flatten_tensors, unflatten_tensors
 
 
@@ -91,6 +90,7 @@ class decenCommunicator:
             if self.comm_iter % self.i2 == 0:
                 self.comm_iter = 0
             else:
+                # decrease iteration by one in order to run another one update and average step (I2 communication)
                 self.iter -= 1
 
         return comm_time

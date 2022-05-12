@@ -75,7 +75,7 @@ class GraphConstruct:
 
     def getWeights(self, weight_type=None):
         
-        if weight_type == 'adfl':
+        if weight_type == 'swift':
 
             degree = len(self.neighbor_list)
             requests = [MPI.REQUEST_NULL for _ in range(degree)]

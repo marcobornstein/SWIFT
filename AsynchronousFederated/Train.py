@@ -42,7 +42,7 @@ def run(rank, size):
                           lr=args.lr,
                           momentum=args.momentum,
                           weight_decay=1e-4,
-                      nesterov=args.nesterov)
+                          nesterov=args.nesterov)
 
     # guarantee all local models start from the same point
     init_model = sync_allreduce(model, size, MPI.COMM_WORLD)
@@ -50,11 +50,15 @@ def run(rank, size):
     # load data
     train_loader, test_loader, val_loader = partition_dataset(rank, size, MPI.COMM_WORLD, args)
 
+    # ensure swift uses its own weighting
+    if args.comm_style == 'swift':
+        args.weight_type = 'swift'
+
     # load base network topology
     p = 3/size
     GP = GraphConstruct(rank, size, MPI.COMM_WORLD, args.graph, args.weight_type, p=p, num_c=args.num_clusters)
 
-    if args.comm_style == 'async':
+    if args.comm_style == 'swift':
         communicator = AsyncDecentralized(rank, size, MPI.COMM_WORLD, GP,
                                           args.sgd_steps, args.max_sgd, args.wb, args.memory_efficient, init_model)
     elif args.comm_style == 'ld-sgd':
@@ -129,11 +133,10 @@ def run(rank, size):
             update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=20.0, decay_epoch=d_epoch,
                                     itr_per_epoch=len(train_loader))
         else:
-            if epoch==81 or epoch==122:
+            if epoch == 81 or epoch == 122:
                 args.lr *= 0.1
                 for param_group in optimizer.param_groups:
                     param_group["lr"] = args.lr
-
 
         # evaluate test accuracy at the end of each epoch
         # test_acc = test_accuracy(model, test_loader)
@@ -142,7 +145,7 @@ def run(rank, size):
         val_acc = test_accuracy(model, val_loader)
 
         # run personalization if turned on
-        if args.personalize and args.comm_style == 'async':
+        if args.personalize and args.comm_style == 'swift':
             comm_time += communicator.personalize(epoch+2, val_acc, args.noniid)
 
         # total time spent in algorithm
@@ -163,7 +166,7 @@ def run(rank, size):
     recorder.save_to_file()
 
     # Broadcast/wait until all other neighbors are finished in async algorithm
-    if args.comm_style == 'async' and args.memory_efficient:
+    if args.comm_style == 'swift' and args.memory_efficient:
         communicator.wait(model)
         print('Finished from Rank %d' % rank)
 
@@ -233,7 +236,7 @@ if __name__ == "__main__":
     parser.add_argument('--description', type=str, help='experiment description')
 
     parser.add_argument('--model', default="res", type=str, help='model name: res/VGG/wrn')
-    parser.add_argument('--comm_style', default='async', type=str, help='baseline communicator')
+    parser.add_argument('--comm_style', default='swift', type=str, help='baseline communicator')
     parser.add_argument('--resSize', default=50, type=int, help='res net size')
     parser.add_argument('--lr', default=0.1, type=float, help='learning rate to start from \
                         (if not customLR then lr always 0.1)')
@@ -249,7 +252,7 @@ if __name__ == "__main__":
     parser.add_argument('--wb', default=0, type=int, help='proportionally increase neighbor weights or self replace')
     parser.add_argument('--memory_efficient', default=0, type=int, help='DO store all neighbor local models')
     parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
-    parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
+    parser.add_argument('--personalize', default=0, type=int, help='use personalization or not')
 
     parser.add_argument('--i1', default=0, type=int, help='i1 comm set, number of local updates no averaging')
     parser.add_argument('--i2', default=1, type=int, help='i2 comm set, number of d-sgd updates')
