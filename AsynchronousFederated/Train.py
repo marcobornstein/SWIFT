@@ -250,9 +250,9 @@ if __name__ == "__main__":
     parser.add_argument('--max_sgd', default=10, type=int, help='max sgd steps per worker')
     parser.add_argument('--personalize', default=1, type=int, help='use personalization or not')
 
-    parser.add_argument('--i1', default=1, type=int, help='i1 comm set, number of local updates no averaging')
-    parser.add_argument('--i2', default=2, type=int, help='i2 comm set, number of d-sgd updates')
-    parser.add_argument('--sgd_steps', default=3, type=int, help='baseline sgd steps per worker')
+    parser.add_argument('--i1', default=0, type=int, help='i1 comm set, number of local updates no averaging')
+    parser.add_argument('--i2', default=1, type=int, help='i2 comm set, number of d-sgd updates')
+    parser.add_argument('--sgd_steps', default=1, type=int, help='baseline sgd steps per worker')
     parser.add_argument('--num_clusters', default=1, type=int, help='number of clusters in graph')
     parser.add_argument('--graph', type=str, help='graph topology')
 
