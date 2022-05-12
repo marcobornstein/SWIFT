@@ -1,2 +1,0 @@
-Namespace(bs=64, comm_style='pd-sgd', dataset='cifar10', datasetRoot='./data', degree_noniid=0.5, description='DSGD', downloadCifar=0, epoch=200, graph='fully-connected', i1=1, i2=2, lr=0.8, max_sgd=10, model='res', momentum=0.0, name='pdsgd-0.5-noniid-fc-4-test1', nesterov=False, noniid=1, num_clusters=1, outputFolder='Output', p=False, personalize=1, randomSeed=9001, resSize=50, savePath=None, sgd_steps=3, warmup=False)
-DSGD
