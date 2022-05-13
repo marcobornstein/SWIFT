@@ -127,12 +127,12 @@ class DataPartitioner(object):
         for worker_idx in range(num_workers):            
             if worker_idx == rank:
                 iid_start_ind = running_iid
-                iid_end_ind = running_iid + worker_split[worker][1]
+                iid_end_ind = running_iid + worker_split[worker_idx][1]
 
-            running_iid += worker_split[worker][1]
+            running_iid += worker_split[worker_idx][1]
 
             # Fills up worker with to_fill noniid data
-            to_fill = worker_split[worker][0]
+            to_fill = worker_split[worker_idx][0]
             while to_fill > 0:
                 num_in_bin = len(labelIdxDict[curr_bin])
                 # How much to take from the bin/label
