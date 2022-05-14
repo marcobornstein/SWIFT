@@ -12,8 +12,8 @@
 #SBATCH --nice=0
 #SBATCH --mail-type=END   # Valid type values are NONE, BEGIN, END, FAIL, REQUEUE
 
-# module load openmpi
-# module load cuda/11.1.1
+module load openmpi
+module load cuda/11.1.1
 
 mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name ldsgd-iid-test1-16W --comm_style ld-sgd --momentum 0.9 --customLR 1 --i1 1 --i2 2 --degree_noniid 0 --noniid 0 --resSize 18 --bs 32 --epoch 300 --description LDSGD --randomSeed 143 --datasetRoot ./data --outputFolder Output
 mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name ldsgd-iid-test2-16W --comm_style ld-sgd --momentum 0.9 --customLR 1 --i1 1 --i2 2 --degree_noniid 0 --noniid 0 --resSize 18 --bs 32 --epoch 300 --description LDSGD --randomSeed 1943 --datasetRoot ./data --outputFolder Output

@@ -12,11 +12,11 @@
 #SBATCH --nice=0
 #SBATCH --mail-type=END   # Valid type values are NONE, BEGIN, END, FAIL, REQUEUE
 
-# module load openmpi
-# module load cuda/11.1.1
+module load openmpi
+module load cuda/11.1.1
 
-mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test1-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --lr 0.5 --degree_noniid 1 --noniid 1 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 2282 --datasetRoot ./data --outputFolder Output
-mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test2-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --lr 0.5 --degree_noniid 1 --noniid 1 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 9867 --datasetRoot ./data --outputFolder Output
-mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test3-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --lr 0.5 --degree_noniid 1 --noniid 1 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 6666 --datasetRoot ./data --outputFolder Output
-mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test4-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --lr 0.5 --degree_noniid 1 --noniid 1 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 7777 --datasetRoot ./data --outputFolder Output
-mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test5-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --lr 0.5 --degree_noniid 1 --noniid 1 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 8888 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test1-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --customLR 1 --degree_noniid 0 --noniid 0 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 2282 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test2-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --customLR 1 --degree_noniid 0 --noniid 0 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 9867 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test3-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --customLR 1 --degree_noniid 0 --noniid 0 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 6666 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test4-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --customLR 1 --degree_noniid 0 --noniid 0 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 7777 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --num_clusters 3 --name pdsgd-iid-test5-16W --comm_style pd-sgd --momentum 0.9 --i1 1 --i2 1 --customLR 1 --degree_noniid 0 --noniid 0 --resSize 18 --bs 32 --epoch 300 --description PDSGD --randomSeed 8888 --datasetRoot ./data --outputFolder Output
