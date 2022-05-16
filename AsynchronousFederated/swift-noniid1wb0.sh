@@ -3,7 +3,7 @@
 # Lines that begin with #SBATCH specify commands to be used by SLURM for scheduling
 
 #SBATCH --job-name=SWIFT    # sets the job name if not set from environment
-#SBATCH --time=05:30:00     # how long you think your job will take to complete; format=hh:mm:ss
+#SBATCH --time=04:30:00     # how long you think your job will take to complete; format=hh:mm:ss
 #SBATCH --account=furongh    # set QOS, this will determine what resources can be requested
 #SBATCH --qos=high  # set QOS, this will determine what resources can be requested
 #SBATCH --gres=gpu:3
@@ -15,8 +15,8 @@
 module load openmpi
 module load cuda/11.1.1
 
-mpirun -np 10 python Train.py --name swift-noniid-test1-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 10 python Train.py --name swift-noniid-test2-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 10 python Train.py --name swift-noniid-test3-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 10 python Train.py --name swift-noniid-test4-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 9001 --datasetRoot ./data --outputFolder Output
-mpirun -np 10 python Train.py --name swift-noniid-test5-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 9001 --datasetRoot ./data --outputFolder Output
+mpirun -np 10 python Train.py --name swift-noniid-test1-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 12 --datasetRoot ./data --outputFolder Output
+mpirun -np 10 python Train.py --name swift-noniid-test2-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 44 --datasetRoot ./data --outputFolder Output
+mpirun -np 10 python Train.py --name swift-noniid-test3-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 3485 --datasetRoot ./data --outputFolder Output
+mpirun -np 10 python Train.py --name swift-noniid-test4-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 9173 --datasetRoot ./data --outputFolder Output
+mpirun -np 10 python Train.py --name swift-noniid-test5-10W-wb0 --graph clique-ring --num_clusters 3 --sgd_steps 1 --weight_type swift --momentum 0.9 --lr 0.8 --degree_noniid 0.5 --noniid 1 --resSize 18 --bs 32 --epoch 300 --memory_efficient 1 --wb 0 --description SWIFT-No-WB --randomSeed 2834 --datasetRoot ./data --outputFolder Output
