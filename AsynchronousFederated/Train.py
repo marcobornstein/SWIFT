@@ -80,9 +80,9 @@ def run(rank, size):
     top1 = AverageMeter()
 
     if args.noniid:
-        d_epoch = 100
+        d_epoch = 200
     else:
-        d_epoch = 80
+        d_epoch = 100
 
     MPI.COMM_WORLD.Barrier()
     # start training
@@ -130,7 +130,7 @@ def run(rank, size):
 
         # update learning rate here
         if not args.customLR:
-            update_learning_rate(optimizer, epoch, drop=0.5, epochs_drop=10.0, decay_epoch=d_epoch,
+            update_learning_rate(optimizer, epoch, drop=0.25, epochs_drop=10.0, decay_epoch=d_epoch,
                                     itr_per_epoch=len(train_loader))
         else:
             if epoch == 81 or epoch == 122:
