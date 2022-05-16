@@ -8,7 +8,7 @@ from DSGD import decenCommunicator
 from mpi4py import MPI
 from DataPartition import partition_dataset
 from comm_helpers import flatten_tensors
-from Misc import AverageMeter, Recorder, test_accuracy, compute_accuracy
+from Misc import AverageMeter, Recorder, test_accuracy, test_loss, compute_accuracy
 
 import torch
 import torch.utils.data.distributed
@@ -138,15 +138,20 @@ def run(rank, size):
                 for param_group in optimizer.param_groups:
                     param_group["lr"] = args.lr
 
-        # evaluate test accuracy at the end of each epoch
-        # test_acc = test_accuracy(model, test_loader)
-
         # evaluate validation accuracy at the end of each epoch
         val_acc = test_accuracy(model, val_loader)
 
+        t = time.time()
+        if args.noniid:
+            # evaluate test accuracy at the end of each epoch
+            test_acc = test_loss(model, test_loader, criterion)
+        else:
+            test_acc = val_acc
+        test_time = time.time() - t
+
         # run personalization if turned on
-        if args.personalize and args.comm_style == 'swift':
-            comm_time += communicator.personalize(epoch+2, val_acc, args.noniid)
+        # if args.personalize and args.comm_style == 'swift':
+        #    comm_time += communicator.personalize(epoch+2, val_acc, args.noniid)
 
         # total time spent in algorithm
         comp_time -= record_time
@@ -155,7 +160,8 @@ def run(rank, size):
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, val_acc: %.3f, comp time: %.3f, "
               "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, val_acc, comp_time, epoch_time))
 
-        recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time), top1.avg, losses.avg, val_acc)
+        recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time,
+                         top1.avg, losses.avg, val_acc, test_acc)
 
         # reset recorders
         comp_time, comm_time = 0, 0

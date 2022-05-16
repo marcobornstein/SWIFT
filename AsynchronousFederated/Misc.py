@@ -30,6 +30,7 @@ class Recorder(object):
         self.record_comm_timing = list()
         self.record_losses = list()
         self.record_trainacc = list()
+        self.record_testloss = list()
         self.total_record_timing = list()
         self.args = args
         self.rank = rank
@@ -38,7 +39,7 @@ class Recorder(object):
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
 
-    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, losses, val_acc):
+    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, losses, val_acc, test_loss):
         self.record_timing.append(epoch_time)
         self.record_total_timing.append(total_time)
         self.record_comp_timing.append(comp_time)
@@ -46,6 +47,7 @@ class Recorder(object):
         self.record_trainacc.append(top1)
         self.record_losses.append(losses)
         self.record_valacc.append(val_acc)
+        self.record_testloss.append(test_loss)
 
     def save_to_file(self):
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-epoch-time.log', self.record_timing, delimiter=',')
@@ -58,7 +60,7 @@ class Recorder(object):
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-losses.log', self.record_losses, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc.log', self.record_trainacc, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
-
+        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-testloss.log', self.record_testloss, delimiter=',')
         with open(self.saveFolderName + '/ExpDescription', 'w') as f:
             f.write(str(self.args) + '\n')
             f.write(self.args.description + '\n')
@@ -92,3 +94,17 @@ def test_accuracy(model, test_loader):
         acc1 = compute_accuracy(outputs, targets)
         top1.update(acc1[0].item(), inputs.size(0))
     return top1.avg
+
+
+def test_loss(model, test_loader, criterion):
+    model.eval()
+    top1 = AverageMeter()
+    for batch_idx, (inputs, targets) in enumerate(test_loader):
+        inputs, targets = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True)
+        # compute output
+        with torch.no_grad():
+            outputs = model(inputs)
+        loss = criterion(outputs, targets)
+        top1.update(loss.item(), inputs.size(0))
+    return top1.avg
+
