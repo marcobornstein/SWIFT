@@ -1,0 +1,2 @@
+Namespace(bs=32, comm_style='swift', customLR=0, dataset='cifar10', datasetRoot='./data', degree_noniid=0.5, description='SWIFT-No-WB', downloadCifar=0, epoch=300, graph='clique-ring', i1=0, i2=1, lr=0.8, max_sgd=10, memory_efficient=1, model='res', momentum=0.9, name='swift-noniid-test3-10W-wb0', nesterov=False, noniid=1, num_clusters=3, outputFolder='Output', p=False, personalize=0, randomSeed=3485, resSize=18, savePath=None, sgd_steps=1, unordered_epochs=1, warmup=False, wb=0, weight_type='swift')
+SWIFT-No-WB
