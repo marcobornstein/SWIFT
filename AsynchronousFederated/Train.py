@@ -146,7 +146,7 @@ def run(rank, size):
             # evaluate test accuracy at the end of each epoch
             t_loss = test_loss(model, test_loader, criterion)
         else:
-            t_loss = val_acc
+            t_loss = losses.avg
         test_time = time.time() - t
 
         # run personalization if turned on
