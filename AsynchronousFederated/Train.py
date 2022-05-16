@@ -144,9 +144,9 @@ def run(rank, size):
         t = time.time()
         if args.noniid:
             # evaluate test accuracy at the end of each epoch
-            test_acc = test_loss(model, test_loader, criterion)
+            t_loss = test_loss(model, test_loader, criterion)
         else:
-            test_acc = val_acc
+            t_loss = val_acc
         test_time = time.time() - t
 
         # run personalization if turned on
@@ -157,11 +157,11 @@ def run(rank, size):
         comp_time -= record_time
         epoch_time = comp_time + comm_time
 
-        print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, val_acc: %.3f, comp time: %.3f, "
-              "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, val_acc, comp_time, epoch_time))
+        print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, val_acc: %.3f, test_loss: %.3f, comp time: %.3f, "
+              "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, val_acc, t_loss, comp_time, epoch_time))
 
         recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time,
-                         top1.avg, losses.avg, val_acc, test_acc)
+                         top1.avg, losses.avg, val_acc, t_loss)
 
         # reset recorders
         comp_time, comm_time = 0, 0
