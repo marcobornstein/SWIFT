@@ -1,0 +1,2 @@
+Namespace(bs=32, comm_style='d-sgd', customLR=1, dataset='cifar10', datasetRoot='./data', degree_noniid=0.0, description='DSGD-paper', downloadCifar=0, epoch=200, graph='ring', i1=0, i2=1, lr=0.0010000000000000002, max_sgd=10, memory_efficient=0, model='res', momentum=0.9, name='dsgd-iid-test3-16W', nesterov=False, noniid=0, num_clusters=3, outputFolder='Output', p=False, personalize=0, randomSeed=2992, resSize=18, savePath=None, sgd_steps=1, unordered_epochs=1, warmup=False, wb=0, weight_type='uniform')
+DSGD-paper
