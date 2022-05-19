@@ -200,10 +200,10 @@ def partition_dataset(rank, size, comm, val_split, args):
                                                    shuffle=True,
                                                    pin_memory=True)
 
-        val_loader = torch.utils.data.DataLoader(val_set,
-                                                   batch_size=args.bs,
-                                                   shuffle=True,
-                                                   pin_memory=True)
+        #val_loader = torch.utils.data.DataLoader(val_set,
+        #                                           batch_size=args.bs,
+        #                                           shuffle=True,
+        #                                           pin_memory=True)
 
         comm.Barrier()
         if rank == 0:
@@ -222,7 +222,7 @@ def partition_dataset(rank, size, comm, val_split, args):
         test_loader = torch.utils.data.DataLoader(t1, batch_size=64, shuffle=False)
         comm.Barrier()
 
-    return train_loader, test_loader, val_loader
+    return train_loader, test_loader #, val_loader
 
 
 def consensus_test_data(args):
