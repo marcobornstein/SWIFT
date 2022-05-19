@@ -165,7 +165,7 @@ class DataPartitioner(object):
         return train_set, val_set
 
 
-def partition_dataset(rank, size, comm, args):
+def partition_dataset(rank, size, comm, val_split, args):
 
     if args.downloadCifar == 1:
         url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
@@ -192,7 +192,7 @@ def partition_dataset(rank, size, comm, args):
 
         partition_sizes = [1.0 / size for _ in range(size)]
         partition = DataPartitioner(trainset, partition_sizes, rank, degree_noniid=args.degree_noniid,
-                                    val_split=0.25, isNonIID=args.noniid)
+                                    val_split=val_split, isNonIID=args.noniid)
         train_set, val_set = partition.train_val_split()
 
         train_loader = torch.utils.data.DataLoader(train_set,
@@ -217,7 +217,9 @@ def partition_dataset(rank, size, comm, args):
         testset = torchvision.datasets.CIFAR10(root=args.datasetRoot, train=False, download=True,
                                                transform=transform_test)
 
-        test_loader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
+        t1, t2 = torch.utils.data.random_split(testset, [500, 9500])
+
+        test_loader = torch.utils.data.DataLoader(t1, batch_size=64, shuffle=False)
         comm.Barrier()
 
     return train_loader, test_loader, val_loader

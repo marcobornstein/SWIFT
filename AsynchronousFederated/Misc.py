@@ -23,7 +23,7 @@ class AverageMeter(object):
 
 class Recorder(object):
     def __init__(self, args, rank):
-        self.record_valacc = list()
+        # self.record_valacc = list()
         self.record_timing = list()
         self.record_total_timing = list()
         self.record_comp_timing = list()
@@ -39,14 +39,14 @@ class Recorder(object):
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
 
-    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, losses, val_acc, test_loss):
+    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, losses, test_loss):
         self.record_timing.append(epoch_time)
         self.record_total_timing.append(total_time)
         self.record_comp_timing.append(comp_time)
         self.record_comm_timing.append(comm_time)
         self.record_trainacc.append(top1)
         self.record_losses.append(losses)
-        self.record_valacc.append(val_acc)
+        # self.record_valacc.append(val_acc)
         self.record_testloss.append(test_loss)
 
     def save_to_file(self):
@@ -59,7 +59,7 @@ class Recorder(object):
                    delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-losses.log', self.record_losses, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc.log', self.record_trainacc, delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
+        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-testloss.log', self.record_testloss, delimiter=',')
         with open(self.saveFolderName + '/ExpDescription', 'w') as f:
             f.write(str(self.args) + '\n')
