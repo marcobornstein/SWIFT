@@ -49,7 +49,7 @@ def run(rank, size):
 
     # load data
     val_split = 0
-    train_loader, test_loader, val_loader = partition_dataset(rank, size, MPI.COMM_WORLD, val_split, args)
+    train_loader, test_loader = partition_dataset(rank, size, MPI.COMM_WORLD, val_split, args)
 
     # ensure swift uses its own weighting
     if args.comm_style == 'swift':
