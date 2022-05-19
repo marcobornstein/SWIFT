@@ -139,13 +139,13 @@ def run(rank, size):
                 for param_group in optimizer.param_groups:
                     param_group["lr"] = args.lr
 
-        # evaluate validation accuracy at the end of each epoch
-        # val_acc = test_accuracy(model, val_loader)
-
         # evaluate test accuracy at the end of each epoch
         t = time.time()
         t_loss = test_loss(model, test_loader, criterion)
         test_time = time.time() - t
+
+        # evaluate validation accuracy at the end of each epoch
+        # val_acc = test_accuracy(model, val_loader)
 
         # run personalization if turned on
         # if args.personalize and args.comm_style == 'swift':
