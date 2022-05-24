@@ -79,6 +79,7 @@ def run(rank, size):
     recorder = Recorder(args, rank)
     losses = AverageMeter()
     top1 = AverageMeter()
+    sleep_time = 0
 
     if args.noniid:
         d_epoch = 200
@@ -126,6 +127,11 @@ def run(rank, size):
             # compute computational time
             comp_time += (end_time - start_time - comm_t)
 
+            # slowdown
+            if rank == 0 and args.slowdown > 1:
+                sleep_time = (args.slowdown - 1) * comp_time
+                time.sleep(sleep_time)
+
             # compute communication time
             comm_time += d_comm_time
 
@@ -151,17 +157,13 @@ def run(rank, size):
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_loss: %.3f, comp time: %.3f, "
               "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, t_loss, comp_time, epoch_time))
 
-        recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time,
+        recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time-sleep_time,
                          top1.avg, losses.avg, t_loss)
 
         # reset recorders
         comp_time, comm_time = 0, 0
         losses.reset()
         top1.reset()
-
-        # slowdown
-        if rank == 0 and args.slowdown > 1:
-            time.sleep((args.slowdown-1)*comp_time)
 
     # Save data to output folder
     recorder.save_to_file()
