@@ -127,13 +127,13 @@ def run(rank, size):
             # compute computational time
             comp_time += (end_time - start_time - comm_t)
 
-            # slowdown
-            if rank == 0 and args.slowdown > 1:
-                sleep_time = (args.slowdown - 1) * comp_time
-                time.sleep(sleep_time)
-
             # compute communication time
             comm_time += d_comm_time
+
+            # slowdown
+            if rank == 0 and args.slowdown > 1:
+                sleep_time = (args.slowdown - 1) * (end_time - start_time - comm_t)
+                time.sleep(sleep_time)
 
         # update learning rate here
         if not args.customLR:
@@ -157,7 +157,7 @@ def run(rank, size):
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_loss: %.3f, comp time: %.3f, "
               "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, t_loss, comp_time, epoch_time))
 
-        recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time-sleep_time,
+        recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time,
                          top1.avg, losses.avg, t_loss)
 
         # reset recorders
