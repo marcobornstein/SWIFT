@@ -157,7 +157,7 @@ def run(rank, size):
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_loss: %.3f, comp time: %.3f, "
               "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, t_loss, comp_time, epoch_time))
 
-        recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time,
+        recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time-sleep_time,
                          top1.avg, losses.avg, t_loss)
 
         # reset recorders
