@@ -74,7 +74,9 @@ class GraphConstruct:
             return g
 
     def getWeights(self, weight_type=None):
-        
+
+        # uniform CIS assumed for this version
+        # need to implement a non-uniform version...
         if weight_type == 'swift':
 
             degree = len(self.neighbor_list)
