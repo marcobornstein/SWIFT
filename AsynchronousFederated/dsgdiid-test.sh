@@ -15,8 +15,8 @@
 module load openmpi
 module load cuda/11.1.1
 
-mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test1-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 2332 --datasetRoot ./data --outputFolder Output
-mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test2-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 2442 --datasetRoot ./data --outputFolder Output
-mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test3-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 2992 --datasetRoot ./data --outputFolder Output
-mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test4-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 4844 --datasetRoot ./data --outputFolder Output
-mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test5-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 2900 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test1-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 2321 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test2-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 2423 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test3-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 2921 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test4-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 4842 --datasetRoot ./data --outputFolder Output
+mpirun -np 16 python Train.py  --graph ring --name dsgd-iid-test5-16W --comm_style d-sgd --lr 0.1 --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 50 --bs 64 --epoch 200 --description DSGD-paper --randomSeed 2912 --datasetRoot ./data --outputFolder Output
