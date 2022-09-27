@@ -4,8 +4,9 @@
 
 #SBATCH --job-name=PDSGD     # sets the job name if not set from environment
 #SBATCH --time=04:50:00     # how long you think your job will take to complete; format=hh:mm:ss
-#SBATCH --account=furongh    # set QOS, this will determine what resources can be requested
-#SBATCH --qos=high    # set QOS, this will determine what resources can be requested
+#SBATCH --account=scavenger    # set QOS, this will determine what resources can be requested
+#SBATCH --qos=scavenger    # set QOS, this will determine what resources can be requested
+#SBATCH --partition=scavenger
 #SBATCH --gres=gpu:4
 #SBATCH --ntasks=16
 #SBATCH --mem 128gb         # memory required by job; if unit is not specified MB will be assumed
