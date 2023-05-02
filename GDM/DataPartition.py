@@ -167,7 +167,17 @@ class DataPartitioner(object):
 
 def partition_dataset(rank, size, comm, val_split, args):
 
-    if args.downloadCifar == 1:
+    # if no dataset file specified, create new 'Data' folder
+    if args.datasetRoot == None:
+        if not os.path.isdir('Data'):
+            os.mkdir('Data')
+        datasetRoot = 'Data'
+        downloadCifar = 1
+    else:
+        datasetRoot = args.datasetRoot
+        downloadCifar = args.downloadCifar
+
+    if downloadCifar == 1:
         url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
         filename = "cifar-10-python.tar.gz"
         tgz_md5 = "c58f30108f718f92721af3b95e74349a"
@@ -185,7 +195,7 @@ def partition_dataset(rank, size, comm, val_split, args):
             transforms.ToTensor(),
             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])
 
-        trainset = torchvision.datasets.CIFAR10(root=args.datasetRoot,
+        trainset = torchvision.datasets.CIFAR10(root=datasetRoot,
                                                 train=True,
                                                 download=True,
                                                 transform=transform_train)
@@ -214,7 +224,7 @@ def partition_dataset(rank, size, comm, val_split, args):
             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
         ])
 
-        testset = torchvision.datasets.CIFAR10(root=args.datasetRoot, train=False, download=True,
+        testset = torchvision.datasets.CIFAR10(root=datasetRoot, train=False, download=True,
                                                transform=transform_test)
 
         t1, t2 = torch.utils.data.random_split(testset, [500, 9500])

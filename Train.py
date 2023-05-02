@@ -276,10 +276,9 @@ if __name__ == "__main__":
     parser.add_argument('--customLR', default=0, type=int, help='custom learning rate strategy, 1 if using multi-step')
 
     args = parser.parse_args()
-    print(args.datasetRoot)
 
     if not args.description:
-        print('No experiment description, exit!')
+        print('Please input an experiment description. Exiting!')
         exit()
 
     rank = MPI.COMM_WORLD.Get_rank()
