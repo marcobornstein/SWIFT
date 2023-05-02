@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import torch
-from CommHelpers import flatten_tensors, unflatten_tensors
+from Communicators.CommHelpers import flatten_tensors, unflatten_tensors
 
 
 class decenCommunicator:

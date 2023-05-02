@@ -2,7 +2,7 @@ import numpy as np
 import time
 from mpi4py import MPI
 import torch
-from CommHelpers import flatten_tensors, unflatten_tensors
+from Communicators.CommHelpers import flatten_tensors, unflatten_tensors
 
 class AsyncDecentralized:
 
