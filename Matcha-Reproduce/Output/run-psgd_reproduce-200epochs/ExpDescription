@@ -1,2 +1,0 @@
-Namespace(bs=64, budget=0.5, compress=False, consensus_lr=0.1, dataset='cifar10', datasetRoot='./data', description='Matcha', downloadCifar=0, epoch=200, graphid=0, lr=0.8, matcha=False, model='res', momentum=0.0, name='psgd_reproduce', nesterov=False, outputFolder='Output', p=False, randomSeed=9001, resSize=50, savePath=None, warmup=False)
-Matcha

@@ -1,14 +1,14 @@
 import numpy as np
 import time
 import argparse
-import resnet
-from GraphConstruct import GraphConstruct
-from AsyncCommunicator import AsyncDecentralized
-from DSGD import decenCommunicator
+from GDM import Resnet
+from GDM.GraphConstruct import GraphConstruct
+from Communicators.AsyncCommunicator import AsyncDecentralized
+from Communicators.DSGD import decenCommunicator
 from mpi4py import MPI
-from DataPartition import partition_dataset
-from comm_helpers import flatten_tensors
-from Misc import AverageMeter, Recorder, test_accuracy, test_loss, compute_accuracy
+from GDM.DataPartition import partition_dataset
+from Communicators.CommHelpers import flatten_tensors
+from Utils.Misc import AverageMeter, Recorder, test_accuracy, test_loss, compute_accuracy
 
 import torch
 import torch.utils.data.distributed
@@ -26,7 +26,7 @@ def run(rank, size):
 
     # select neural network model
     num_class = 10
-    model = resnet.ResNet(args.resSize, num_class)
+    model = Resnet.ResNet(args.resSize, num_class)
 
     # split up GPUs
     num_gpus = torch.cuda.device_count()
