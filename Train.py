@@ -9,7 +9,7 @@ from mpi4py import MPI
 from GDM.DataPartition import partition_dataset
 from Communicators.CommHelpers import flatten_tensors
 from Utils.Misc import AverageMeter, Recorder, test_accuracy, test_loss, compute_accuracy
-
+import os
 import torch
 import torch.utils.data.distributed
 import torch.nn as nn
@@ -262,7 +262,7 @@ if __name__ == "__main__":
     parser.add_argument('--i2', default=1, type=int, help='i2 comm set, number of d-sgd updates')
     parser.add_argument('--sgd_steps', default=1, type=int, help='baseline sgd steps per worker')
     parser.add_argument('--num_clusters', default=1, type=int, help='number of clusters in graph')
-    parser.add_argument('--graph', type=str, help='graph topology')
+    parser.add_argument('--graph', default='ring', type=str, help='graph topology')
 
     parser.add_argument('--warmup', action='store_true', help='use lr warmup or not')
     parser.add_argument('--nesterov', action='store_true', help='use nesterov momentum or not')
@@ -271,7 +271,7 @@ if __name__ == "__main__":
     parser.add_argument('--downloadCifar', default=0, type=int, help='change to 1 if needing to download Cifar')
     parser.add_argument('--p', '-p', action='store_true', help='partition the dataset or not')
     parser.add_argument('--savePath', type=str, help='save path')
-    parser.add_argument('--outputFolder', type=str, help='save folder')
+    parser.add_argument('--outputFolder', default='Output', type=str, help='save folder')
     parser.add_argument('--randomSeed', default=9001, type=int, help='random seed')
     parser.add_argument('--customLR', default=0, type=int, help='custom learning rate strategy, 1 if using multi-step')
 
@@ -280,6 +280,9 @@ if __name__ == "__main__":
     if not args.description:
         print('Please input an experiment description. Exiting!')
         exit()
+
+    if not os.path.isdir(args.outputFolder):
+        os.mkdir(args.outputFolder)
 
     rank = MPI.COMM_WORLD.Get_rank()
     size = MPI.COMM_WORLD.Get_size()

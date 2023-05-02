@@ -181,7 +181,7 @@ def partition_dataset(rank, size, comm, val_split, args):
         url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
         filename = "cifar-10-python.tar.gz"
         tgz_md5 = "c58f30108f718f92721af3b95e74349a"
-        torchvision.datasets.utils.download_and_extract_archive(url, args.datasetRoot, filename=filename, md5=tgz_md5)
+        torchvision.datasets.utils.download_and_extract_archive(url, datasetRoot, filename=filename, md5=tgz_md5)
         comm.Barrier()
 
     if rank == 0:
