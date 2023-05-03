@@ -21,14 +21,19 @@ packages versions (including PyTorch), however we have not tested on these newer
 Python package installer for easier implementation.
 
 We use Python 3.8.2 with the following packages (and versions):
-1. torch (1.10.0)
-2. torchvision (0.11.1)
+1. torch (1.10.0+cu111)
+2. torchvision (0.11.1+cu111)
 3. numpy (1.19.5)
 4. networkx (2.6.3)
 5. mpi4py (2.6.3)
 6. Pillow (8.4.0)
 
-Furthermore, for installing mpi4py, we require OpenMPI as a backend. Finally, we use CUDA 11.1.1.
+Furthermore, for installing mpi4py, we require OpenMPI as a backend. Finally, we use CUDA 11.1.1. Installing PyTorch with CUDA 11.1.1 can be done using
+the following command:
+
+```
+pip install torch==1.10.0+cu111 torchvision==0.11.1+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+```
 
 ## Citation
 If using SWIFT or this database in further research, please cite either of the following:
