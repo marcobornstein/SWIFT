@@ -2,8 +2,33 @@
 
 # Shared WaIt-Free Transmission (SWIFT)
 
-Under construction...
+## Running SWIFT
 
+After building dependencies, one can test if SWIFT runs by using the following command:
+
+```
+mpirun -np 1 python Train.py --description test
+```
+
+We include the scripts used to run our experiments within the Scripts folder. These may have to
+be altered in order to run on different systems/clusters. We also include a test script (test-script.sh)
+which should run SWIFT in parallel with 4 workers.
+
+## Code Dependencies
+
+Below we list the packages and modules that we used when running SWIFT. We believe that are code can work with newer 
+packages versions (including PyTorch), however we have not tested on these newer versions. We are hoping to build a 
+Python package installer for easier implementation.
+
+We use Python 3.8.2 with the following packages (and versions):
+1. torch (1.10.0)
+2. torchvision (0.11.1)
+3. numpy (1.19.5)
+4. networkx (2.6.3)
+5. mpi4py (2.6.3)
+6. Pillow (8.4.0)
+
+Furthermore, for installing mpi4py, we require OpenMPI as a backend. Finally, we use CUDA 11.1.1.
 
 ## Citation
 If using SWIFT or this database in further research, please cite either of the following:

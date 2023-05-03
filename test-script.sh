@@ -13,7 +13,7 @@
 #SBATCH --nice=0
 #SBATCH --mail-type=END   # Valid type values are NONE, BEGIN, END, FAIL, REQUEUE
 
-module load openmpi
+module load mpi
 module load cuda/11.1.1
 
 mpirun -np 4 python Train.py --name swift-test --graph ring --customLR 1 --sgd_steps 1 --weight_type swift --momentum 0.9 --degree_noniid 0 --noniid 0 --resSize 18 --bs 32 --epoch 10 --wb 1 --description SWIFT-test --randomSeed 3782 --datasetRoot Data --outputFolder Output
