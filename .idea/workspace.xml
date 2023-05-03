@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98918209-d93e-4648-a0b1-9150a5a55a80" name="Changes" comment="Data Folder auto">
-      <change beforePath="$PROJECT_DIR$/GDM/DataPartition.py" beforeDir="false" afterPath="$PROJECT_DIR$/GDM/DataPartition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GDM/GraphConstruct.py" beforeDir="false" afterPath="$PROJECT_DIR$/GDM/GraphConstruct.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Train.py" beforeDir="false" afterPath="$PROJECT_DIR$/Train.py" afterDir="false" />
+    <list default="true" id="98918209-d93e-4648-a0b1-9150a5a55a80" name="Changes" comment="Fix Single Worker">
+      <change afterPath="$PROJECT_DIR$/test-script.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +48,9 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Graph-Data-Model" />
       <recent name="$PROJECT_DIR$/Utils" />
@@ -105,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683061943806</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Fix Single Worker">
+      <created>1683063016040</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1683063016040</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -128,6 +136,7 @@
     <MESSAGE value="Renaming Issues" />
     <MESSAGE value="Delete Log Files (to reduce github size)" />
     <MESSAGE value="Data Folder auto" />
-    <option name="LAST_COMMIT_MESSAGE" value="Data Folder auto" />
+    <MESSAGE value="Fix Single Worker" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix Single Worker" />
   </component>
 </project>
