@@ -138,28 +138,25 @@ class AsyncDecentralized:
         tic = time.time()
 
         for idx, node in enumerate(self.neighbor_list):
-            # check to see if a message has arrived from a neighbor
-            if self.comm.Iprobe(source=node, tag=node):
-                recv_nodes.append((idx, node))
-            # if no message has arrived, use stored model from worker
-            else:
-                self.avg_model.add_(torch.from_numpy(self.worker_models[idx]), alpha=self.neighbor_weights[idx])
-
-        for idx, node in recv_nodes:
-            while True:
-                req = self.comm.Irecv(buffer, source=node, tag=node)
-                if not req.Test():
-                    req.Cancel()
-                    req.Free()
-                    self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
-                    self.worker_models[idx] = prev_model
-                    break
-                prev_model = buffer
-
-        # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
-        self.avg_model.add_(self.send_buffer, alpha=self.sw)
-
-        toc = time.time()
+        	# check to see if a message has arrived from a neighbor
+        	probe = self.comm.Iprobe(source=node, tag=node)
+        	# if no message has arrived, use stored model from worker
+        	if not probe:
+        	    self.avg_model.add_(torch.from_numpy(self.worker_models[idx]), alpha=self.neighbor_weights[idx])
+        	#if a message has arrived from a neighbor
+        	else:
+        	    #iterate until most recent message has arrived from a neighbor
+        	    while(probe):
+        	        self.comm.Recv(buffer, source=node, tag=node)
+        	        prev_model = buffer
+        	        probe = self.comm.Iprobe(source=node, tag=node)  
+        	    self.avg_model.add_(torch.from_numpy(prev_model), alpha=self.neighbor_weights[idx])
+        	    self.worker_models[idx] = prev_model
+        
+                # compute weighted average: (1-d*alpha)x_i + alpha * sum_j x_j
+                self.avg_model.add_(self.send_buffer, alpha=self.sw)
+        
+                toc = time.time()
 
         # update local models
         self.reset_model()
