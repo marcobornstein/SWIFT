@@ -1,0 +1,29 @@
+# Varying client heterogeneity: one straggler in a 16 client ring.
+# Paper: Section 6.2, Table 5, Figure 4. Hyperparameters from Table 8, row 3.
+#
+#   mpirun -np 16 swift-train --config configs/slowdown-ring.yaml --slowdown 4
+#
+# slowdown=N makes rank 0 take N times as long over its computation. The paper
+# reports N = 1 (none), 2 and 4.
+name: slowdown-ring-16
+notes: Varying client heterogeneity, 16 client ring with an artificial straggler
+
+algorithm: swift
+local_steps: 1
+weight_boost: true
+
+topology: ring
+slowdown: 2.0
+
+resnet_depth: 18
+batch_size: 32
+non_iid: 0.0
+
+epochs: 100
+lr: 0.1
+momentum: 0.9
+weight_decay: 1.0e-4
+lr_schedule: step
+lr_gamma: 0.5
+lr_decay_start: 50
+lr_decay_every: 10

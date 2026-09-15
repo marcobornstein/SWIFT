@@ -1,0 +1,27 @@
+# Baseline comparison: 16 clients in a ring on IID CIFAR-10.
+# Paper: Section 6.1, Table 3, Figure 2. Hyperparameters from Table 8, row 1.
+#
+#   mpirun -np 16 swift-train --config configs/baseline-ring.yaml
+#
+# The "varying number of clients" experiment (Section 6.3, Table 6, Figure 5)
+# is this same config launched with -np 2, 4, 8 and 16.
+name: baseline-ring-16
+notes: Baseline comparison, 16 client ring, IID CIFAR-10
+
+algorithm: swift
+local_steps: 1          # C0 in the paper; use 2 for the C1 (2-SGD) rows
+weight_boost: true
+
+topology: ring
+
+resnet_depth: 18
+batch_size: 32
+non_iid: 0.0
+
+epochs: 200
+lr: 0.1
+momentum: 0.9
+weight_decay: 1.0e-4
+lr_schedule: multistep
+lr_gamma: 0.1
+lr_milestones: [81, 122]

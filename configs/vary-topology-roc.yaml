@@ -1,0 +1,28 @@
+# Varying network topology: 16 clients, ResNet-50.
+# Paper: Section 6.3, Table 7, Figure 6. Hyperparameters from Table 8, row 5.
+#
+#   mpirun -np 16 swift-train --config configs/vary-topology-roc.yaml --clusters 2
+#   mpirun -np 16 swift-train --config configs/vary-topology-roc.yaml --clusters 4
+#   mpirun -np 16 swift-train --config configs/vary-topology-roc.yaml --topology ring
+name: topology-roc4-16
+notes: Varying topology, 16 clients, ResNet-50
+
+algorithm: swift
+local_steps: 1
+weight_boost: true
+
+topology: clique-ring
+clusters: 4
+
+resnet_depth: 50
+batch_size: 64
+non_iid: 0.0
+
+epochs: 200
+lr: 0.1
+momentum: 0.9
+weight_decay: 1.0e-4
+lr_schedule: step
+lr_gamma: 0.5
+lr_decay_start: 100
+lr_decay_every: 10

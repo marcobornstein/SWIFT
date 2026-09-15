@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "swift-fl"
+version = "2.0.0"
+description = "SWIFT: Rapid Decentralized Federated Learning via Wait-Free Model Communication (ICLR 2023)"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [
+    { name = "Marco Bornstein" },
+    { name = "Tahseen Rabbani" },
+    { name = "Evan Wang" },
+    { name = "Amrit Singh Bedi" },
+    { name = "Furong Huang" },
+]
+keywords = ["federated-learning", "decentralized", "asynchronous", "mpi", "pytorch"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.0",
+    "torchvision>=0.15",
+    "numpy>=1.24",
+    "networkx>=3.0",
+    "mpi4py>=3.1",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.7"]
+dev = ["pytest>=7.4", "ruff>=0.6"]
+
+[project.scripts]
+swift-train = "swift.cli:main"
+
+[project.urls]
+Paper = "https://openreview.net/forum?id=jh1nCir1R3d"
+arXiv = "https://arxiv.org/abs/2210.14026"
+Source = "https://github.com/marcobornstein/SWIFT"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 90
+src = ["src", "tests", "tools"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

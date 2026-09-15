@@ -1,0 +1,29 @@
+# Varying degrees of non-IIDness: 10 clients in a 3-cluster ring of cliques.
+# Paper: Section 6.2, Table 4, Figure 3. Hyperparameters from Table 8, row 2.
+#
+#   mpirun -np 10 swift-train --config configs/vary-noniid-roc.yaml --non-iid 0.9
+#
+# The paper sweeps non_iid over 0.25, 0.5, 0.7 and 0.9. Ten clients because
+# CIFAR-10 has ten labels, so each client maps onto one label bin.
+name: noniid-roc3-10
+notes: Varying non-IIDness, 10 client ROC-3C
+
+algorithm: swift
+local_steps: 1
+weight_boost: true
+
+topology: clique-ring
+clusters: 3
+
+resnet_depth: 18
+batch_size: 32
+non_iid: 0.5
+
+epochs: 300
+lr: 0.8
+momentum: 0.9
+weight_decay: 1.0e-4
+lr_schedule: step
+lr_gamma: 0.5
+lr_decay_start: 200
+lr_decay_every: 10

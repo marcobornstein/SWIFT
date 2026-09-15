@@ -1,0 +1,51 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      # mpi4py builds against a system MPI, and the MPI tests need to launch
+      # real ranks.
+      - name: Install OpenMPI
+        run: sudo apt-get update && sudo apt-get install -y libopenmpi-dev openmpi-bin
+
+      - name: Install
+        run: |
+          pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -e '.[dev,plot]'
+
+      - name: Lint
+        run: ruff check src tests tools
+
+      - name: Unit tests
+        run: pytest -q
+
+      # The communicators only exist under MPI, so the single-rank run above
+      # skips them. Four ranks exercise a ring; ten exercise the ring of
+      # cliques, where CCS has unequal degrees to negotiate.
+      - name: MPI tests (4 ranks)
+        run: mpirun -np 4 --oversubscribe pytest tests/test_mpi.py -q
+
+      - name: MPI tests (10 ranks)
+        run: mpirun --allow-run-as-root -np 10 --oversubscribe pytest tests/test_mpi.py -q
+
+      - name: Single rank runs
+        run: mpirun -np 1 pytest tests/test_mpi.py -q

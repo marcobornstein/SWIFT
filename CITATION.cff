@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+title: "SWIFT: Rapid Decentralized Federated Learning via Wait-Free Model Communication"
+message: "If you use this software, please cite the paper below."
+type: software
+authors:
+  - family-names: Bornstein
+    given-names: Marco
+  - family-names: Rabbani
+    given-names: Tahseen
+  - family-names: Wang
+    given-names: Evan
+  - family-names: Bedi
+    given-names: Amrit Singh
+  - family-names: Huang
+    given-names: Furong
+repository-code: "https://github.com/marcobornstein/SWIFT"
+license: MIT
+version: 2.0.0
+preferred-citation:
+  type: conference-paper
+  title: "SWIFT: Rapid Decentralized Federated Learning via Wait-Free Model Communication"
+  authors:
+    - family-names: Bornstein
+      given-names: Marco
+    - family-names: Rabbani
+      given-names: Tahseen
+    - family-names: Wang
+      given-names: Evan
+    - family-names: Bedi
+      given-names: Amrit Singh
+    - family-names: Huang
+      given-names: Furong
+  collection-title: "International Conference on Learning Representations (ICLR)"
+  year: 2023
+  url: "https://openreview.net/forum?id=jh1nCir1R3d"
