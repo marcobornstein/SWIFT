@@ -15,7 +15,32 @@ authors:
     given-names: Furong
 repository-code: "https://github.com/marcobornstein/SWIFT"
 license: MIT
-version: 2.0.0
+version: 2.0.1
+abstract: >-
+  Reference implementation of SWIFT, a wait-free decentralized federated
+  learning algorithm in which clients never block on one another: each
+  broadcasts its model to its neighbours and averages in whatever has arrived.
+  SWIFT is the first asynchronous decentralized federated learning algorithm to
+  obtain the optimal O(1/sqrt(T)) convergence rate without a bounded-delay
+  assumption; in the paper's experiments it reduces communication time by
+  nearly an order of magnitude and run time by upwards of 50% against
+  synchronous baselines. Includes the D-SGD, PA-SGD and LD-SGD baselines, one
+  configuration per experiment in the paper, and tooling to reproduce its
+  tables and figures.
+keywords:
+  - federated learning
+  - decentralized optimization
+  - asynchronous SGD
+  - distributed machine learning
+  - MPI
+  - PyTorch
+identifiers:
+  - type: doi
+    value: 10.48550/arXiv.2210.14026
+    description: arXiv preprint of the ICLR 2023 paper
+  - type: url
+    value: "https://openreview.net/forum?id=jh1nCir1R3d"
+    description: ICLR 2023 paper on OpenReview
 preferred-citation:
   type: conference-paper
   title: "SWIFT: Rapid Decentralized Federated Learning via Wait-Free Model Communication"

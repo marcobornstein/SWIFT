@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "swift-fl"
-version = "2.0.0"
+version = "2.0.1"
 description = "SWIFT: Rapid Decentralized Federated Learning via Wait-Free Model Communication (ICLR 2023)"
 readme = "README.md"
 license = "MIT"
