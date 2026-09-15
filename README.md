@@ -1,5 +1,8 @@
 # SWIFT
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22772090.svg)](https://doi.org/10.5281/zenodo.22772090)
+[![tests](https://github.com/marcobornstein/SWIFT/actions/workflows/ci.yml/badge.svg)](https://github.com/marcobornstein/SWIFT/actions/workflows/ci.yml)
+
 **Rapid Decentralized Federated Learning via Wait-Free Model Communication**
 Marco Bornstein, Tahseen Rabbani, Evan Wang, Amrit Singh Bedi, Furong Huang — *ICLR 2023*
 
@@ -308,6 +311,10 @@ replaces.
   url       = {https://openreview.net/forum?id=jh1nCir1R3d}
 }
 ```
+
+To cite this software specifically, rather than the paper, use its Zenodo
+DOI, [10.5281/zenodo.22772090](https://doi.org/10.5281/zenodo.22772090), which always resolves to the
+latest archived release.
 
 ## License
 

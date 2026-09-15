@@ -36,6 +36,9 @@ keywords:
   - PyTorch
 identifiers:
   - type: doi
+    value: 10.5281/zenodo.22772090
+    description: Zenodo archive of this software, all versions
+  - type: doi
     value: 10.48550/arXiv.2210.14026
     description: arXiv preprint of the ICLR 2023 paper
   - type: url
